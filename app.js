@@ -591,7 +591,17 @@
     const countEl = h('span');
     const noticeEl = h('div', { class: 'notice', hidden: true });
 
-    const fit = () => { ta.style.height = 'auto'; ta.style.height = Math.max(ta.scrollHeight, 200) + 'px'; };
+    // Grow the textarea with its content. Measuring needs height:auto for a moment, which would
+    // shrink the page and make the browser jump the scroll up, so the page's height is held while
+    // measuring and the scroll position is put back.
+    const fit = () => {
+      const y = window.scrollY;
+      page.style.minHeight = page.offsetHeight + 'px';
+      ta.style.height = 'auto';
+      ta.style.height = Math.max(ta.scrollHeight, 200) + 'px';
+      page.style.minHeight = '';
+      if (window.scrollY !== y) window.scrollTo(0, y);
+    };
     const counts = () => {
       const v = ta.value;
       const lines = v ? v.split('\n').length : 0;
