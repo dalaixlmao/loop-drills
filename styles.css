@@ -372,3 +372,17 @@ details.rv[open] > summary { border-bottom: 1px solid var(--line); }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
+
+/* follow-ups you can tick */
+.rv-body ul.fu-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+.fu-list li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px 12px; align-items: start; }
+.fu-check { display: flex; gap: 10px; align-items: flex-start; cursor: pointer; min-width: 0; }
+.fu-check input { margin: 3px 0 0; width: 16px; height: 16px; accent-color: var(--t2); flex: none; }
+.fu-check input:checked + span { color: var(--muted); text-decoration: line-through; text-decoration-color: var(--line); }
+.fu-ans { border: 1px solid var(--line); background: var(--surface); border-radius: 8px; font-size: 12px; padding: 3px 9px; cursor: pointer; color: var(--muted); white-space: nowrap; }
+.fu-ans:hover { color: var(--ink); background: var(--soft); }
+.fu-note { font-size: 12px; color: var(--muted); margin-top: 12px !important; }
+@media (max-width: 640px) {
+  .fu-list li { grid-template-columns: minmax(0, 1fr); }
+  .fu-ans { justify-self: start; margin-left: 26px; }
+}

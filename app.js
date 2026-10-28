@@ -12,6 +12,7 @@
   const FONT_LABEL = { arial: 'Arial', courier: 'Courier New', roboto: 'Roboto Mono' };
   const SIZES = [13, 14, 15, 16, 18];
   const TIMER_SECONDS = 45 * 60;
+  const TEMPLATE = 'Clarifying questions:\n- \n\nExamples and edge cases:\n- \n\nApproach:\nBrute force: \nBetter: \n\nComplexity:\nTime: \nSpace: \n\nCode:\n\n\nDry run:\n\n';
   const OWN_PATTERN = { id: 'own', tier: 0, name: 'Your own questions', signal: 'Questions you added that are not filed under a pattern yet.' };
 
   const svg = (body, extra) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ${extra || ''}>${body}</svg>`;
@@ -163,6 +164,22 @@
   const getSol = (id) => ls.get(solKey(id), null);
   const putSol = (id, rec) => ls.set(solKey(id), rec);
   const safeName = (id) => String(id).replace(/[^A-Za-z0-9_.-]/g, '_');
+  function noteOpened(id) {
+    const cur = getSol(id) || { t: '', u: 0, d: false };
+    cur.m = cur.m || {};
+    if (cur.m.opened) return;
+    cur.m.opened = Date.now();
+    putSol(id, cur);
+  }
+  function updateMeta(id, fn) {
+    const cur = getSol(id) || { t: '', u: 0, d: false };
+    cur.m = Object.assign({}, cur.m || {});
+    fn(cur.m);
+    cur.u = Date.now(); cur.d = true;
+    putSol(id, cur);
+    Sync.schedule('sol:' + id, () => Sync.syncSolution(id), 4000);
+    refreshDocState();
+  }
 
   // ------------------------------------------------------------------ GitHub client
   const GH = {
@@ -237,18 +254,34 @@
     remote.forEach((x) => { if (order.indexOf(x.id) < 0) order.push(x.id); });
     return order.map((id) => m[id]).filter(Boolean);
   }
+  // The first line of every solution file carries what the daily review needs besides the text:
+  // when you opened it, active typing time, what you revealed (and how much you had written by then),
+  // and which follow-ups you marked solved.
   function serializeSol(id, rec) {
     const q = qById(id);
+    const m = rec.m || {};
     const meta = { id: id, updated: rec.u, title: q ? q.title : id };
-    if (q && q.leetcode && q.leetcode.number) meta.leetcode = q.leetcode.number;
-    return '<!-- loop-drills ' + JSON.stringify(meta) + ' -->\n' + rec.t;
+    if (q) {
+      if (q.leetcode && q.leetcode.number) meta.leetcode = q.leetcode.number;
+      meta.pattern = q.pattern; meta.difficulty = q.difficulty;
+    }
+    if (m.opened) meta.opened = m.opened;
+    if (m.firstKey) meta.firstKeyAt = m.firstKey;
+    if (m.active) meta.activeSec = Math.round(m.active);
+    if (m.reveals && Object.keys(m.reveals).length) meta.reveals = m.reveals;
+    if (q && (q.followups || []).length) meta.followups = { total: q.followups.length, solved: (m.fu || []).slice().sort((a, b) => a - b) };
+    return '<!-- loop-drills ' + JSON.stringify(meta).replace(/-->/g, '-- >') + ' -->\n' + rec.t;
   }
   function parseSolFile(text) {
     const m = /^<!-- loop-drills (\{.*?\}) -->\r?\n?/.exec(text);
-    if (!m) return { t: text, u: 0 };
+    if (!m) return { t: text, u: 0, m: {} };
     const meta = safeJSON(m[1], {});
-    return { t: text.slice(m[0].length), u: Number(meta.updated) || 0 };
+    return {
+      t: text.slice(m[0].length), u: Number(meta.updated) || 0,
+      m: { opened: meta.opened || 0, firstKey: meta.firstKeyAt || 0, active: meta.activeSec || 0, reveals: meta.reveals || {}, fu: (meta.followups && meta.followups.solved) || [] },
+    };
   }
+  const hasSignals = (m) => !!(m && ((m.reveals && Object.keys(m.reveals).length) || (m.fu && m.fu.length)));
 
   const Sync = {
     state: 'local', msg: '', last: ls.get('lastSync', 0), inflight: 0, timers: {}, lastPull: 0,
@@ -332,13 +365,13 @@
           const remote = await GH.get(path);
           const r = remote ? parseSolFile(remote.text) : null;
           if (r && (!local || r.u > local.u)) {
-            putSol(id, { t: r.t, u: r.u, d: false });
+            putSol(id, { t: r.t, u: r.u, d: false, m: r.m });
             onSolutionPulled(id, r);
             return 'pulled';
           }
           if (!local || !local.d) return 'clean';
           const markClean = () => { const cur = getSol(id); if (cur && cur.u === local.u) { cur.d = false; putSol(id, cur); } };
-          if ((r && r.u === local.u && r.t === local.t) || (!r && !local.t)) { markClean(); return 'same'; }
+          if ((r && r.u === local.u && r.t === local.t) || (!r && !local.t && !hasSignals(local.m))) { markClean(); return 'same'; }
           try {
             const q = qById(id);
             await GH.put(path, serializeSol(id, local), remote && remote.sha, 'Solution: ' + (q ? q.title : id));
@@ -373,6 +406,7 @@
   function onSolutionPulled(id, r) {
     if (route.view !== 'q' || route.id !== id || !route.ctx || !route.ctx.editor) return;
     route.ctx.editor.load(r.t, true);
+    if (route.ctx.refreshFollowups) route.ctx.refreshFollowups();
   }
 
   // ------------------------------------------------------------------ theme
@@ -551,7 +585,7 @@
       placeholder: 'Start typing. Like a Google Doc in a real interview, there is no autocomplete, highlighting or auto-indent.\n\nClarifying questions, approach, complexity, then code.',
     });
     ta.value = rec ? rec.t : '';
-    let saveT = null, touched = false, tabOut = false;
+    let saveT = null, touched = false, tabOut = false, lastInput = 0, activeAdd = 0;
     const page = h('div', { class: 'doc-page' }, ta);
     const stateEl = h('span', { class: 'save-state' });
     const countEl = h('span');
@@ -573,8 +607,12 @@
       clearTimeout(saveT); saveT = null;
       const cur = getSol(q.id);
       if (cur && cur.t === ta.value) return;
-      putSol(q.id, { t: ta.value, u: Date.now(), d: true });
-      Sync.schedule('sol:' + q.id, () => Sync.syncSolution(q.id), 2500);
+      const m = Object.assign({}, (cur && cur.m) || {});
+      if (!m.opened) m.opened = Date.now();
+      if (!m.firstKey) m.firstKey = Date.now();
+      m.active = (m.active || 0) + activeAdd; activeAdd = 0;
+      putSol(q.id, { t: ta.value, u: Date.now(), d: true, m: m });
+      Sync.schedule('sol:' + q.id, () => Sync.syncSolution(q.id), 5000);
       refreshDocState();
     };
     const insert = (text) => {
@@ -588,6 +626,9 @@
     };
     ta.addEventListener('input', () => {
       touched = true;
+      const now = Date.now();
+      if (lastInput && now - lastInput < 60000) activeAdd += (now - lastInput) / 1000;
+      lastInput = now;
       fit(); counts();
       clearTimeout(saveT); saveT = setTimeout(persist, 300);
       if (Sync.enabled()) { stateEl.textContent = 'Editing'; stateEl.setAttribute('data-state', 'pending'); }
@@ -613,6 +654,9 @@
     const sizeSel = h('select', { 'aria-label': 'Font size', title: 'Font size', onchange: (e) => { S.ui.size = Number(e.target.value); saveUi(); applyFont(); } },
       SIZES.map((n) => h('option', { value: String(n), selected: Number(S.ui.size) === n, text: String(n) })));
     const copyBtn = h('button', { class: 'icon-btn', type: 'button', title: 'Copy everything to paste into LeetCode', onclick: async () => { toast((await copyText(ta.value)) ? 'Copied the whole doc' : 'Copy failed. Select the text and copy it manually.'); } }, icon('copy'), h('span', { class: 'lbl', text: 'Copy' }));
+    const templateBtn = h('button', { class: 'icon-btn', type: 'button', title: 'Insert the interview structure: clarify, examples, approach, complexity, code, dry run', onclick: () => {
+      insert(ta.value.trim() ? '\n' + TEMPLATE : TEMPLATE);
+    } }, icon('ruler'), h('span', { class: 'lbl', text: 'Template' }));
     const saveBtn = h('button', { class: 'icon-btn', type: 'button', title: 'Save to GitHub now', onclick: async () => {
       persist();
       if (!Sync.enabled()) { toast('Saved on this device. Set up sync in Settings to reach it from your phone.'); return; }
@@ -624,7 +668,7 @@
     const el = h('section', { class: 'doc', 'aria-label': 'Solution document' },
       h('div', { class: 'doc-bar' },
         h('div', { class: 'doc-name' }, h('span', { html: DOC_ICON }), h('div', { class: 'nm' }, h('b', { text: 'Solution · ' + q.title }), stateEl)),
-        h('div', { class: 'doc-tools' }, fontSel, sizeSel, copyBtn, saveBtn)),
+        h('div', { class: 'doc-tools' }, fontSel, sizeSel, templateBtn, copyBtn, saveBtn)),
       h('div', { class: 'doc-scroll' }, noticeEl, page),
       h('div', { class: 'doc-foot' }, countEl, h('span', { text: 'Tab indents · Esc then Tab leaves the doc' })));
     if (noticeEl) noticeEl.style.cssText = 'max-width:816px;margin:0 auto 12px';
@@ -648,6 +692,15 @@
       el, refresh,
       fit: () => requestAnimationFrame(fit),
       flush: () => { persist(); },
+      length: () => ta.value.length,
+      appendSection(text) {
+        persist();
+        const v = ta.value;
+        ta.focus();
+        ta.setSelectionRange(v.length, v.length);
+        insert((v.trim() ? (v.endsWith('\n\n') ? '' : v.endsWith('\n') ? '\n' : '\n\n') : '') + text + '\n');
+        fit();
+      },
       load(text, fromRemote) {
         if (ta.value === text) return;
         const focused = document.activeElement === ta;
@@ -692,12 +745,44 @@
     const editor = Editor(q);
 
     const lc = q.leetcode && q.leetcode.url ? q.leetcode : null;
+    noteOpened(q.id);
+    const fuSolved = () => new Set(((getSol(q.id) || {}).m || {}).fu || []);
+    const fuSub = () => { const n = (q.followups || []).length; return n ? fuSolved().size + ' of ' + n + ' solved' : ''; };
+    const fuList = h('ul', { class: 'fu-list' }, (q.followups || []).map((c, i) => {
+      const cid = 'fu-' + safeName(q.id) + '-' + i;
+      return h('li', null,
+        h('label', { class: 'fu-check', for: cid },
+          h('input', { type: 'checkbox', id: cid, checked: fuSolved().has(i), onchange: (e) => {
+            editor.flush();
+            const on = e.target.checked;
+            updateMeta(q.id, (m) => { const st = new Set(m.fu || []); if (on) st.add(i); else st.delete(i); m.fu = Array.from(st).sort((a, b) => a - b); });
+            const sub = reveals.querySelector('.rv-fu .rv-sub'); if (sub) sub.textContent = fuSub();
+            if (on && !new RegExp('Follow-up ' + (i + 1) + '\\b', 'i').test((getSol(q.id) || {}).t || '')) toast('Marked solved. Use "Answer in doc" so the review can see your answer.');
+          } }),
+          h('span', { text: c })),
+        h('button', { class: 'fu-ans', type: 'button', title: 'Adds a "Follow-up ' + (i + 1) + '" section at the end of your doc', onclick: () => editor.appendSection('Follow-up ' + (i + 1) + ': ' + c) }, 'Answer in doc'));
+    }));
     const reveals = h('div', { class: 'reveals' },
       reveal('rv-cons', 'ruler', 'Constraints', 'LeetCode', q.constraints && q.constraints.length ? h('ul', null, q.constraints.map((c) => h('li', { text: c }))) : h('p', { text: 'No constraints recorded for this one.' })),
-      reveal('rv-fu', 'chat', 'Follow-ups the interviewer might ask', (q.followups || []).length ? String(q.followups.length) : '', (q.followups || []).length ? h('ul', null, q.followups.map((c) => h('li', { text: c }))) : h('p', { text: 'No follow-ups recorded yet.' })),
+      reveal('rv-fu', 'chat', 'Follow-ups the interviewer might ask', fuSub(), (q.followups || []).length ? [fuList, h('p', { class: 'fu-note', text: 'Tick one once you have answered it in the doc. The daily review only counts ticked follow-ups that have a written answer.' })] : h('p', { text: 'No follow-ups recorded yet.' })),
       reveal('rv-hint', 'bulb', 'One hint', 'Not the full idea', h('p', { text: q.hint || 'No hint recorded for this one.' })),
       lc ? reveal('rv-lc', 'code', 'Which LeetCode problem is this?', 'Spoiler', h('div', { class: 'lc-name' }, lc.number ? h('b', { text: '#' + lc.number }) : null, h('span', { text: lc.title || lc.url }), h('a', { href: lc.url, target: '_blank', rel: 'noopener', text: 'Open' }))) : null,
       blind ? reveal('rv-pat', 'eye', 'Pattern and difficulty', 'Hidden in blind mode', h('p', null, h('b', { text: p.name }), ' · ' + q.difficulty)) : null);
+    // Record the first time each hidden panel is opened, and how much was already written,
+    // so the review can tell "peeked before trying" from "checked after a full attempt".
+    const REVEAL_KEYS = { 'rv-cons': 'constraints', 'rv-fu': 'followups', 'rv-hint': 'hint', 'rv-lc': 'leetcode', 'rv-pat': 'pattern' };
+    reveals.querySelectorAll('details.rv').forEach((d) => {
+      const key = Object.keys(REVEAL_KEYS).find((c) => d.classList.contains(c));
+      if (!key) return;
+      d.addEventListener('toggle', () => {
+        if (!d.open) return;
+        const k = REVEAL_KEYS[key];
+        const seen = (((getSol(q.id) || {}).m || {}).reveals || {})[k];
+        if (seen) return;
+        editor.flush();
+        updateMeta(q.id, (m) => { m.reveals = Object.assign({}, m.reveals || {}); m.reveals[k] = { at: Date.now(), chars: editor.length() }; });
+      });
+    });
 
     const prompt = h('section', { class: 'card prompt', 'aria-label': 'Problem' },
       h('div', { class: 'crumbs' },
@@ -725,6 +810,11 @@
     route.ctx = {
       editor,
       refreshStatus: drawStatus,
+      refreshFollowups: () => {
+        const st = fuSolved();
+        fuList.querySelectorAll('input[type="checkbox"]').forEach((box, i) => { box.checked = st.has(i); });
+        const sub = reveals.querySelector('.rv-fu .rv-sub'); if (sub) sub.textContent = fuSub();
+      },
       cleanup: () => { timer.stop(); editor.flush(); if (Sync.enabled() && Sync.timers['sol:' + q.id]) { Sync.flushKey('sol:' + q.id); Sync.syncSolution(q.id); } },
     };
     if (Sync.enabled()) Sync.syncSolution(q.id);
