@@ -35,7 +35,7 @@
     code: svg('<path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/>'),
     eye: svg('<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>'),
     copy: svg('<rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/>'),
-    cloud: svg('<path d="M17.5 19a4.5 4.5 0 1 0-1.4-8.8A6 6 0 1 0 6 17.7"/><path d="M12 13v8M9 18l3 3 3-3"/>'),
+    cloud: svg('<path d="M7 19h10a4.5 4.5 0 0 0 .6-8.96A6 6 0 0 0 6.2 9.2 5 5 0 0 0 7 19z"/><path d="m9.2 14 2 2 3.6-3.6"/>'),
     pencil: svg('<path d="M12 20h9M16.5 3.5a2.1 2.1 0 1 1 3 3L7 19l-4 1 1-4z"/>'),
     trash: svg('<path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/>'),
     download: svg('<path d="M12 3v12M7 10l5 5 5-5M5 21h14"/>'),
