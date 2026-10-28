@@ -1,0 +1,2871 @@
+{
+ "version": 1,
+ "updated": "2026-10-29",
+ "tiers": [
+  {
+   "id": 1,
+   "label": "Start now",
+   "heading": "New ground",
+   "blurb": "Not graph or DP, and no overlap with the Google problems you just finished. Highest return for the least repetition."
+  },
+  {
+   "id": 2,
+   "label": "Next",
+   "heading": "Echoes a Google problem you did",
+   "blurb": "Each pattern here mirrors something from your Google list, so it is still warm. Pick these up once Start now is moving."
+  },
+  {
+   "id": 3,
+   "label": "Later",
+   "heading": "Graph and DP, fresh memory",
+   "blurb": "You just studied these. The last four mirror your Google problems directly, so they sit at the very end."
+  }
+ ],
+ "patterns": [
+  {
+   "id": "mono",
+   "tier": 1,
+   "name": "Monotonic stack / deque",
+   "signal": "Next greater or smaller, window maximum, who can see whom. Keep a stack or deque ordered and pop when the order breaks."
+  },
+  {
+   "id": "bsa",
+   "tier": 1,
+   "name": "Binary search on the answer",
+   "signal": "\"Smallest X that works\" or \"largest X that still works\". Write check(x), then search over x."
+  },
+  {
+   "id": "xor",
+   "tier": 1,
+   "name": "XOR trie / prefix XOR",
+   "signal": "Best or counted XOR between pairs, XOR over ranges. Walk a bit trie from the top bit; prefix XORs cancel."
+  },
+  {
+   "id": "rand",
+   "tier": 1,
+   "name": "Randomized & reservoir sampling",
+   "signal": "Uniform or weighted picks, unknown lengths, rejection sampling, O(1) random structures."
+  },
+  {
+   "id": "tree",
+   "tier": 1,
+   "name": "Rerooting / LCA / binary lifting",
+   "signal": "An answer for every node as root, paths between two nodes, k-th ancestor queries."
+  },
+  {
+   "id": "heap",
+   "tier": 2,
+   "name": "Heaps & lazy deletion",
+   "mirror": "AdService, remove node then max edge",
+   "signal": "Scheduling simulations, running medians, removing an arbitrary element from a heap."
+  },
+  {
+   "id": "prefix",
+   "tier": 2,
+   "name": "Prefix sums + hash map",
+   "mirror": "Alice and Bob string split, remove one then equal split",
+   "signal": "Subarray totals, remainders, parity masks. Store the first index or the count of each prefix state."
+  },
+  {
+   "id": "sweep",
+   "tier": 2,
+   "name": "Sweep line / difference array",
+   "mirror": "Merged schedule from a roster",
+   "signal": "Overlaps, schedules, skylines, how many intervals cover a point."
+  },
+  {
+   "id": "kadane",
+   "tier": 2,
+   "name": "Kadane variants",
+   "mirror": "First + last minus middle subarray",
+   "signal": "Best subarray with a twist: circular, one deletion, scores split across two ends."
+  },
+  {
+   "id": "design",
+   "tier": 2,
+   "name": "Design problems",
+   "mirror": "AdService (InsertAd / GetAd)",
+   "signal": "A class with several operations, each needing its own fast path."
+  },
+  {
+   "id": "topo",
+   "tier": 3,
+   "name": "Topological sort",
+   "signal": "Dependencies, valid orderings, DP along a DAG, cycle detection."
+  },
+  {
+   "id": "dsu",
+   "tier": 3,
+   "name": "Union-find (offline & reverse)",
+   "signal": "Connectivity under merges. Run deletions backwards, or sort the queries so the graph only grows."
+  },
+  {
+   "id": "state",
+   "tier": 3,
+   "name": "State-space graph search",
+   "signal": "An extra rule (k uses, keys held, last colour) means a node becomes (place, state)."
+  },
+  {
+   "id": "bitmask",
+   "tier": 3,
+   "name": "Bitmask DP",
+   "signal": "A small set of items. DP over subsets of what is done, visited or covered."
+  },
+  {
+   "id": "game",
+   "tier": 3,
+   "name": "Game theory DP",
+   "signal": "Two optimal players. Track the score difference or win/lose states, sometimes solved backwards."
+  },
+  {
+   "id": "msbfs",
+   "tier": 3,
+   "name": "Multi-source BFS",
+   "mirror": "Rat's Safest Path, multiple cats follow-up",
+   "signal": "Distance to the nearest of many sources. Spread from all of them at once."
+  },
+  {
+   "id": "treedp",
+   "tier": 3,
+   "name": "Tree DP with a choice",
+   "mirror": "Minimum cost to remove all leaf nodes",
+   "signal": "Take, skip or cut at each node. Return more than one value per subtree."
+  },
+  {
+   "id": "bott",
+   "tier": 3,
+   "name": "Bottleneck / minimax path",
+   "mirror": "Rat's Safest Path, Minimum Security Level",
+   "signal": "A path is only as good as its worst edge or cell, not the sum."
+  },
+  {
+   "id": "mult",
+   "tier": 3,
+   "name": "Multiplicative edges & Dijkstra variants",
+   "mirror": "Multiplicative edge graph (your practice list)",
+   "signal": "Products and ratios along paths, counting shortest paths, second-best paths, deadlines."
+  }
+ ],
+ "questions": [
+  {
+   "id": "lc907",
+   "pattern": "mono",
+   "difficulty": "Medium",
+   "title": "Bandwidth health score",
+   "story": [
+    "Our network team logs the available bandwidth of a link once per second. For any continuous time window, the usable throughput of that window is limited by its worst second, the lowest reading inside it.",
+    "Leadership wants one health number for the day: add up the worst-second reading of every possible continuous window (every start second, and every end second at or after it). The total gets very large, so report it modulo 1,000,000,007.",
+    "Write a function that takes the day's readings in order and returns that number."
+   ],
+   "constraints": [
+    "1 ≤ arr.length ≤ 3 * 10⁴",
+    "1 ≤ arr[i] ≤ 3 * 10⁴"
+   ],
+   "followups": [
+    "Now do the same with the best second (maximum) of every window. What changes?",
+    "Readings can repeat. How do you make sure a window whose minimum appears twice is counted exactly once?",
+    "Return the sum of (max - min) over every window."
+   ],
+   "hint": "Stop iterating over windows. Ask how many windows each individual reading is responsible for.",
+   "leetcode": {
+    "number": 907,
+    "title": "Sum of Subarray Minimums",
+    "url": "https://leetcode.com/problems/sum-of-subarray-minimums/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc901",
+   "pattern": "mono",
+   "difficulty": "Medium",
+   "title": "Live price streak",
+   "story": [
+    "You are building a widget for a finance app. Closing prices for one stock arrive one day at a time. After each new price, the widget shows a streak: counting back from today, how many consecutive days (including today) closed at a price less than or equal to today's.",
+    "Design a class with a method that receives the next day's price and immediately returns today's streak. Prices arrive strictly in order and you cannot look ahead."
+   ],
+   "constraints": [
+    "1 ≤ price ≤ 10⁵",
+    "At most 10⁴ calls will be made to next."
+   ],
+   "followups": [
+    "What is the amortized cost per call, and why?",
+    "Change the streak to strictly lower prices only.",
+    "One stream now carries many tickers interleaved as (ticker, price). Adapt the design."
+   ],
+   "hint": "Once a day has been covered by a higher or equal price, it can never be the boundary of any future streak.",
+   "leetcode": {
+    "number": 901,
+    "title": "Online Stock Span",
+    "url": "https://leetcode.com/problems/online-stock-span/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc962",
+   "pattern": "mono",
+   "difficulty": "Medium",
+   "title": "Longest climb badge",
+   "story": [
+    "A hiking app records the elevation at each GPS sample along a trail. Marketing wants a \"longest climb\" badge: the largest gap, in sample positions, between an earlier sample and a later sample that is at least as high as the earlier one. The samples in between can do anything.",
+    "Write a function that takes the elevation samples in order and returns that largest gap (later position minus earlier position). If no later sample is ever at least as high as an earlier one, return 0."
+   ],
+   "constraints": [
+    "2 ≤ nums.length ≤ 5 * 10⁴",
+    "0 ≤ nums[i] ≤ 5 * 10⁴"
+   ],
+   "followups": [
+    "Return the pair of positions too.",
+    "What if the later sample must be strictly higher?",
+    "Compare a sort-based solution with a stack-based one. What does each cost?"
+   ],
+   "hint": "Most samples can never be a useful starting point. A sample is only worth keeping as a start if it is lower than every start before it.",
+   "leetcode": {
+    "number": 962,
+    "title": "Maximum Width Ramp",
+    "url": "https://leetcode.com/problems/maximum-width-ramp/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc239",
+   "pattern": "mono",
+   "difficulty": "Hard",
+   "title": "Rolling peak load",
+   "story": [
+    "An SRE dashboard receives the per-second request count for a service as a list. The on-call view shows a rolling peak: for every window of k consecutive seconds, the highest request count inside it, as the window slides one second at a time from the start of the list to the end.",
+    "Write a function that takes the counts and k and returns the rolling peaks, one per window position, in order."
+   ],
+   "constraints": [
+    "1 ≤ nums.length ≤ 10⁵",
+    "10⁴ ≤ nums[i] ≤ 10⁴",
+    "1 ≤ k ≤ nums.length"
+   ],
+   "followups": [
+    "The counts now arrive as a live stream. Emit each peak as soon as its window is complete, using O(k) memory.",
+    "Return the rolling minimum and rolling maximum together.",
+    "Queries now ask for the maximum of arbitrary ranges, not fixed-size windows. What would you build?"
+   ],
+   "hint": "When a new second arrives that beats some older seconds, those older seconds can never be a peak again for any later window.",
+   "leetcode": {
+    "number": 239,
+    "title": "Sliding Window Maximum",
+    "url": "https://leetcode.com/problems/sliding-window-maximum/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc1944",
+   "pattern": "mono",
+   "difficulty": "Hard",
+   "title": "Who can you see at the parade?",
+   "story": [
+    "People stand in a single line facing right to watch a parade, and everyone has a different height. A person can see someone further to their right if everybody standing between the two of them is shorter than both of them. Neighbours can always see each other.",
+    "For every person, count how many people to their right they can see. Write a function that takes the heights from left to right and returns those counts in the same order."
+   ],
+   "constraints": [
+    "n == heights.length",
+    "1 ≤ n ≤ 10⁵",
+    "1 ≤ heights[i] ≤ 10⁵",
+    "All the values of heights are unique."
+   ],
+   "followups": [
+    "Also count how many people each person can see to their left.",
+    "Heights are no longer unique. What breaks, and how do you fix it?",
+    "Return the total number of pairs who can see each other."
+   ],
+   "hint": "Walk from the right end. Think about whom a person hides from everyone standing to their left.",
+   "leetcode": {
+    "number": 1944,
+    "title": "Number of Visible People in a Queue",
+    "url": "https://leetcode.com/problems/number-of-visible-people-in-a-queue/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc1011",
+   "pattern": "bsa",
+   "difficulty": "Medium",
+   "title": "Sizing the daily truck",
+   "story": [
+    "A warehouse has a queue of parcels with known weights, and they must leave in exactly the order they are queued. Each day one truck takes parcels from the front of the queue, as many as it can without going over its weight limit, and leaves. Whatever is left waits for the next day.",
+    "Every parcel has to be gone within D days, and we want to rent the smallest truck that makes it. Write a function that takes the parcel weights in queue order and D, and returns the smallest weight limit that gets everything shipped in time."
+   ],
+   "constraints": [
+    "1 ≤ days ≤ weights.length ≤ 5 * 10⁴",
+    "1 ≤ weights[i] ≤ 500"
+   ],
+   "followups": [
+    "Parcels can now be loaded in any order. Does the problem get easier or harder?",
+    "Return the actual day-by-day split.",
+    "What are the lower and upper ends of your search, and why are they correct?"
+   ],
+   "hint": "Checking whether one particular weight limit works is easy and greedy. Notice what happens to that check as the limit grows.",
+   "leetcode": {
+    "number": 1011,
+    "title": "Capacity To Ship Packages Within D Days",
+    "url": "https://leetcode.com/problems/capacity-to-ship-packages-within-d-days/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc1552",
+   "pattern": "bsa",
+   "difficulty": "Medium",
+   "title": "Spacing out the cell towers",
+   "story": [
+    "A telecom company owns candidate sites along a straight highway, each at a different distance from the city. It must put up exactly m towers, at most one per site, and towers interfere when they are close to each other.",
+    "Choose the sites so that the smallest distance between any two towers is as large as possible, and return that smallest distance. Write a function that takes the site positions (in no particular order) and m."
+   ],
+   "constraints": [
+    "n == position.length",
+    "2 ≤ n ≤ 10⁵",
+    "1 ≤ position[i] ≤ 10⁹",
+    "All integers in position are distinct.",
+    "2 ≤ m ≤ position.length"
+   ],
+   "followups": [
+    "Return which sites to use.",
+    "The highway is now a ring road.",
+    "Each site has a rental cost. Maximize the spacing within a budget."
+   ],
+   "hint": "Fix a minimum spacing and ask whether m towers can be placed with it.",
+   "leetcode": {
+    "number": 1552,
+    "title": "Magnetic Force Between Two Balls",
+    "url": "https://leetcode.com/problems/magnetic-force-between-two-balls/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc1482",
+   "pattern": "bsa",
+   "difficulty": "Medium",
+   "title": "Earliest wedding order",
+   "story": [
+    "A florist grows a single row of flowers. Each flower blooms on a known day and stays usable from then on. A bouquet needs k flowers that stand next to each other in the row, all already bloomed, and each flower can go into at most one bouquet.",
+    "A customer needs m bouquets. Write a function that takes the bloom day of each flower in row order, m and k, and returns the earliest day on which the florist can cut m bouquets, or -1 if it can never be done."
+   ],
+   "constraints": [
+    "bloomDay.length == n",
+    "1 ≤ n ≤ 10⁵",
+    "1 ≤ bloomDay[i] ≤ 10⁹",
+    "1 ≤ m ≤ 10⁶",
+    "1 ≤ k ≤ n"
+   ],
+   "followups": [
+    "The k flowers in a bouquet no longer have to be adjacent.",
+    "Answer many (m, k) requests for the same row.",
+    "Bloom days are huge numbers. Does your approach care?"
+   ],
+   "hint": "Checking a single day is one left-to-right scan, and if some day works then every later day works too.",
+   "leetcode": {
+    "number": 1482,
+    "title": "Minimum Number of Days to Make m Bouquets",
+    "url": "https://leetcode.com/problems/minimum-number-of-days-to-make-m-bouquets/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc410",
+   "pattern": "bsa",
+   "difficulty": "Hard",
+   "title": "Splitting the video render",
+   "story": [
+    "A render farm has to process a long video as a sequence of scenes, each with a known render cost. You hand the video to k machines. Each machine gets one continuous run of scenes (no reordering, no gaps) and every machine gets at least one scene. The job finishes when the busiest machine finishes.",
+    "Write a function that takes the scene costs in order and k and returns the smallest possible load on the busiest machine."
+   ],
+   "constraints": [
+    "1 ≤ nums.length ≤ 1000",
+    "0 ≤ nums[i] ≤ 10⁶",
+    "1 ≤ k ≤ min(50, nums.length)"
+   ],
+   "followups": [
+    "Also return where to cut.",
+    "Solve it with DP and compare with your first approach.",
+    "Some scenes cost zero. Does anything change?"
+   ],
+   "hint": "Don't search over where to cut. Search over the answer.",
+   "leetcode": {
+    "number": 410,
+    "title": "Split Array Largest Sum",
+    "url": "https://leetcode.com/problems/split-array-largest-sum/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc2141",
+   "pattern": "bsa",
+   "difficulty": "Hard",
+   "title": "Keeping the lab rigs alive",
+   "story": [
+    "A research lab has n test rigs that must all run at the same time, and a pile of batteries, each good for a known number of minutes. A rig holds one battery at a time. At any whole minute you may swap batteries between rigs as often as you like, swaps are instant, and batteries cannot be recharged.",
+    "Write a function that takes n and the battery lifetimes and returns the longest time all n rigs can stay on together."
+   ],
+   "constraints": [
+    "1 ≤ n ≤ batteries.length ≤ 10⁵",
+    "1 ≤ batteries[i] ≤ 10⁹"
+   ],
+   "followups": [
+    "Return a swap schedule, not just the time.",
+    "Every swap now costs one minute of downtime for that rig.",
+    "Is there a greedy answer that avoids binary search entirely?"
+   ],
+   "hint": "For a target time T, think about how much any single battery can really contribute.",
+   "leetcode": {
+    "number": 2141,
+    "title": "Maximum Running Time of N Computers",
+    "url": "https://leetcode.com/problems/maximum-running-time-of-n-computers/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc421",
+   "pattern": "xor",
+   "difficulty": "Medium",
+   "title": "Most different fingerprints",
+   "story": [
+    "Every file in a storage system has a 31-bit fingerprint stored as a non-negative integer. To stress-test deduplication, we want the pair of files whose fingerprints differ the most, where the difference is measured as the bitwise XOR of the two values.",
+    "Write a function that takes all the fingerprints and returns the largest XOR you can get from any pair. Pairing a file with itself is allowed and gives 0."
+   ],
+   "constraints": [
+    "1 ≤ nums.length ≤ 2 * 10⁵",
+    "0 ≤ nums[i] ≤ 2³¹ - 1"
+   ],
+   "followups": [
+    "Return the pair of files as well.",
+    "Fingerprints arrive one by one. Report the best XOR so far after each arrival.",
+    "Fingerprints become 64 bits. What changes?"
+   ],
+   "hint": "Build the answer from the highest bit down and ask, at each bit, whether a 1 is still achievable.",
+   "leetcode": {
+    "number": 421,
+    "title": "Maximum XOR of Two Numbers in an Array",
+    "url": "https://leetcode.com/problems/maximum-xor-of-two-numbers-in-an-array/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc1442",
+   "pattern": "xor",
+   "difficulty": "Medium",
+   "title": "Balanced checksum splits",
+   "story": [
+    "A packet is a sequence of integer values, and our checksum for any continuous chunk is the XOR of all values in it.",
+    "Count the ways to pick a continuous chunk and cut it into two non-empty consecutive parts so that both parts have the same checksum. Two ways are different if the chunk or the cut position differs. Write a function that takes the values and returns that count."
+   ],
+   "constraints": [
+    "1 ≤ arr.length ≤ 300",
+    "1 ≤ arr[i] ≤ 10⁸"
+   ],
+   "followups": [
+    "Do it in linear time.",
+    "Count ways to cut a chunk into three parts with equal checksums.",
+    "The values arrive as a stream. Keep the count up to date."
+   ],
+   "hint": "Two parts with equal XOR says something very specific about the XOR of the whole chunk.",
+   "leetcode": {
+    "number": 1442,
+    "title": "Count Triplets That Can Form Two Arrays of Equal XOR",
+    "url": "https://leetcode.com/problems/count-triplets-that-can-form-two-arrays-of-equal-xor/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc1738",
+   "pattern": "xor",
+   "difficulty": "Medium",
+   "title": "K-th brightest tile code",
+   "story": [
+    "A satellite image is stored as a grid of non-negative pixel codes. Each pixel gets a tile code: the XOR of every pixel in the rectangle from the top-left corner of the image down to that pixel, inclusive.",
+    "Write a function that takes the grid and k and returns the k-th largest tile code among all pixels, where k = 1 means the largest."
+   ],
+   "constraints": [
+    "m == matrix.length",
+    "n == matrix[i].length",
+    "1 ≤ m, n ≤ 1000",
+    "0 ≤ matrix[i][j] ≤ 10⁶",
+    "1 ≤ k ≤ m * n"
+   ],
+   "followups": [
+    "Answer many different k values for the same image.",
+    "Pixels are updated one at a time between queries.",
+    "Can you avoid sorting every tile code?"
+   ],
+   "hint": "Each tile code can be built from three neighbouring tile codes and one pixel.",
+   "leetcode": {
+    "number": 1738,
+    "title": "Find Kth Largest XOR Coordinate Value",
+    "url": "https://leetcode.com/problems/find-kth-largest-xor-coordinate-value/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc1707",
+   "pattern": "xor",
+   "difficulty": "Hard",
+   "title": "Capped access codes",
+   "story": [
+    "We hold a list of non-negative access codes. Support sends a batch of questions. Each question has a probe value x and a cap m: looking only at codes that are at most m, what is the largest XOR you can get between x and one of those codes? If no code is within the cap, the answer is -1.",
+    "Write a function that takes the codes and the questions and returns one answer per question, in the original question order."
+   ],
+   "constraints": [
+    "1 ≤ nums.length, queries.length ≤ 10⁵",
+    "queries[i].length == 2",
+    "0 ≤ nums[j], xi, mi ≤ 10⁹"
+   ],
+   "followups": [
+    "Questions now arrive online, so you cannot reorder them.",
+    "Codes can also be deleted between questions.",
+    "What memory does your structure use, and can you bound it?"
+   ],
+   "hint": "If you are allowed to answer the questions in a different order than they were asked, the cap becomes much easier to respect.",
+   "leetcode": {
+    "number": 1707,
+    "title": "Maximum XOR With an Element From Array",
+    "url": "https://leetcode.com/problems/maximum-xor-with-an-element-from-array/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc1803",
+   "pattern": "xor",
+   "difficulty": "Hard",
+   "title": "Not-too-similar user pairs",
+   "story": [
+    "Each user in a recommendation system has an integer feature ID. Two different users are a \"nice match\" when the XOR of their IDs falls inside a band [low, high], both ends included.",
+    "Write a function that takes the IDs, low and high, and returns how many unordered pairs of different users are nice matches."
+   ],
+   "constraints": [
+    "1 ≤ nums.length ≤ 2 * 10⁴",
+    "1 ≤ nums[i] ≤ 2 * 10⁴",
+    "1 ≤ low ≤ high ≤ 2 * 10⁴"
+   ],
+   "followups": [
+    "Answer many (low, high) bands for the same users.",
+    "IDs arrive in a stream. Keep a running count.",
+    "Count pairs whose XOR is exactly a given value."
+   ],
+   "hint": "Counting pairs below a threshold is easier than counting inside a band.",
+   "leetcode": {
+    "number": 1803,
+    "title": "Count Pairs With XOR in a Range",
+    "url": "https://leetcode.com/problems/count-pairs-with-xor-in-a-range/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc382",
+   "pattern": "rand",
+   "difficulty": "Medium",
+   "title": "Sampling a log you read once",
+   "story": [
+    "A service writes its log as a singly linked chain of records, and you are handed the head of the chain. Build a sampler with a method that returns the value of one record chosen uniformly at random, every record equally likely. The method will be called many times.",
+    "Assume you do not know how long the chain is."
+   ],
+   "constraints": [
+    "The number of nodes in the linked list will be in the range [1, 10⁴].",
+    "10⁴ ≤ Node.val ≤ 10⁴",
+    "At most 10⁴ calls will be made to getRandom."
+   ],
+   "followups": [
+    "The chain is far too large to copy into memory. Use O(1) extra space.",
+    "Pick k distinct records uniformly instead of one.",
+    "Prove that every record is returned with probability 1/n."
+   ],
+   "hint": "Walk the chain once per call and decide at each record whether it replaces your current pick.",
+   "leetcode": {
+    "number": 382,
+    "title": "Linked List Random Node",
+    "url": "https://leetcode.com/problems/linked-list-random-node/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc528",
+   "pattern": "rand",
+   "difficulty": "Medium",
+   "title": "Weighted traffic split",
+   "story": [
+    "An experiment platform splits incoming users across variants. Each variant has a positive integer weight, and a variant should receive users in proportion to its weight.",
+    "Build a class that is initialized with the weights and has a method that returns the index of the variant for the next user."
+   ],
+   "constraints": [
+    "1 ≤ w.length ≤ 10⁴",
+    "1 ≤ w[i] ≤ 10⁵",
+    "pickIndex will be called at most 10⁴ times."
+   ],
+   "followups": [
+    "Weights change frequently between picks.",
+    "Make each pick O(1) after preprocessing.",
+    "How would you test that the split is actually correct?"
+   ],
+   "hint": "Lay the weights end to end on a number line.",
+   "leetcode": {
+    "number": 528,
+    "title": "Random Pick with Weight",
+    "url": "https://leetcode.com/problems/random-pick-with-weight/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc470",
+   "pattern": "rand",
+   "difficulty": "Medium",
+   "title": "A ten-sided die from a seven-sided one",
+   "story": [
+    "Our hardware random source exposes a single function, rand7(), which returns an integer from 1 to 7 uniformly at random.",
+    "Write rand10(), which returns an integer from 1 to 10 uniformly at random, using only rand7(). No other source of randomness is allowed."
+   ],
+   "constraints": [
+    "1 ≤ n ≤ 10⁵"
+   ],
+   "followups": [
+    "What is the expected number of rand7() calls per rand10()?",
+    "Reduce that expected number.",
+    "Generalize to randN() from randM()."
+   ],
+   "hint": "Two calls together give you more than ten equally likely outcomes.",
+   "leetcode": {
+    "number": 470,
+    "title": "Implement Rand10() Using Rand7()",
+    "url": "https://leetcode.com/problems/implement-rand10-using-rand7/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc710",
+   "pattern": "rand",
+   "difficulty": "Hard",
+   "title": "Handing out free ports",
+   "story": [
+    "A service hands out port numbers from 0 to n - 1, chosen uniformly at random. Some ports are reserved and must never be handed out, and the reserved list is fixed. n can be very large compared to the reserved list.",
+    "Build a class that is initialized with n and the reserved ports, with a method that returns a random allowed port, every allowed port equally likely. Keep calls to the language's random function to a minimum."
+   ],
+   "constraints": [
+    "1 ≤ n ≤ 10⁹",
+    "0 ≤ blacklist.length ≤ min(10⁵, n - 1)",
+    "0 ≤ blacklist[i] < n",
+    "All the values of blacklist are unique.",
+    "At most 2 * 10⁴ calls will be made to pick."
+   ],
+   "followups": [
+    "The reserved list now changes at runtime.",
+    "Return k distinct allowed ports.",
+    "Can your memory depend only on the size of the reserved list?"
+   ],
+   "hint": "You know exactly how many allowed ports there are. Pick in that smaller range, then repair the few picks that land on reserved ports.",
+   "leetcode": {
+    "number": 710,
+    "title": "Random Pick with Blacklist",
+    "url": "https://leetcode.com/problems/random-pick-with-blacklist/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc381",
+   "pattern": "rand",
+   "difficulty": "Hard",
+   "title": "Raffle box with repeat tickets",
+   "story": [
+    "Build a raffle box. People can drop in a ticket with a number on it (the same number can be dropped in many times), remove one ticket with a given number, and draw a random ticket without removing it. Each ticket in the box is equally likely to be drawn, so a number that appears three times is three times as likely.",
+    "Implement insert(val), returning true if val was not in the box before; remove(val), returning true if a ticket with val was there and one was removed; and getRandom(), returning a drawn number. Every operation should be O(1) on average."
+   ],
+   "constraints": [
+    "2³¹ ≤ val ≤ 2³¹ - 1",
+    "At most 2 * 10⁵ calls in total will be made to insert, remove, and getRandom.",
+    "There will be at least one element in the data structure when getRandom is called."
+   ],
+   "followups": [
+    "Add removeAll(val).",
+    "getRandom should now return each distinct number with equal probability.",
+    "Make the structure safe for concurrent use."
+   ],
+   "hint": "An array gives you O(1) random access. The hard part is deleting from its middle.",
+   "leetcode": {
+    "number": 381,
+    "title": "Insert Delete GetRandom O(1) - Duplicates allowed",
+    "url": "https://leetcode.com/problems/insert-delete-getrandom-o1-duplicates-allowed/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc2096",
+   "pattern": "tree",
+   "difficulty": "Medium",
+   "title": "Directions inside the org chart",
+   "story": [
+    "A company's reporting structure is a binary tree: each employee has at most a left report and a right report, and every employee has a unique badge number. A navigation tool must give directions from one employee to another using three moves: L (go to your left report), R (go to your right report) and U (go up to your manager).",
+    "Write a function that takes the root and the two badge numbers and returns the shortest sequence of moves as a string."
+   ],
+   "constraints": [
+    "The number of nodes in the tree is n.",
+    "2 ≤ n ≤ 10⁵",
+    "1 ≤ Node.val ≤ n",
+    "All the values in the tree are unique.",
+    "1 ≤ startValue, destValue ≤ n",
+    "startValue ≠ destValue"
+   ],
+   "followups": [
+    "Answer many direction requests on the same tree.",
+    "The tree is no longer binary.",
+    "Only the number of moves is needed, for a very large number of queries."
+   ],
+   "hint": "The shortest route always passes through one particular person.",
+   "leetcode": {
+    "number": 2096,
+    "title": "Step-By-Step Directions From a Binary Tree Node to Another",
+    "url": "https://leetcode.com/problems/step-by-step-directions-from-a-binary-tree-node-to-another/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc310",
+   "pattern": "tree",
+   "difficulty": "Medium",
+   "title": "Where to put the main server",
+   "story": [
+    "A company network has n machines connected by cables so that there is exactly one route between any two machines. You will pick one machine to host the main server. Its worst-case latency is the largest number of hops from it to any other machine.",
+    "Write a function that takes n and the list of cables and returns every machine that minimizes that worst case, in any order."
+   ],
+   "constraints": [
+    "1 ≤ n ≤ 2 * 10⁴",
+    "edges.length == n - 1",
+    "0 ≤ ai, bi < n",
+    "ai ≠ bi",
+    "All the pairs (ai, bi) are distinct.",
+    "The given input is guaranteed to be a tree and there will be no repeated edges."
+   ],
+   "followups": [
+    "At most how many machines can be in the answer, and why?",
+    "Cables now have different latencies.",
+    "One extra cable is added, creating a single cycle."
+   ],
+   "hint": "Machines at the edge of the network are never good choices. What happens if you keep removing them?",
+   "leetcode": {
+    "number": 310,
+    "title": "Minimum Height Trees",
+    "url": "https://leetcode.com/problems/minimum-height-trees/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc863",
+   "pattern": "tree",
+   "difficulty": "Medium",
+   "title": "Everyone k steps away",
+   "story": [
+    "A family tree is stored as a binary tree where each person has a unique ID. Given one person and a number k, we want everyone exactly k relationship steps away from them, where one step goes from a parent to a child or from a child to a parent.",
+    "Write a function that takes the root, the target person's ID and k, and returns the IDs of everyone at that distance, in any order."
+   ],
+   "constraints": [
+    "The number of nodes in the tree is in the range [1, 500].",
+    "0 ≤ Node.val ≤ 500",
+    "All the values Node.val are unique.",
+    "target is the value of one of the nodes in the tree.",
+    "0 ≤ k ≤ 1000"
+   ],
+   "followups": [
+    "Do it without building a separate graph.",
+    "Return the groups for every distance at once.",
+    "Steps now have weights."
+   ],
+   "hint": "The tree only lets you walk down. Give yourself a way to walk up.",
+   "leetcode": {
+    "number": 863,
+    "title": "All Nodes Distance K in Binary Tree",
+    "url": "https://leetcode.com/problems/all-nodes-distance-k-in-binary-tree/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc834",
+   "pattern": "tree",
+   "difficulty": "Hard",
+   "title": "Total travel to every office",
+   "story": [
+    "Our offices are connected by direct routes that form a tree: n offices, n - 1 routes, exactly one path between any two. For every office, HR wants to know the total number of route hops all the other offices would travel if everyone met at that office.",
+    "Write a function that takes n and the routes and returns, for each office, the total distance from all other offices."
+   ],
+   "constraints": [
+    "1 ≤ n ≤ 3 * 10⁴",
+    "edges.length == n - 1",
+    "edges[i].length == 2",
+    "0 ≤ ai, bi < n",
+    "ai ≠ bi",
+    "The given input represents a valid tree."
+   ],
+   "followups": [
+    "Routes now have weights.",
+    "Each office has a headcount and the total should count people, not offices.",
+    "Return only the best office."
+   ],
+   "hint": "Once you know the answer for one office, moving the meeting to a neighbouring office changes the total in a way you can compute from subtree sizes.",
+   "leetcode": {
+    "number": 834,
+    "title": "Sum of Distances in Tree",
+    "url": "https://leetcode.com/problems/sum-of-distances-in-tree/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc1483",
+   "pattern": "tree",
+   "difficulty": "Hard",
+   "title": "Climbing the version history",
+   "story": [
+    "A version control system stores commits as a tree. Every commit except the root has exactly one parent, given as a parent array, and the root is commit 0. Engineers keep asking: what is the commit k steps above this one?",
+    "Design a class that is initialized with the parent array and answers (commit, k), returning -1 if that would go past the root. There will be a lot of these questions."
+   ],
+   "constraints": [
+    "1 ≤ k ≤ n ≤ 5 * 10⁴",
+    "parent.length == n",
+    "parent[0] == -1",
+    "0 ≤ parent[i] < n for all 0 < i < n",
+    "0 ≤ node < n",
+    "There will be at most 5 * 10⁴ queries."
+   ],
+   "followups": [
+    "Use the same structure to find the lowest common ancestor of two commits.",
+    "New commits are appended over time.",
+    "What are your preprocessing time and memory?"
+   ],
+   "hint": "Any k can be written as a sum of powers of two.",
+   "leetcode": {
+    "number": 1483,
+    "title": "Kth Ancestor of a Tree Node",
+    "url": "https://leetcode.com/problems/kth-ancestor-of-a-tree-node/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc1834",
+   "pattern": "heap",
+   "difficulty": "Medium",
+   "title": "One worker, many jobs",
+   "story": [
+    "A batch system has a single worker that runs one job at a time. Each job, numbered by its position in the list, becomes available at a known time and takes a known amount of time to run.",
+    "Whenever the worker is free and jobs are waiting, it picks the waiting job with the shortest run time, breaking ties by the smaller job number. A started job always runs to completion, and the worker can start the next one instantly. If nothing is waiting, it sits idle until something arrives.",
+    "Write a function that takes the list of (available time, run time) pairs and returns the job numbers in the order the worker runs them."
+   ],
+   "constraints": [
+    "1 ≤ tasks.length ≤ 10⁵",
+    "tasks[i] = [enqueueTimei, processingTimei]",
+    "1 ≤ enqueueTimei, processingTimei ≤ 10⁹"
+   ],
+   "followups": [
+    "The worker may now pause a job when a shorter one arrives.",
+    "There are now two workers.",
+    "Return each job's waiting time as well."
+   ],
+   "hint": "Keep two views of the jobs: one ordered by when they arrive, one ordered by how the worker chooses.",
+   "leetcode": {
+    "number": 1834,
+    "title": "Single-Threaded CPU",
+    "url": "https://leetcode.com/problems/single-threaded-cpu/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc1882",
+   "pattern": "heap",
+   "difficulty": "Medium",
+   "title": "Load balancer with server weights",
+   "story": [
+    "A load balancer has servers, each with a weight, and a list of tasks with known durations. Task j arrives at second j and joins a queue in arrival order.",
+    "Whenever there are free servers and the queue is not empty, the task at the front goes to the free server with the smallest weight, ties going to the smaller server index. If no server is free, tasks wait until one frees up. If several servers free up at the same moment, waiting tasks are handed out in queue order using the same weight-then-index rule.",
+    "Write a function that takes the server weights and the task durations and returns, for each task, the index of the server that ran it."
+   ],
+   "constraints": [
+    "servers.length == n",
+    "tasks.length == m",
+    "1 ≤ n, m ≤ 2 * 10⁵",
+    "1 ≤ servers[i], tasks[j] ≤ 2 * 10⁵"
+   ],
+   "followups": [
+    "Servers can now fail in the middle of a task.",
+    "Also return the time each task finished.",
+    "Tasks now carry priorities that override arrival order."
+   ],
+   "hint": "Track free servers and busy servers separately, and jump time forward when nothing is free.",
+   "leetcode": {
+    "number": 1882,
+    "title": "Process Tasks Using Servers",
+    "url": "https://leetcode.com/problems/process-tasks-using-servers/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc2349",
+   "pattern": "heap",
+   "difficulty": "Medium",
+   "title": "Which shelf has this SKU?",
+   "story": [
+    "A warehouse has a huge number of numbered shelves. Each shelf holds one product SKU at a time, and a shelf's SKU can be replaced.",
+    "Design a system with change(shelf, sku), which puts that SKU on that shelf (replacing whatever was there), and find(sku), which returns the smallest shelf number currently holding that SKU, or -1 if no shelf does."
+   ],
+   "constraints": [
+    "1 ≤ index, number ≤ 10⁹",
+    "At most 10⁵ calls will be made in total to change and find."
+   ],
+   "followups": [
+    "find should return the k smallest shelves instead.",
+    "Shelves can be emptied entirely.",
+    "Can every operation be worst-case O(log n)?"
+   ],
+   "hint": "You do not have to remove a stale entry the moment it goes stale.",
+   "leetcode": {
+    "number": 2349,
+    "title": "Design a Number Container System",
+    "url": "https://leetcode.com/problems/design-a-number-container-system/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc480",
+   "pattern": "heap",
+   "difficulty": "Hard",
+   "title": "Rolling median latency",
+   "story": [
+    "We log one latency value per request. The on-call view shows the median latency over a rolling window of the last k requests. When k is even, the median is the average of the two middle values.",
+    "Write a function that takes the latency values and k and returns the median of every window of k consecutive values, from left to right. Answers within 10^-5 of the true value are fine."
+   ],
+   "constraints": [
+    "1 ≤ k ≤ nums.length ≤ 10⁵",
+    "2³¹ ≤ nums[i] ≤ 2³¹ - 1"
+   ],
+   "followups": [
+    "Show the rolling 90th percentile instead of the median.",
+    "Values arrive as a live stream.",
+    "k is close to the full length. Does your approach still hold up?"
+   ],
+   "hint": "Keep the lower half and the upper half apart, and don't rush to physically delete the value leaving the window.",
+   "leetcode": {
+    "number": 480,
+    "title": "Sliding Window Median",
+    "url": "https://leetcode.com/problems/sliding-window-median/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc2402",
+   "pattern": "heap",
+   "difficulty": "Hard",
+   "title": "Busiest conference room",
+   "story": [
+    "An office has n meeting rooms numbered from 0. Meetings are requested as half-open time ranges [start, end), and no two meetings share a start time.",
+    "Each meeting takes the free room with the lowest number. If no room is free, the meeting waits until one frees up and then runs for its original duration. When a room frees up, the waiting meeting with the earliest original start gets it.",
+    "Write a function that takes n and the meetings and returns the room that hosted the most meetings, the lowest room number on a tie."
+   ],
+   "constraints": [
+    "1 ≤ n ≤ 100",
+    "1 ≤ meetings.length ≤ 10⁵",
+    "meetings[i].length == 2",
+    "0 ≤ starti < endi ≤ 5 * 10⁵",
+    "All the values of starti are unique."
+   ],
+   "followups": [
+    "Return the full schedule.",
+    "Rooms now have capacities and meetings have sizes.",
+    "What overflow risk hides in the delayed end times?"
+   ],
+   "hint": "One heap for idle rooms and one for busy rooms ordered by when they free up.",
+   "leetcode": {
+    "number": 2402,
+    "title": "Meeting Rooms III",
+    "url": "https://leetcode.com/problems/meeting-rooms-iii/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc974",
+   "pattern": "prefix",
+   "difficulty": "Medium",
+   "title": "Balanced shift totals",
+   "story": [
+    "A store logs the net cash change of every transaction during a shift, positive or negative. An auditor wants to count every continuous run of one or more transactions whose total is a multiple of k.",
+    "Write a function that takes the changes in order and k and returns that count."
+   ],
+   "constraints": [
+    "1 ≤ nums.length ≤ 3 * 10⁴",
+    "10⁴ ≤ nums[i] ≤ 10⁴",
+    "2 ≤ k ≤ 10⁴"
+   ],
+   "followups": [
+    "Return the longest such run instead.",
+    "What does your language return for -7 mod 5, and how do you guard against it?",
+    "k changes per query."
+   ],
+   "hint": "Two running totals that leave the same remainder tell you something about the transactions between them.",
+   "leetcode": {
+    "number": 974,
+    "title": "Subarray Sums Divisible by K",
+    "url": "https://leetcode.com/problems/subarray-sums-divisible-by-k/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc1371",
+   "pattern": "prefix",
+   "difficulty": "Medium",
+   "title": "Longest balanced chant",
+   "story": [
+    "A linguistics team is studying a long lowercase transcript. They want the longest continuous stretch in which every vowel (a, e, i, o, u) appears an even number of times. Zero counts as even.",
+    "Write a function that takes the transcript and returns the length of that longest stretch."
+   ],
+   "constraints": [
+    "1 ≤ s.length ≤ 5 x 10⁵",
+    "s contains only lowercase English letters."
+   ],
+   "followups": [
+    "Every letter, not just vowels, must appear an even number of times.",
+    "Allow at most one vowel to appear an odd number of times.",
+    "Return the stretch itself."
+   ],
+   "hint": "You only care whether each vowel count is odd or even, and there are only five vowels.",
+   "leetcode": {
+    "number": 1371,
+    "title": "Find the Longest Substring Containing Vowels in Even Counts",
+    "url": "https://leetcode.com/problems/find-the-longest-substring-containing-vowels-in-even-counts/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc1590",
+   "pattern": "prefix",
+   "difficulty": "Medium",
+   "title": "Trim the invoice",
+   "story": [
+    "An invoice has line items with positive amounts in a fixed order. Because of an accounting rule, the invoice total must be divisible by p. You may delete exactly one continuous block of line items, possibly an empty one, but you cannot delete the whole invoice.",
+    "Write a function that takes the amounts and p and returns the length of the shortest block to delete, or -1 if it is impossible."
+   ],
+   "constraints": [
+    "1 ≤ nums.length ≤ 10⁵",
+    "1 ≤ nums[i] ≤ 10⁹",
+    "1 ≤ p ≤ 10⁹"
+   ],
+   "followups": [
+    "Return the block itself.",
+    "You may delete up to two blocks.",
+    "Amounts can now be negative."
+   ],
+   "hint": "Work out what remainder the deleted block must have.",
+   "leetcode": {
+    "number": 1590,
+    "title": "Make Sum Divisible by P",
+    "url": "https://leetcode.com/problems/make-sum-divisible-by-p/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc1074",
+   "pattern": "prefix",
+   "difficulty": "Hard",
+   "title": "Counting target plots",
+   "story": [
+    "A farm is mapped as a grid of plots, each with a profit that can be negative. The owner wants to count how many axis-aligned rectangles of plots have a total profit exactly equal to a target. Two rectangles are different if any corner differs.",
+    "Write a function that takes the grid and the target and returns the count."
+   ],
+   "constraints": [
+    "1 ≤ matrix.length ≤ 100",
+    "1 ≤ matrix[0].length ≤ 100",
+    "1000 ≤ matrix[i][j] ≤ 1000",
+    "10⁸ ≤ target ≤ 10⁸"
+   ],
+   "followups": [
+    "The grid is very wide but only a few rows tall. Which way do you iterate?",
+    "Return the largest such rectangle.",
+    "Count rectangles whose total is at most the target."
+   ],
+   "hint": "Fix a pair of rows, and what is left is a one-dimensional problem you already know.",
+   "leetcode": {
+    "number": 1074,
+    "title": "Number of Submatrices That Sum to Target",
+    "url": "https://leetcode.com/problems/number-of-submatrices-that-sum-to-target/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc862",
+   "pattern": "prefix",
+   "difficulty": "Hard",
+   "title": "Fastest fundraising streak",
+   "story": [
+    "A charity tracks net donations per hour, and refunds make some hours negative. They want the shortest continuous run of hours whose net total reaches at least K.",
+    "Write a function that takes the hourly totals and K and returns the length of the shortest such run, or -1 if none exists."
+   ],
+   "constraints": [
+    "1 ≤ nums.length ≤ 10⁵",
+    "10⁵ ≤ nums[i] ≤ 10⁵",
+    "1 ≤ k ≤ 10⁹"
+   ],
+   "followups": [
+    "Why does the usual two-pointer window break when values can be negative?",
+    "Return the run itself.",
+    "Answer for many different K values."
+   ],
+   "hint": "Among candidate start points, a later start with a smaller or equal running total makes an earlier one useless.",
+   "leetcode": {
+    "number": 862,
+    "title": "Shortest Subarray with Sum at Least K",
+    "url": "https://leetcode.com/problems/shortest-subarray-with-sum-at-least-k/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc1094",
+   "pattern": "sweep",
+   "difficulty": "Medium",
+   "title": "Shuttle seat check",
+   "story": [
+    "A shuttle drives one way along a straight road and never turns back. It has a fixed number of seats. You get a list of bookings: each says how many passengers get on at one kilometre mark and get off at a later kilometre mark. At any stop, passengers get off before new ones get on.",
+    "Write a function that returns whether the shuttle can serve every booking without ever carrying more passengers than it has seats."
+   ],
+   "constraints": [
+    "1 ≤ trips.length ≤ 1000",
+    "trips[i].length == 3",
+    "1 ≤ numPassengersi ≤ 100",
+    "0 ≤ fromi < toi ≤ 1000",
+    "1 ≤ capacity ≤ 10⁵"
+   ],
+   "followups": [
+    "Return the minimum number of seats needed.",
+    "Kilometre marks are now huge numbers.",
+    "The shuttle may reject bookings. Maximize passengers served."
+   ],
+   "hint": "Only the points where someone boards or leaves can change the load.",
+   "leetcode": {
+    "number": 1094,
+    "title": "Car Pooling",
+    "url": "https://leetcode.com/problems/car-pooling/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc1943",
+   "pattern": "sweep",
+   "difficulty": "Medium",
+   "title": "Overlapping alert rules",
+   "story": [
+    "Several monitoring rules each cover a half-open time range [start, end), and each rule has a unique positive ID. Wherever rules overlap, the alerting system summarizes the combined coverage as the sum of the IDs of all rules active there.",
+    "Describe the timeline with the fewest non-overlapping half-open segments [left, right, sum], covering only times where at least one rule is active. Two neighbouring segments must stay separate if the set of active rules changes between them, even if the sum happens to stay the same. Return the segments in any order."
+   ],
+   "constraints": [
+    "1 ≤ segments.length ≤ 2 * 10⁴",
+    "segments[i].length == 3",
+    "1 ≤ starti < endi ≤ 10⁵",
+    "1 ≤ colori ≤ 10⁹",
+    "Each colori is distinct."
+   ],
+   "followups": [
+    "Return the actual set of rule IDs per segment.",
+    "Times are huge numbers and there are many rules.",
+    "Merge neighbouring segments whenever the sum is equal, regardless of which rules are active."
+   ],
+   "hint": "Record what changes at each boundary point. Nothing interesting happens between boundaries.",
+   "leetcode": {
+    "number": 1943,
+    "title": "Describe the Painting",
+    "url": "https://leetcode.com/problems/describe-the-painting/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc2406",
+   "pattern": "sweep",
+   "difficulty": "Medium",
+   "title": "How many training rooms?",
+   "story": [
+    "An L&D team has a list of training sessions, each occupying an inclusive range of days [first day, last day]. Two sessions can share a room only if they do not share any day, so sessions that touch on a single day conflict.",
+    "Write a function that takes the sessions and returns the minimum number of rooms needed so that every session gets one."
+   ],
+   "constraints": [
+    "1 ≤ intervals.length ≤ 10⁵",
+    "intervals[i].length == 2",
+    "1 ≤ lefti ≤ righti ≤ 10⁶"
+   ],
+   "followups": [
+    "Return the room assignment.",
+    "Ranges are now half-open.",
+    "Every room has a setup cost and sessions have priorities."
+   ],
+   "hint": "The answer is a property of a single moment in time.",
+   "leetcode": {
+    "number": 2406,
+    "title": "Divide Intervals Into Minimum Number of Groups",
+    "url": "https://leetcode.com/problems/divide-intervals-into-minimum-number-of-groups/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc218",
+   "pattern": "sweep",
+   "difficulty": "Hard",
+   "title": "Drawing the city silhouette",
+   "story": [
+    "A maps team wants the outline of a city as seen from far away. Every building is a rectangle standing on flat ground, described by its left x, right x and height, and the list is sorted by left x.",
+    "Produce the outline as a list of key points (x, height) sorted by x. Each key point marks where the outline changes to a new height, and the last key point has height 0 where the rightmost building ends. Consecutive key points must not have the same height.",
+    "Write a function that takes the buildings and returns the key points."
+   ],
+   "constraints": [
+    "1 ≤ buildings.length ≤ 10⁴",
+    "0 ≤ lefti < righti ≤ 2³¹ - 1",
+    "1 ≤ heighti ≤ 2³¹ - 1",
+    "buildings is sorted by lefti in non-decreasing order."
+   ],
+   "followups": [
+    "Solve it with divide and conquer.",
+    "Buildings are added one at a time and the outline must be kept up to date.",
+    "Return the total area under the outline."
+   ],
+   "hint": "Sweep across x keeping the set of buildings currently standing, with fast access to the tallest one.",
+   "leetcode": {
+    "number": 218,
+    "title": "The Skyline Problem",
+    "url": "https://leetcode.com/problems/the-skyline-problem/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc2251",
+   "pattern": "sweep",
+   "difficulty": "Hard",
+   "title": "What's on at the festival?",
+   "story": [
+    "A festival app lists every performance as an inclusive time range [start, end]. Visitors arrive at various times, and for each visitor the app shows how many performances are running at the moment they arrive.",
+    "Write a function that takes the performances and the arrival times and returns, for each visitor in the original order, the number of performances running when they arrive."
+   ],
+   "constraints": [
+    "1 ≤ flowers.length ≤ 5 * 10⁴",
+    "flowers[i].length == 2",
+    "1 ≤ starti ≤ endi ≤ 10⁹",
+    "1 ≤ people.length ≤ 5 * 10⁴",
+    "1 ≤ people[i] ≤ 10⁹"
+   ],
+   "followups": [
+    "Performances are added and cancelled live.",
+    "Ranges are now half-open.",
+    "Return which performances, not just how many."
+   ],
+   "hint": "Running at time t means started at or before t and not yet ended before t. Count those two things separately.",
+   "leetcode": {
+    "number": 2251,
+    "title": "Number of Flowers in Full Bloom",
+    "url": "https://leetcode.com/problems/number-of-flowers-in-full-bloom/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc918",
+   "pattern": "kadane",
+   "difficulty": "Medium",
+   "title": "Best stretch on the ring road",
+   "story": [
+    "A delivery van drives a circular route of stops, and each stop has a profit that can be negative. A driver works one continuous stretch of consecutive stops around the ring, at least one stop, without visiting any stop twice.",
+    "Write a function that takes the profits around the ring and returns the best total profit of such a stretch."
+   ],
+   "constraints": [
+    "n == nums.length",
+    "1 ≤ n ≤ 3 * 10⁴",
+    "3 * 10⁴ ≤ nums[i] ≤ 3 * 10⁴"
+   ],
+   "followups": [
+    "Return the first and last stop of the stretch.",
+    "The stretch must contain exactly k stops.",
+    "What goes wrong when every stop has a negative profit?"
+   ],
+   "hint": "A stretch that wraps past the end is the whole ring with something removed from the middle.",
+   "leetcode": {
+    "number": 918,
+    "title": "Maximum Sum Circular Subarray",
+    "url": "https://leetcode.com/problems/maximum-sum-circular-subarray/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc1186",
+   "pattern": "kadane",
+   "difficulty": "Medium",
+   "title": "One bad day forgiven",
+   "story": [
+    "A trader's daily P&L is a list of integers. Their bonus is based on their best continuous run of trading days, and the desk will forgive at most one day in that run and drop it from the total. The run must still contain at least one day after the drop.",
+    "Write a function that takes the daily P&L and returns the best possible total."
+   ],
+   "constraints": [
+    "1 ≤ arr.length ≤ 10⁵",
+    "10⁴ ≤ arr[i] ≤ 10⁴"
+   ],
+   "followups": [
+    "Forgive up to k days.",
+    "Forgiven days must not be next to each other.",
+    "Return the run and the forgiven day."
+   ],
+   "hint": "At each day, keep two running bests: one where nothing has been forgiven yet and one where something already has.",
+   "leetcode": {
+    "number": 1186,
+    "title": "Maximum Subarray Sum with One Deletion",
+    "url": "https://leetcode.com/problems/maximum-subarray-sum-with-one-deletion/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc1014",
+   "pattern": "kadane",
+   "difficulty": "Medium",
+   "title": "Two viewpoints on one walk",
+   "story": [
+    "A walking trail has viewpoints in order, one per kilometre, and each has an attractiveness score. A visitor picks two viewpoints, an earlier one and a later one, and the trip's score is the sum of their two scores minus the number of kilometres between them.",
+    "Write a function that takes the scores in trail order and returns the best possible trip score."
+   ],
+   "constraints": [
+    "2 ≤ values.length ≤ 5 * 10⁴",
+    "1 ≤ values[i] ≤ 1000"
+   ],
+   "followups": [
+    "Pick three viewpoints.",
+    "Return the pair.",
+    "Gaps between viewpoints now have different lengths."
+   ],
+   "hint": "Split the formula into a part that depends only on the first viewpoint and a part that depends only on the second.",
+   "leetcode": {
+    "number": 1014,
+    "title": "Best Sightseeing Pair",
+    "url": "https://leetcode.com/problems/best-sightseeing-pair/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc2272",
+   "pattern": "kadane",
+   "difficulty": "Hard",
+   "title": "Most lopsided stretch of a log",
+   "story": [
+    "A log is a string of lowercase event codes. For any continuous stretch of it, its imbalance is the largest difference between the counts of two codes that both appear in that stretch. The two codes may be the same, which gives 0.",
+    "Write a function that takes the log and returns the largest imbalance over all continuous stretches."
+   ],
+   "constraints": [
+    "1 ≤ s.length ≤ 10⁴",
+    "s consists of lowercase English letters."
+   ],
+   "followups": [
+    "Return the stretch as well.",
+    "Codes now include uppercase letters and digits.",
+    "Why is the rule that both codes must appear the tricky part?"
+   ],
+   "hint": "Fix the pair of codes first. Then it is a best-subarray problem with a catch.",
+   "leetcode": {
+    "number": 2272,
+    "title": "Substring With Largest Variance",
+    "url": "https://leetcode.com/problems/substring-with-largest-variance/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc363",
+   "pattern": "kadane",
+   "difficulty": "Hard",
+   "title": "Budget-capped land plot",
+   "story": [
+    "A land survey is a grid where each cell has a value, positive or negative. A developer wants to buy one axis-aligned rectangle of cells with the largest total value that does not go over a budget K. At least one rectangle is always within budget.",
+    "Write a function that takes the grid and K and returns the best total that does not exceed K."
+   ],
+   "constraints": [
+    "m == matrix.length",
+    "n == matrix[i].length",
+    "1 ≤ m, n ≤ 100",
+    "100 ≤ matrix[i][j] ≤ 100",
+    "10⁵ ≤ k ≤ 10⁵"
+   ],
+   "followups": [
+    "There are far more rows than columns. What do you change?",
+    "Without the K cap, what simpler algorithm works?",
+    "Return the rectangle."
+   ],
+   "hint": "Fix two rows, squash to one dimension, then you need the best subarray sum that stays at or under K.",
+   "leetcode": {
+    "number": 363,
+    "title": "Max Sum of Rectangle No Larger Than K",
+    "url": "https://leetcode.com/problems/max-sum-of-rectangle-no-larger-than-k/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc1146",
+   "pattern": "design",
+   "difficulty": "Medium",
+   "title": "Config with time travel",
+   "story": [
+    "A feature-flag service stores a fixed number of integer flags, all starting at 0. Engineers set flags, occasionally take a snapshot, and later ask what a flag's value was as of a given snapshot.",
+    "Design a class initialized with the number of flags, with set(index, value); snap(), which returns the new snapshot's ID (0 for the first, then 1, 2, ...); and get(index, snapId), which returns the value that flag had when that snapshot was taken."
+   ],
+   "constraints": [
+    "1 ≤ length ≤ 5 * 10⁴",
+    "0 ≤ index < length",
+    "0 ≤ val ≤ 10⁹",
+    "0 ≤ snap_id < (the total number of times we call snap())",
+    "At most 5 * 10⁴ calls will be made to set, snap, and get."
+   ],
+   "followups": [
+    "Memory must grow with the number of set calls, not flags times snapshots.",
+    "Add diff(snapA, snapB) listing the flags that changed.",
+    "Old snapshots can be deleted."
+   ],
+   "hint": "Store history per flag, not per snapshot.",
+   "leetcode": {
+    "number": 1146,
+    "title": "Snapshot Array",
+    "url": "https://leetcode.com/problems/snapshot-array/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc2353",
+   "pattern": "design",
+   "difficulty": "Medium",
+   "title": "Top dish per cuisine",
+   "story": [
+    "A food-delivery app tracks dishes. Each dish has a unique name, a cuisine and a rating, and ratings change all the time. The home screen asks for the top-rated dish in a given cuisine.",
+    "Design a class initialized with the dishes, their cuisines and their starting ratings, with changeRating(dish, newRating) and highestRated(cuisine). On a tie, return the alphabetically smaller dish name."
+   ],
+   "constraints": [
+    "1 ≤ n ≤ 2 * 10⁴",
+    "n == foods.length == cuisines.length == ratings.length",
+    "1 ≤ foods[i].length, cuisines[i].length ≤ 10",
+    "foods[i], cuisines[i] consist of lowercase English letters.",
+    "1 ≤ ratings[i] ≤ 10⁸",
+    "All the strings in foods are distinct.",
+    "food will be the name of a food item in the system across all calls to changeRating.",
+    "cuisine will be a type of cuisine of at least one food item in the system across all calls to highestRated.",
+    "At most 2 * 10⁴ calls in total will be made to changeRating and highestRated."
+   ],
+   "followups": [
+    "Return the top k dishes per cuisine.",
+    "Dishes can be added and removed.",
+    "Compare a sorted set with a heap and lazy deletion."
+   ],
+   "hint": "A rating change makes an old entry wrong. You can remove it, or learn to ignore it.",
+   "leetcode": {
+    "number": 2353,
+    "title": "Design a Food Rating System",
+    "url": "https://leetcode.com/problems/design-a-food-rating-system/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc1396",
+   "pattern": "design",
+   "difficulty": "Medium",
+   "title": "Average commute between stations",
+   "story": [
+    "A metro card system records tap-ins and tap-outs. Each rider has a card ID and can only be checked in at one station at a time.",
+    "Design a class with checkIn(id, station, t), checkOut(id, station, t) and getAverageTime(from, to). The average covers every completed trip that tapped in at \"from\" and tapped out at \"to\", and direction matters. There is always at least one such trip when the average is asked for."
+   ],
+   "constraints": [
+    "1 ≤ id, t ≤ 10⁶",
+    "1 ≤ stationName.length, startStation.length, endStation.length ≤ 10",
+    "All strings consist of uppercase and lowercase English letters and digits.",
+    "There will be at most 2 * 10⁴ calls in total to checkIn, checkOut, and getAverageTime.",
+    "Answers within 10⁻⁵ of the actual value will be accepted."
+   ],
+   "followups": [
+    "Return the median travel time instead of the average.",
+    "Only trips from the last hour count.",
+    "Millions of riders, many servers. How do you shard it?"
+   ],
+   "hint": "Keep open trips and finished-route statistics in two separate maps.",
+   "leetcode": {
+    "number": 1396,
+    "title": "Design Underground System",
+    "url": "https://leetcode.com/problems/design-underground-system/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc895",
+   "pattern": "design",
+   "difficulty": "Hard",
+   "title": "Most-repeated undo",
+   "story": [
+    "Design a stack-like structure for an editor's undo history. push(x) adds an action ID. pop() removes and returns the action ID that currently appears most often in the structure; on a tie, it returns the one that was pushed most recently.",
+    "Both operations should be fast."
+   ],
+   "constraints": [
+    "0 ≤ val ≤ 10⁹",
+    "At most 2 * 10⁴ calls will be made to push and pop.",
+    "It is guaranteed that there will be at least one element in the stack before calling pop."
+   ],
+   "followups": [
+    "Add peek() without removing anything.",
+    "pop() should now remove the least frequent ID.",
+    "What is the exact complexity of each operation?"
+   ],
+   "hint": "Group pushes by how many times that value had been seen at the moment it was pushed, and keep a stack per group.",
+   "leetcode": {
+    "number": 895,
+    "title": "Maximum Frequency Stack",
+    "url": "https://leetcode.com/problems/maximum-frequency-stack/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc432",
+   "pattern": "design",
+   "difficulty": "Hard",
+   "title": "Live counter leaderboard",
+   "story": [
+    "Build a counter store for search terms. inc(key) adds one to a key's count, creating it at 1 if needed. dec(key) subtracts one and removes the key when it reaches zero; it is only called on keys that exist. getMaxKey() returns any key with the highest count and getMinKey() any key with the lowest count, or an empty string if there are no keys.",
+    "Every operation must run in O(1) average time."
+   ],
+   "constraints": [
+    "1 ≤ key.length ≤ 10",
+    "key consists of lowercase English letters.",
+    "It is guaranteed that for each call to dec, key is existing in the data structure.",
+    "At most 5 * 10⁴ calls will be made to inc, dec, getMaxKey, and getMinKey."
+   ],
+   "followups": [
+    "Return all keys that share the maximum count.",
+    "Add incBy(key, n).",
+    "Why does a heap not meet the requirement?"
+   ],
+   "hint": "Counts only ever move by one. Picture buckets of keys that share a count, chained in order.",
+   "leetcode": {
+    "number": 432,
+    "title": "All O`one Data Structure",
+    "url": "https://leetcode.com/problems/all-oone-data-structure/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc2115",
+   "pattern": "topo",
+   "difficulty": "Medium",
+   "title": "What can the kitchen make?",
+   "story": [
+    "A kitchen has some basic supplies in unlimited quantity. It also has a list of recipes, each with a list of required ingredients. An ingredient can itself be another recipe, and two recipes may even need each other.",
+    "Write a function that takes the recipe names, each recipe's ingredient list and the supplies, and returns every recipe the kitchen can actually make, in any order."
+   ],
+   "constraints": [
+    "n == recipes.length == ingredients.length",
+    "1 ≤ n ≤ 100",
+    "1 ≤ ingredients[i].length, supplies.length ≤ 100",
+    "1 ≤ recipes[i].length, ingredients[i][j].length, supplies[k].length ≤ 10",
+    "recipes[i], ingredients[i][j], and supplies[k] consist only of lowercase English letters.",
+    "All the values of recipes and supplies combined are unique.",
+    "Each ingredients[i] does not contain any duplicate values."
+   ],
+   "followups": [
+    "Ingredients are consumed and supplies are now finite.",
+    "Return the order in which to cook them.",
+    "What happens to recipes that depend on each other, and why?"
+   ],
+   "hint": "A recipe becomes makeable at the moment its last missing ingredient becomes available.",
+   "leetcode": {
+    "number": 2115,
+    "title": "Find All Possible Recipes from Given Supplies",
+    "url": "https://leetcode.com/problems/find-all-possible-recipes-from-given-supplies/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc851",
+   "pattern": "topo",
+   "difficulty": "Medium",
+   "title": "Quietest richer colleague",
+   "story": [
+    "We have n people. We know some pairwise facts of the form \"a has more money than b\", and the facts never contradict each other. Each person also has a unique quietness score.",
+    "For each person x, find the quietest person among everyone who definitely has at least as much money as x, which includes x themselves. Write a function that takes the facts and the quietness scores and returns, for each person, the index of that quietest person."
+   ],
+   "constraints": [
+    "n == quiet.length",
+    "1 ≤ n ≤ 500",
+    "0 ≤ quiet[i] < n",
+    "All the values of quiet are unique.",
+    "0 ≤ richer.length ≤ n * (n - 1) / 2",
+    "0 ≤ ai, bi < n",
+    "ai ≠ bi",
+    "All the pairs of richer are unique.",
+    "The observations in richer are all logically consistent."
+   ],
+   "followups": [
+    "Facts arrive over time.",
+    "Return the k quietest instead of one.",
+    "Why can't you just sort people by money?"
+   ],
+   "hint": "A person's answer depends only on the answers of the people directly richer than them.",
+   "leetcode": {
+    "number": 851,
+    "title": "Loud and Rich",
+    "url": "https://leetcode.com/problems/loud-and-rich/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc1462",
+   "pattern": "topo",
+   "difficulty": "Medium",
+   "title": "Is this a prerequisite?",
+   "story": [
+    "A university has numbered courses and a list of direct prerequisites (\"take a before b\"). Prerequisites chain: if a comes before b and b comes before c, then a is a prerequisite of c. There are no cycles.",
+    "Students send many questions of the form \"is course u a prerequisite of course v?\". Write a function that takes the number of courses, the direct prerequisites and the questions, and returns true or false for each question."
+   ],
+   "constraints": [
+    "2 ≤ numCourses ≤ 100",
+    "0 ≤ prerequisites.length ≤ (numCourses * (numCourses - 1) / 2)",
+    "prerequisites[i].length == 2",
+    "0 ≤ ai, bi ≤ numCourses - 1",
+    "ai ≠ bi",
+    "All the pairs [ai, bi] are unique.",
+    "The prerequisites graph has no cycles.",
+    "1 ≤ queries.length ≤ 10⁴",
+    "0 ≤ ui, vi ≤ numCourses - 1",
+    "ui ≠ vi"
+   ],
+   "followups": [
+    "There are now a very large number of courses and questions.",
+    "New prerequisites are added between questions.",
+    "Return the full chain that makes u a prerequisite of v."
+   ],
+   "hint": "With few courses and many questions, work out reachability once up front.",
+   "leetcode": {
+    "number": 1462,
+    "title": "Course Schedule IV",
+    "url": "https://leetcode.com/problems/course-schedule-iv/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc1857",
+   "pattern": "topo",
+   "difficulty": "Hard",
+   "title": "Most repeated tag along a pipeline",
+   "story": [
+    "A data pipeline is a directed graph of steps, and each step is tagged with one lowercase letter. For any path through the graph, its score is the number of times the most frequent tag appears on that path.",
+    "Write a function that takes the tags (one per step) and the directed edges, and returns the highest score over all paths. If the pipeline contains a cycle, return -1."
+   ],
+   "constraints": [
+    "n == colors.length",
+    "m == edges.length",
+    "1 ≤ n ≤ 10⁵",
+    "0 ≤ m ≤ 10⁵",
+    "colors consists of lowercase English letters.",
+    "0 ≤ aj, bj < n"
+   ],
+   "followups": [
+    "Tags are arbitrary strings, not letters.",
+    "Return the best path itself.",
+    "Find the best path that ends at a given step."
+   ],
+   "hint": "Visit steps in an order where every step comes after all of its predecessors, and carry one count per letter.",
+   "leetcode": {
+    "number": 1857,
+    "title": "Largest Color Value in a Directed Graph",
+    "url": "https://leetcode.com/problems/largest-color-value-in-a-directed-graph/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc2392",
+   "pattern": "topo",
+   "difficulty": "Hard",
+   "title": "Seating chart with rules",
+   "story": [
+    "You are seating k guests, numbered 1 to k, in a k by k grid: every guest gets their own row and their own column, and every other seat stays empty. There are two lists of rules: \"guest a must sit in a row strictly above guest b\" and \"guest a must sit in a column strictly left of guest b\".",
+    "Write a function that returns any grid that satisfies every rule, using 0 for empty seats, or an empty grid if no arrangement works."
+   ],
+   "constraints": [
+    "2 ≤ k ≤ 400",
+    "1 ≤ rowConditions.length, colConditions.length ≤ 10⁴",
+    "rowConditions[i].length == colConditions[i].length == 2",
+    "1 ≤ abovei, belowi, lefti, righti ≤ k",
+    "abovei ≠ belowi",
+    "lefti ≠ righti"
+   ],
+   "followups": [
+    "Minimize the grid size.",
+    "Some rules now say two guests share a row.",
+    "Explain why rows and columns can be solved independently."
+   ],
+   "hint": "Rows and columns never interact. Solve each as its own ordering problem.",
+   "leetcode": {
+    "number": 2392,
+    "title": "Build a Matrix With Conditions",
+    "url": "https://leetcode.com/problems/build-a-matrix-with-conditions/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc1202",
+   "pattern": "dsu",
+   "difficulty": "Medium",
+   "title": "Best label after allowed swaps",
+   "story": [
+    "A label is a lowercase string. We have a list of position pairs; for each pair, the characters at those two positions can be swapped, any number of times and in any order.",
+    "Write a function that takes the label and the pairs and returns the alphabetically smallest label you can reach."
+   ],
+   "constraints": [
+    "1 ≤ s.length ≤ 10⁵",
+    "0 ≤ pairs.length ≤ 10⁵",
+    "0 ≤ pairs[i][0], pairs[i][1] < s.length",
+    "s only contains lower case English letters."
+   ],
+   "followups": [
+    "Each swap costs 1. Reach the smallest label with the fewest swaps.",
+    "Pairs arrive online.",
+    "Why can any arrangement within a group be reached?"
+   ],
+   "hint": "Think about which positions can exchange characters, directly or through others.",
+   "leetcode": {
+    "number": 1202,
+    "title": "Smallest String With Swaps",
+    "url": "https://leetcode.com/problems/smallest-string-with-swaps/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc947",
+   "pattern": "dsu",
+   "difficulty": "Medium",
+   "title": "Decommissioning sensors",
+   "story": [
+    "Sensors sit at distinct integer points on a plane. A sensor can be decommissioned if some other sensor that is still active shares its row or its column.",
+    "Write a function that takes the sensor coordinates and returns the maximum number of sensors you can decommission."
+   ],
+   "constraints": [
+    "1 ≤ stones.length ≤ 1000",
+    "0 ≤ xi, yi ≤ 10⁴",
+    "No two stones are at the same coordinate point."
+   ],
+   "followups": [
+    "Return a valid order of removals.",
+    "Coordinates are now huge numbers.",
+    "Prove the formula you used."
+   ],
+   "hint": "Within one connected group, you can always remove everything except one.",
+   "leetcode": {
+    "number": 947,
+    "title": "Most Stones Removed with Same Row or Column",
+    "url": "https://leetcode.com/problems/most-stones-removed-with-same-row-or-column/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc990",
+   "pattern": "dsu",
+   "difficulty": "Medium",
+   "title": "Can the config be consistent?",
+   "story": [
+    "A config validator receives a list of constraints between single-letter variables. Each constraint says either that two variables are equal or that two variables are not equal.",
+    "Write a function that returns whether there is an assignment of integers to the variables that satisfies every constraint."
+   ],
+   "constraints": [
+    "1 ≤ equations.length ≤ 500",
+    "equations[i].length == 4",
+    "equations[i][0] is a lowercase letter.",
+    "equations[i][1] is either '=' or '!'.",
+    "equations[i][2] is '='.",
+    "equations[i][3] is a lowercase letter."
+   ],
+   "followups": [
+    "Add less-than constraints.",
+    "Report which constraint causes the conflict.",
+    "Variables are now arbitrary strings."
+   ],
+   "hint": "Apply all the equalities first.",
+   "leetcode": {
+    "number": 990,
+    "title": "Satisfiability of Equality Equations",
+    "url": "https://leetcode.com/problems/satisfiability-of-equality-equations/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc2382",
+   "pattern": "dsu",
+   "difficulty": "Hard",
+   "title": "Failing nodes on the pipeline",
+   "story": [
+    "A row of n compute nodes each has a positive throughput. Nodes fail one at a time in a known order, and a failed node splits the row. A segment is a continuous run of working nodes, and its value is its total throughput.",
+    "Write a function that takes the throughputs and the failure order and returns, after each failure, the largest segment value remaining (0 if nothing is working)."
+   ],
+   "constraints": [
+    "n == nums.length == removeQueries.length",
+    "1 ≤ n ≤ 10⁵",
+    "1 ≤ nums[i] ≤ 10⁹",
+    "0 ≤ removeQueries[i] < n",
+    "All the values of removeQueries are unique."
+   ],
+   "followups": [
+    "Failed nodes can come back online at arbitrary times.",
+    "Also report how many segments exist after each failure.",
+    "Why is going forward in time awkward here?"
+   ],
+   "hint": "Time runs one way in the story, but nothing stops you from running it the other way.",
+   "leetcode": {
+    "number": 2382,
+    "title": "Maximum Segment Sum After Removals",
+    "url": "https://leetcode.com/problems/maximum-segment-sum-after-removals/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc1697",
+   "pattern": "dsu",
+   "difficulty": "Hard",
+   "title": "Scooter range checks",
+   "story": [
+    "A city's bike network has docks and two-way segments between them, each with a length, and there can be several segments between the same two docks. An e-scooter can only ride segments strictly shorter than its range L.",
+    "You get a batch of questions: can a scooter with range L get from dock p to dock q? Write a function that takes the number of docks, the segments and the questions, and returns true or false for each question."
+   ],
+   "constraints": [
+    "2 ≤ n ≤ 10⁵",
+    "1 ≤ edgeList.length, queries.length ≤ 10⁵",
+    "edgeList[i].length == 3",
+    "queries[j].length == 3",
+    "0 ≤ ui, vi, pj, qj ≤ n - 1",
+    "ui ≠ vi",
+    "pj ≠ qj",
+    "1 ≤ disi, limitj ≤ 10⁹",
+    "There may be multiple edges between two nodes."
+   ],
+   "followups": [
+    "Questions now arrive online.",
+    "Return the minimum range needed for each pair instead.",
+    "Segments are added between questions."
+   ],
+   "hint": "If you answer the questions sorted by range, the usable network only ever grows.",
+   "leetcode": {
+    "number": 1697,
+    "title": "Checking Existence of Edge Length Limited Paths",
+    "url": "https://leetcode.com/problems/checking-existence-of-edge-length-limited-paths/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc787",
+   "pattern": "state",
+   "difficulty": "Medium",
+   "title": "Cheapest trip with a layover cap",
+   "story": [
+    "A travel site has direct flights between cities, each with a price. A customer wants the cheapest way from city src to city dst with at most k stops in between.",
+    "Write a function that takes the number of cities, the flights, src, dst and k, and returns the cheapest total price, or -1 if no such trip exists."
+   ],
+   "constraints": [
+    "2 ≤ n ≤ 100",
+    "0 ≤ flights.length ≤ (n * (n - 1) / 2)",
+    "flights[i].length == 3",
+    "0 ≤ fromi, toi < n",
+    "fromi ≠ toi",
+    "1 ≤ pricei ≤ 10⁴",
+    "There will not be any multiple flights between two cities.",
+    "0 ≤ src, dst, k < n",
+    "src ≠ dst"
+   ],
+   "followups": [
+    "Why does plain Dijkstra over cities give wrong answers?",
+    "Minimize the number of stops first, then the price.",
+    "Return the route."
+   ],
+   "hint": "Where you are is not the whole state. How many flights you have used matters too.",
+   "leetcode": {
+    "number": 787,
+    "title": "Cheapest Flights Within K Stops",
+    "url": "https://leetcode.com/problems/cheapest-flights-within-k-stops/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc1129",
+   "pattern": "state",
+   "difficulty": "Medium",
+   "title": "Alternating transit companies",
+   "story": [
+    "A transit map has stations and one-way connections, each run by either the Red company or the Blue company. There can be loops and duplicate connections. A promotional pass requires you to alternate companies on every leg: never two Red legs or two Blue legs in a row.",
+    "Write a function that takes the number of stations, the Red connections and the Blue connections, and returns, for each station, the fewest legs needed to reach it from station 0 under the pass rule, or -1 if it cannot be reached."
+   ],
+   "constraints": [
+    "1 ≤ n ≤ 100",
+    "0 ≤ redEdges.length, blueEdges.length ≤ 400",
+    "redEdges[i].length == blueEdges[j].length == 2",
+    "0 ≤ ai, bi, uj, vj < n"
+   ],
+   "followups": [
+    "Three companies that must be used in a fixed cycle.",
+    "Legs now have travel times.",
+    "Return the route for one station."
+   ],
+   "hint": "Arriving at a station on a Red leg and arriving on a Blue leg are different situations.",
+   "leetcode": {
+    "number": 1129,
+    "title": "Shortest Path with Alternating Colors",
+    "url": "https://leetcode.com/problems/shortest-path-with-alternating-colors/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc752",
+   "pattern": "state",
+   "difficulty": "Medium",
+   "title": "Cracking the bike lock",
+   "story": [
+    "A bike lock has four wheels, each showing a digit from 0 to 9, and each wheel wraps around (9 to 0 and 0 to 9). One move turns one wheel by one step. The lock starts at 0000. Some combinations jam the lock for good if they are ever displayed.",
+    "Write a function that takes the jamming combinations and the target combination and returns the fewest moves to reach the target, or -1 if it cannot be done."
+   ],
+   "constraints": [
+    "1 ≤ deadends.length ≤ 500",
+    "deadends[i].length == 4",
+    "target.length == 4",
+    "target will not be in the list deadends.",
+    "target and deadends[i] consist of digits only."
+   ],
+   "followups": [
+    "Speed it up with bidirectional search.",
+    "The lock now has six wheels.",
+    "Turning each wheel costs a different amount."
+   ],
+   "hint": "Treat every combination as a node.",
+   "leetcode": {
+    "number": 752,
+    "title": "Open the Lock",
+    "url": "https://leetcode.com/problems/open-the-lock/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc1293",
+   "pattern": "state",
+   "difficulty": "Hard",
+   "title": "Robot with a few wall-breaks",
+   "story": [
+    "A warehouse robot moves on a grid of free cells and walls, one step up, down, left or right at a time. It starts at the top-left cell and must reach the bottom-right cell. It carries enough charges to break through at most k walls.",
+    "Write a function that returns the fewest steps to reach the goal, or -1 if it cannot."
+   ],
+   "constraints": [
+    "m == grid.length",
+    "n == grid[i].length",
+    "1 ≤ m, n ≤ 40",
+    "1 ≤ k ≤ m * n",
+    "grid[i][j] is either 0 or 1.",
+    "grid[0][0] == grid[m - 1][n - 1] == 0"
+   ],
+   "followups": [
+    "k is large compared with the grid. Can you finish early?",
+    "Breaking a wall now costs extra time.",
+    "Return the path."
+   ],
+   "hint": "Two visits to the same cell are not the same if they have different numbers of charges left.",
+   "leetcode": {
+    "number": 1293,
+    "title": "Shortest Path in a Grid with Obstacles Elimination",
+    "url": "https://leetcode.com/problems/shortest-path-in-a-grid-with-obstacles-elimination/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc864",
+   "pattern": "state",
+   "difficulty": "Hard",
+   "title": "Escape room keys",
+   "story": [
+    "An escape room is a grid of walls, open cells, one starting cell, a few keys marked by lowercase letters and their matching locked doors marked by the same letter in uppercase. You move one step at a time in four directions, pick up a key by stepping on it, and can only pass through a door once you hold its key.",
+    "Write a function that takes the grid and returns the fewest steps needed to collect every key, or -1 if it is impossible."
+   ],
+   "constraints": [
+    "m == grid.length",
+    "n == grid[i].length",
+    "1 ≤ m, n ≤ 30",
+    "grid[i][j] is either an English letter, '.', '#', or '@'.",
+    "There is exactly one '@' in the grid.",
+    "The number of keys in the grid is in the range [1, 6].",
+    "Each key in the grid is unique.",
+    "Each key in the grid has a matching lock."
+   ],
+   "followups": [
+    "There are now many more keys.",
+    "Each key is used up when it opens a door.",
+    "Return the order in which the keys are collected."
+   ],
+   "hint": "Your position is not the full state. The keys you hold fit in a few bits.",
+   "leetcode": {
+    "number": 864,
+    "title": "Shortest Path to Get All Keys",
+    "url": "https://leetcode.com/problems/shortest-path-to-get-all-keys/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc1986",
+   "pattern": "bitmask",
+   "difficulty": "Medium",
+   "title": "Packing focus sessions",
+   "story": [
+    "You have a list of tasks with known durations in hours, and you work in focus sessions of at most S hours. A task must be finished in the same session it starts in, tasks can be done in any order, and no task is longer than S.",
+    "Write a function that takes the task durations and S and returns the minimum number of sessions."
+   ],
+   "constraints": [
+    "n == tasks.length",
+    "1 ≤ n ≤ 14",
+    "1 ≤ tasks[i] ≤ 10",
+    "max(tasks[i]) ≤ sessionTime ≤ 15"
+   ],
+   "followups": [
+    "Return the plan.",
+    "Sessions now have different lengths.",
+    "Show why longest-task-first can fail."
+   ],
+   "hint": "Represent \"which tasks are already done\" exactly, and ask the best you can do from each such set.",
+   "leetcode": {
+    "number": 1986,
+    "title": "Minimum Number of Work Sessions to Finish the Tasks",
+    "url": "https://leetcode.com/problems/minimum-number-of-work-sessions-to-finish-the-tasks/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc2305",
+   "pattern": "bitmask",
+   "difficulty": "Medium",
+   "title": "Splitting the bonus envelopes",
+   "story": [
+    "A manager has bonus envelopes, each with a fixed amount, and must hand all of them out to k team members. An envelope cannot be split. The unfairness of a distribution is the largest total any single person receives.",
+    "Write a function that takes the envelope amounts and k and returns the smallest possible unfairness."
+   ],
+   "constraints": [
+    "2 ≤ cookies.length ≤ 8",
+    "1 ≤ cookies[i] ≤ 10⁵",
+    "2 ≤ k ≤ cookies.length"
+   ],
+   "followups": [
+    "Minimize the gap between the largest and smallest totals instead.",
+    "Prune your search and explain each pruning rule.",
+    "What would you do with fifty envelopes?"
+   ],
+   "hint": "Trying every assignment is fine here, as long as you cut branches that cannot beat your best.",
+   "leetcode": {
+    "number": 2305,
+    "title": "Fair Distribution of Cookies",
+    "url": "https://leetcode.com/problems/fair-distribution-of-cookies/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc698",
+   "pattern": "bitmask",
+   "difficulty": "Medium",
+   "title": "Equal shards",
+   "story": [
+    "We need to split a set of jobs, each with a positive size, into exactly k non-empty shards so that every shard has the same total size. Every job goes into exactly one shard.",
+    "Write a function that takes the job sizes and k and returns whether this is possible."
+   ],
+   "constraints": [
+    "1 ≤ k ≤ nums.length ≤ 16",
+    "1 ≤ nums[i] ≤ 10⁴",
+    "The frequency of each element is in the range [1, 4]."
+   ],
+   "followups": [
+    "Return the shards.",
+    "Some job sizes can be zero.",
+    "Compare backtracking with DP over subsets."
+   ],
+   "hint": "You know each shard's target size up front. Fill one shard at a time.",
+   "leetcode": {
+    "number": 698,
+    "title": "Partition to K Equal Sum Subsets",
+    "url": "https://leetcode.com/problems/partition-to-k-equal-sum-subsets/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc847",
+   "pattern": "bitmask",
+   "difficulty": "Hard",
+   "title": "Inspecting every server room",
+   "story": [
+    "A data center's server rooms are connected by corridors (an undirected, connected graph). An inspector must visit every room at least once. They can start and finish anywhere, revisit rooms and reuse corridors.",
+    "Write a function that takes the corridor graph as adjacency lists and returns the fewest corridor walks needed."
+   ],
+   "constraints": [
+    "n == graph.length",
+    "1 ≤ n ≤ 12",
+    "0 ≤ graph[i].length < n",
+    "graph[i] does not contain i.",
+    "If graph[a] contains b, then graph[b] contains a.",
+    "The input graph is always connected."
+   ],
+   "followups": [
+    "Corridors now have lengths.",
+    "The inspector must return to where they started.",
+    "Return the route."
+   ],
+   "hint": "Your state is where you are plus which rooms you have already seen. Start from every room at once.",
+   "leetcode": {
+    "number": 847,
+    "title": "Shortest Path Visiting All Nodes",
+    "url": "https://leetcode.com/problems/shortest-path-visiting-all-nodes/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc1125",
+   "pattern": "bitmask",
+   "difficulty": "Hard",
+   "title": "Smallest launch team",
+   "story": [
+    "A product launch needs a list of skills. You have a pool of people, each with some of those skills. A team is sufficient if every required skill is covered by at least one member.",
+    "Write a function that takes the required skills and each person's skills and returns the indices of a smallest sufficient team, in any order. A sufficient team always exists."
+   ],
+   "constraints": [
+    "1 ≤ req_skills.length ≤ 16",
+    "1 ≤ req_skills[i].length ≤ 16",
+    "req_skills[i] consists of lowercase English letters.",
+    "All the strings of req_skills are unique.",
+    "1 ≤ people.length ≤ 60",
+    "0 ≤ people[i].length ≤ 16",
+    "1 ≤ people[i][j].length ≤ 16",
+    "people[i][j] consists of lowercase English letters.",
+    "All the strings of people[i] are unique.",
+    "Every skill in people[i] is a skill in req_skills.",
+    "It is guaranteed a sufficient team exists."
+   ],
+   "followups": [
+    "People have salaries. Minimize total cost instead of size.",
+    "Swap the sizes: many skills, few people.",
+    "Return every smallest team."
+   ],
+   "hint": "Write the covered skills as a bitmask and ask for the smallest team that reaches each mask.",
+   "leetcode": {
+    "number": 1125,
+    "title": "Smallest Sufficient Team",
+    "url": "https://leetcode.com/problems/smallest-sufficient-team/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc1140",
+   "pattern": "game",
+   "difficulty": "Medium",
+   "title": "Growing grab limit",
+   "story": [
+    "Two players share a row of piles of coins. On each turn a player takes every coin in the first X remaining piles, where X is between 1 and 2M, and then M becomes max(M, X). M starts at 1 and the first player moves first. Both play optimally and want as many coins as possible.",
+    "Write a function that takes the piles and returns how many coins the first player ends up with."
+   ],
+   "constraints": [
+    "1 ≤ piles.length ≤ 100",
+    "1 ≤ piles[i] ≤ 10⁴"
+   ],
+   "followups": [
+    "Return the first player's best opening move.",
+    "Three players take turns.",
+    "What are the states, and how many are there?"
+   ],
+   "hint": "From any position, the best one player can do leaves the opponent with whatever remains of the suffix.",
+   "leetcode": {
+    "number": 1140,
+    "title": "Stone Game II",
+    "url": "https://leetcode.com/problems/stone-game-ii/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc375",
+   "pattern": "game",
+   "difficulty": "Medium",
+   "title": "Paid guessing game",
+   "story": [
+    "A friend picks a secret number from 1 to n. You guess. If you are wrong, you pay the number you guessed in dollars and they tell you whether the secret is higher or lower, and you keep guessing until you are right.",
+    "Write a function that takes n and returns the smallest amount of money that guarantees you a win, whatever number they picked."
+   ],
+   "constraints": [
+    "1 ≤ n ≤ 200"
+   ],
+   "followups": [
+    "Every wrong guess now costs a fixed amount.",
+    "Return the best first guess.",
+    "Is plain binary search optimal here? Why not?"
+   ],
+   "hint": "You choose the guess, and your friend effectively chooses which side you end up on.",
+   "leetcode": {
+    "number": 375,
+    "title": "Guess Number Higher or Lower II",
+    "url": "https://leetcode.com/problems/guess-number-higher-or-lower-ii/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc464",
+   "pattern": "game",
+   "difficulty": "Medium",
+   "title": "Race to the target",
+   "story": [
+    "Two players take turns picking a number from a shared pool of 1 to maxChoosable, and each number can be picked only once. Picked numbers are added to a running total, and whoever first makes the total reach or exceed desiredTotal wins.",
+    "Write a function that returns whether the first player can force a win, assuming both play optimally."
+   ],
+   "constraints": [
+    "1 ≤ maxChoosableInteger ≤ 20",
+    "0 ≤ desiredTotal ≤ 300"
+   ],
+   "followups": [
+    "Numbers can now be reused.",
+    "Return a winning first move.",
+    "Why does the running total not need to be part of the state?"
+   ],
+   "hint": "The set of numbers already used tells you everything about the position.",
+   "leetcode": {
+    "number": 464,
+    "title": "Can I Win",
+    "url": "https://leetcode.com/problems/can-i-win/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc1406",
+   "pattern": "game",
+   "difficulty": "Hard",
+   "title": "Take one, two or three",
+   "story": [
+    "Two players face a row of cards, each with a value that can be negative. On each turn a player takes 1, 2 or 3 cards from the front of the row and adds their values to their own score. The first player moves first, both play optimally, and the game ends when the row is empty.",
+    "Write a function that returns \"Alice\" if the first player wins, \"Bob\" if the second player wins, or \"Tie\"."
+   ],
+   "constraints": [
+    "1 ≤ stoneValue.length ≤ 5 * 10⁴",
+    "1000 ≤ stoneValue[i] ≤ 1000"
+   ],
+   "followups": [
+    "Players may take up to k cards.",
+    "Use O(1) extra memory.",
+    "Return the full optimal play."
+   ],
+   "hint": "Instead of tracking both scores, track how far ahead the player to move can get.",
+   "leetcode": {
+    "number": 1406,
+    "title": "Stone Game III",
+    "url": "https://leetcode.com/problems/stone-game-iii/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc913",
+   "pattern": "game",
+   "difficulty": "Hard",
+   "title": "Chase on the floor plan",
+   "story": [
+    "A mouse and a cat play on an undirected graph. The mouse starts at node 1 and moves first, the cat starts at node 2, and node 0 is a hole the cat may never enter. On every turn the player to move must travel along an edge.",
+    "The cat wins if it lands on the mouse. The mouse wins if it reaches the hole. If a position repeats with the same player to move, the game is a draw. Write a function that returns 1 if the mouse wins, 2 if the cat wins and 0 for a draw, assuming both play optimally."
+   ],
+   "constraints": [
+    "3 ≤ graph.length ≤ 50",
+    "1 ≤ graph[i].length < graph.length",
+    "0 ≤ graph[i][j] < graph.length",
+    "graph[i][j] ≠ i",
+    "graph[i] is unique.",
+    "The mouse and the cat can always move."
+   ],
+   "followups": [
+    "Why does plain memoized DFS give wrong answers?",
+    "Return the mouse's best first move.",
+    "There are now two cats."
+   ],
+   "hint": "Work backwards from positions whose result you already know for certain.",
+   "leetcode": {
+    "number": 913,
+    "title": "Cat and Mouse",
+    "url": "https://leetcode.com/problems/cat-and-mouse/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc1162",
+   "pattern": "msbfs",
+   "difficulty": "Medium",
+   "title": "Most remote ocean buoy",
+   "story": [
+    "A square ocean map has land cells and water cells. We want to anchor a weather buoy on the water cell that is as far as possible from its nearest land, measured in Manhattan distance.",
+    "Write a function that returns that distance, or -1 if the map has no land or no water."
+   ],
+   "constraints": [
+    "n == grid.length",
+    "n == grid[i].length",
+    "1 ≤ n ≤ 100",
+    "grid[i][j] is 0 or 1"
+   ],
+   "followups": [
+    "Use straight-line distance instead.",
+    "Return every best cell.",
+    "The map is enormous. What would you change?"
+   ],
+   "hint": "Don't search outward from each water cell.",
+   "leetcode": {
+    "number": 1162,
+    "title": "As Far from Land as Possible",
+    "url": "https://leetcode.com/problems/as-far-from-land-as-possible/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc1765",
+   "pattern": "msbfs",
+   "difficulty": "Medium",
+   "title": "Terrain for the game map",
+   "story": [
+    "A game designer marks each cell of a map as water or land. Every cell must get a non-negative height: water cells are 0, and two cells that share a side may differ by at most 1. The designer wants the tallest possible peak.",
+    "Write a function that takes the water/land map and returns a height grid that reaches the tallest possible peak. Any valid answer is fine."
+   ],
+   "constraints": [
+    "m == isWater.length",
+    "n == isWater[i].length",
+    "1 ≤ m, n ≤ 1000",
+    "isWater[i][j] is 0 or 1.",
+    "There is at least one water cell."
+   ],
+   "followups": [
+    "Some land cells already have fixed heights.",
+    "Diagonal neighbours now count as adjacent.",
+    "Prove your heights cannot be raised anywhere."
+   ],
+   "hint": "A cell's best possible height is decided by how far it is from the nearest water.",
+   "leetcode": {
+    "number": 1765,
+    "title": "Map of Highest Peak",
+    "url": "https://leetcode.com/problems/map-of-highest-peak/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc934",
+   "pattern": "msbfs",
+   "difficulty": "Medium",
+   "title": "Linking two islands",
+   "story": [
+    "A square map has exactly two islands of land cells (land connects up, down, left and right). We want to build a causeway by turning the fewest water cells into land so the two islands join.",
+    "Write a function that returns that minimum number of water cells."
+   ],
+   "constraints": [
+    "n == grid.length == grid[i].length",
+    "2 ≤ n ≤ 100",
+    "grid[i][j] is either 0 or 1.",
+    "There are exactly two islands in grid."
+   ],
+   "followups": [
+    "There are k islands and all of them must be joined.",
+    "Water cells have different filling costs.",
+    "Return the cells to fill."
+   ],
+   "hint": "Grow one entire island outward at once.",
+   "leetcode": {
+    "number": 934,
+    "title": "Shortest Bridge",
+    "url": "https://leetcode.com/problems/shortest-bridge/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc2258",
+   "pattern": "msbfs",
+   "difficulty": "Hard",
+   "title": "How long can you wait?",
+   "story": [
+    "A field is a grid of grass, fire and walls. You start at the top-left cell and must reach a safehouse at the bottom-right cell. Every minute you may move to an adjacent grass cell, and after your move every fire cell spreads to all adjacent cells that are not walls. Reaching the safehouse counts even if the fire arrives there right after you.",
+    "Write a function that returns the maximum number of minutes you can wait at the start and still make it, -1 if you cannot make it at all, or 10^9 if you are safe no matter how long you wait."
+   ],
+   "constraints": [
+    "m == grid.length",
+    "n == grid[i].length",
+    "2 ≤ m, n ≤ 300",
+    "4 ≤ m * n ≤ 2 * 10⁴",
+    "grid[i][j] is either 0, 1, or 2.",
+    "grid[0][0] == grid[m - 1][n - 1] == 0"
+   ],
+   "followups": [
+    "Solve it without binary search.",
+    "Fire now spreads every two minutes.",
+    "There are several safehouses."
+   ],
+   "hint": "Start by working out when the fire reaches each cell.",
+   "leetcode": {
+    "number": 2258,
+    "title": "Escape the Spreading Fire",
+    "url": "https://leetcode.com/problems/escape-the-spreading-fire/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc815",
+   "pattern": "msbfs",
+   "difficulty": "Hard",
+   "title": "Fewest buses across the city",
+   "story": [
+    "A city runs bus lines, and each line loops forever through its list of stops. You start at stop source, not on any bus, and want to reach stop target riding buses only.",
+    "Write a function that takes the lines and the two stops and returns the fewest buses you need to board, or -1 if it is impossible."
+   ],
+   "constraints": [
+    "1 ≤ routes.length ≤ 500.",
+    "1 ≤ routes[i].length ≤ 10⁵",
+    "All the values of routes[i] are unique.",
+    "sum(routes[i].length) ≤ 10⁵",
+    "0 ≤ routes[i][j] < 10⁶",
+    "0 ≤ source, target < 10⁶"
+   ],
+   "followups": [
+    "Minimize the number of stops travelled instead.",
+    "Return the transfers.",
+    "Why are lines better graph nodes than stops here?"
+   ],
+   "hint": "Count boardings, not stops.",
+   "leetcode": {
+    "number": 815,
+    "title": "Bus Routes",
+    "url": "https://leetcode.com/problems/bus-routes/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc979",
+   "pattern": "treedp",
+   "difficulty": "Medium",
+   "title": "Rebalancing spare laptops",
+   "story": [
+    "An org chart is a binary tree of n teams, and there are exactly n spare laptops spread across the teams; some teams have several and some have none. Moving one laptop between a team and its parent or child team counts as one move.",
+    "Write a function that returns the minimum number of moves so that every team ends up with exactly one laptop."
+   ],
+   "constraints": [
+    "The number of nodes in the tree is n.",
+    "1 ≤ n ≤ 100",
+    "0 ≤ Node.val ≤ n",
+    "The sum of all Node.val is n."
+   ],
+   "followups": [
+    "The tree is no longer binary.",
+    "Each team needs a different target number of laptops.",
+    "Moves across some edges cost more than others."
+   ],
+   "hint": "Look at a single edge. How many laptops must cross it, no matter what you do?",
+   "leetcode": {
+    "number": 979,
+    "title": "Distribute Coins in Binary Tree",
+    "url": "https://leetcode.com/problems/distribute-coins-in-binary-tree/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc2925",
+   "pattern": "treedp",
+   "difficulty": "Medium",
+   "title": "Harvesting without starving the branches",
+   "story": [
+    "A distribution network is a tree rooted at node 0, and every node holds a positive stock value. You may harvest any node: add its value to your score and set its value to 0. At the end the network must still be healthy: for every leaf, the sum of the values along the path from the root to that leaf must not be 0.",
+    "Write a function that takes the edges and the values and returns the maximum score you can harvest."
+   ],
+   "constraints": [
+    "2 ≤ n ≤ 2 * 10⁴",
+    "edges.length == n - 1",
+    "edges[i].length == 2",
+    "0 ≤ ai, bi < n",
+    "values.length == n",
+    "1 ≤ values[i] ≤ 10⁹",
+    "The input is generated such that edges represents a valid tree."
+   ],
+   "followups": [
+    "Some values can be zero from the start.",
+    "You may harvest at most k nodes.",
+    "Return which nodes you leave untouched."
+   ],
+   "hint": "It is easier to think about what you leave behind than about what you take.",
+   "leetcode": {
+    "number": 2925,
+    "title": "Maximum Score After Applying Operations on a Tree",
+    "url": "https://leetcode.com/problems/maximum-score-after-applying-operations-on-a-tree/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc337",
+   "pattern": "treedp",
+   "difficulty": "Medium",
+   "title": "Picking promo stores",
+   "story": [
+    "Retail stores form a binary tree, each store reporting to one regional store above it. Each store has an expected promo revenue, but you cannot run the promo in two stores that are directly connected.",
+    "Write a function that takes the root and returns the maximum total revenue."
+   ],
+   "constraints": [
+    "The number of nodes in the tree is in the range [1, 10⁴].",
+    "0 ≤ Node.val ≤ 10⁴"
+   ],
+   "followups": [
+    "Chosen stores must now be at least three edges apart.",
+    "Return which stores to pick.",
+    "The tree is very deep. Do it without recursion."
+   ],
+   "hint": "For every store, compute two numbers: the best with it and the best without it.",
+   "leetcode": {
+    "number": 337,
+    "title": "House Robber III",
+    "url": "https://leetcode.com/problems/house-robber-iii/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc968",
+   "pattern": "treedp",
+   "difficulty": "Hard",
+   "title": "Fewest security cameras",
+   "story": [
+    "A building's corridors form a binary tree of junctions. A camera placed at a junction watches that junction, its parent and its children.",
+    "Write a function that takes the root and returns the minimum number of cameras so that every junction is watched."
+   ],
+   "constraints": [
+    "The number of nodes in the tree is in the range [1, 1000].",
+    "Node.val == 0"
+   ],
+   "followups": [
+    "Cameras now see two junctions away.",
+    "Some junctions cannot hold a camera.",
+    "Prove that your greedy choice is optimal."
+   ],
+   "hint": "A leaf should never hold a camera.",
+   "leetcode": {
+    "number": 968,
+    "title": "Binary Tree Cameras",
+    "url": "https://leetcode.com/problems/binary-tree-cameras/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc2246",
+   "pattern": "treedp",
+   "difficulty": "Hard",
+   "title": "Longest varied trail",
+   "story": [
+    "A park's trails form a tree rooted at junction 0, given as a parent array. Each junction has a one-letter marker. A hiker wants the longest path, counted in junctions, along which no two consecutive junctions share a marker. The path may go up and then down.",
+    "Write a function that takes the parent array and the markers and returns the length of that longest path."
+   ],
+   "constraints": [
+    "n == parent.length == s.length",
+    "1 ≤ n ≤ 10⁵",
+    "0 ≤ parent[i] ≤ n - 1 for all i ≥ 1",
+    "parent[0] == -1",
+    "parent represents a valid tree.",
+    "s consists of only lowercase English letters."
+   ],
+   "followups": [
+    "Edges now have lengths.",
+    "No marker may appear twice anywhere on the path.",
+    "The tree is one long chain. Avoid a stack overflow."
+   ],
+   "hint": "At each junction, combine the two best valid chains coming up from its children.",
+   "leetcode": {
+    "number": 2246,
+    "title": "Longest Path With Different Adjacent Characters",
+    "url": "https://leetcode.com/problems/longest-path-with-different-adjacent-characters/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc1631",
+   "pattern": "bott",
+   "difficulty": "Medium",
+   "title": "Gentlest hiking route",
+   "story": [
+    "A hiking map is a grid of heights. You start at the top-left cell and want to reach the bottom-right cell, moving up, down, left or right. A route's effort is the largest height difference between two consecutive cells on it.",
+    "Write a function that returns the minimum effort over all routes."
+   ],
+   "constraints": [
+    "rows == heights.length",
+    "columns == heights[i].length",
+    "1 ≤ rows, columns ≤ 100",
+    "1 ≤ heights[i][j] ≤ 10⁶"
+   ],
+   "followups": [
+    "Solve it three different ways.",
+    "Diagonal moves are now allowed.",
+    "Return the route."
+   ],
+   "hint": "A route is only as hard as its worst step.",
+   "leetcode": {
+    "number": 1631,
+    "title": "Path With Minimum Effort",
+    "url": "https://leetcode.com/problems/path-with-minimum-effort/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc2812",
+   "pattern": "bott",
+   "difficulty": "Medium",
+   "title": "Staying away from the guards",
+   "story": [
+    "A square map has guards standing on some cells. You start at the top-left cell and want to reach the bottom-right cell, moving up, down, left or right, and you are allowed to walk through any cell. A route's safety is the smallest Manhattan distance from any cell on the route to any guard.",
+    "Write a function that returns the largest possible safety."
+   ],
+   "constraints": [
+    "1 ≤ grid.length == n ≤ 400",
+    "grid[i].length == n",
+    "grid[i][j] is either 0 or 1.",
+    "There is at least one thief in the grid."
+   ],
+   "followups": [
+    "Some cells are now walls.",
+    "Guards move one step every minute.",
+    "Return the route."
+   ],
+   "hint": "Before thinking about routes, find each cell's distance to its nearest guard.",
+   "leetcode": {
+    "number": 2812,
+    "title": "Find the Safest Path in a Grid",
+    "url": "https://leetcode.com/problems/find-the-safest-path-in-a-grid/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc2492",
+   "pattern": "bott",
+   "difficulty": "Medium",
+   "title": "Weakest road on the way",
+   "story": [
+    "Cities 1 to n are connected by two-way roads, each with a length. The network may be split into several parts, but city 1 and city n are connected. A trip's score is the length of the shortest road it uses, and a trip may reuse roads and revisit cities, including 1 and n.",
+    "Write a function that returns the minimum possible score of a trip between city 1 and city n."
+   ],
+   "constraints": [
+    "2 ≤ n ≤ 10⁵",
+    "1 ≤ roads.length ≤ 10⁵",
+    "roads[i].length == 3",
+    "1 ≤ ai, bi ≤ n",
+    "ai ≠ bi",
+    "1 ≤ distancei ≤ 10⁴",
+    "There are no repeated edges.",
+    "There is at least one path between 1 and n."
+   ],
+   "followups": [
+    "Trips must now be simple paths.",
+    "Answer many (a, b) city pairs.",
+    "Why does allowing revisits change everything?"
+   ],
+   "hint": "If you can revisit anything, which roads can a trip touch?",
+   "leetcode": {
+    "number": 2492,
+    "title": "Minimum Score of a Path Between Two Cities",
+    "url": "https://leetcode.com/problems/minimum-score-of-a-path-between-two-cities/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc778",
+   "pattern": "bott",
+   "difficulty": "Hard",
+   "title": "Waiting for the flood",
+   "story": [
+    "A terrain grid has a different elevation in every cell. Water rises over time: at time t, every cell with elevation at most t is flooded, and you can swim instantly between adjacent flooded cells.",
+    "Write a function that returns the earliest time at which you can swim from the top-left cell to the bottom-right cell."
+   ],
+   "constraints": [
+    "n == grid.length",
+    "n == grid[i].length",
+    "1 ≤ n ≤ 50",
+    "0 ≤ grid[i][j] < n²",
+    "Each value grid[i][j] is unique."
+   ],
+   "followups": [
+    "Elevations are no longer distinct.",
+    "Solve it with union-find.",
+    "Return the path."
+   ],
+   "hint": "The answer is the highest cell on the best route.",
+   "leetcode": {
+    "number": 778,
+    "title": "Swim in Rising Water",
+    "url": "https://leetcode.com/problems/swim-in-rising-water/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc2503",
+   "pattern": "bott",
+   "difficulty": "Hard",
+   "title": "How far does each flashlight reach?",
+   "story": [
+    "A cave is a grid where each cell has a darkness level. With a flashlight of strength q, you start at the top-left cell and can enter any cell whose darkness is strictly less than q, moving up, down, left or right. You score one point for every distinct cell you enter. If the starting cell is too dark, you score 0.",
+    "Write a function that takes the grid and a list of flashlight strengths and returns the score for each strength, in the original order."
+   ],
+   "constraints": [
+    "m == grid.length",
+    "n == grid[i].length",
+    "2 ≤ m, n ≤ 1000",
+    "4 ≤ m * n ≤ 10⁵",
+    "k == queries.length",
+    "1 ≤ k ≤ 10⁴",
+    "1 ≤ grid[i][j], queries[i] ≤ 10⁶"
+   ],
+   "followups": [
+    "Strengths now arrive online.",
+    "Each query has its own starting cell.",
+    "Solve it with union-find."
+   ],
+   "hint": "Answer the strengths from weakest to strongest. The reachable area only grows.",
+   "leetcode": {
+    "number": 2503,
+    "title": "Maximum Number of Points From Grid Queries",
+    "url": "https://leetcode.com/problems/maximum-number-of-points-from-grid-queries/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc1514",
+   "pattern": "mult",
+   "difficulty": "Medium",
+   "title": "Most reliable delivery route",
+   "story": [
+    "A drone network has hubs connected by two-way links, and each link has a probability that a package survives it. A route's survival chance is the product of its link probabilities.",
+    "Write a function that takes the number of hubs, the links, their probabilities, a start hub and an end hub, and returns the highest survival chance of any route, or 0 if no route exists."
+   ],
+   "constraints": [
+    "2 ≤ n ≤ 10⁴",
+    "0 ≤ start, end < n",
+    "start ≠ end",
+    "0 ≤ a, b < n",
+    "a ≠ b",
+    "0 ≤ succProb.length == edges.length ≤ 2*10⁴",
+    "0 ≤ succProb[i] ≤ 1",
+    "There is at most one edge between every two nodes."
+   ],
+   "followups": [
+    "Why does Dijkstra still work with products?",
+    "Rewrite it using logarithms. What changes?",
+    "Return the route."
+   ],
+   "hint": "Multiplying by a number between 0 and 1 never makes a route more reliable.",
+   "leetcode": {
+    "number": 1514,
+    "title": "Path with Maximum Probability",
+    "url": "https://leetcode.com/problems/path-with-maximum-probability/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc399",
+   "pattern": "mult",
+   "difficulty": "Medium",
+   "title": "Currency converter from partial rates",
+   "story": [
+    "A finance tool knows some exchange rates as equations of the form \"A / B = value\" between named currencies. Users ask for C / D. If it can be derived from the known rates, return it; otherwise return -1.0. Currencies that never appear in the known rates are undefined. The known rates never contradict each other.",
+    "Write a function that takes the equations, their values and the queries and returns an answer for each query."
+   ],
+   "constraints": [
+    "1 ≤ equations.length ≤ 20",
+    "equations[i].length == 2",
+    "1 ≤ Ai.length, Bi.length ≤ 5",
+    "values.length == equations.length",
+    "0.0 < values[i] ≤ 20.0",
+    "1 ≤ queries.length ≤ 20",
+    "queries[i].length == 2",
+    "1 ≤ Cj.length, Dj.length ≤ 5",
+    "Ai, Bi, Cj, Dj consist of lower case English letters and digits."
+   ],
+   "followups": [
+    "Rates are updated over time.",
+    "Detect inconsistent rates that would allow arbitrage.",
+    "Solve it with weighted union-find."
+   ],
+   "hint": "Each known rate is an edge you can walk in both directions.",
+   "leetcode": {
+    "number": 399,
+    "title": "Evaluate Division",
+    "url": "https://leetcode.com/problems/evaluate-division/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc1976",
+   "pattern": "mult",
+   "difficulty": "Medium",
+   "title": "Counting fastest commutes",
+   "story": [
+    "A city has intersections 0 to n - 1 joined by two-way roads with travel times, and every intersection can be reached. You are at intersection 0 and want to reach n - 1 as fast as possible.",
+    "Write a function that returns how many different routes achieve the shortest travel time, modulo 1,000,000,007."
+   ],
+   "constraints": [
+    "1 ≤ n ≤ 200",
+    "n - 1 ≤ roads.length ≤ n * (n - 1) / 2",
+    "roads[i].length == 3",
+    "0 ≤ ui, vi ≤ n - 1",
+    "1 ≤ timei ≤ 10⁹",
+    "ui ≠ vi",
+    "There is at most one road connecting any two intersections.",
+    "You can reach any intersection from any other intersection."
+   ],
+   "followups": [
+    "Count routes within 10% of the shortest time.",
+    "Return one shortest route.",
+    "Why must you count while running the shortest-path search, not afterwards?"
+   ],
+   "hint": "When you find a strictly better time to a node, reset its count. When you tie, add to it.",
+   "leetcode": {
+    "number": 1976,
+    "title": "Number of Ways to Arrive at Destination",
+    "url": "https://leetcode.com/problems/number-of-ways-to-arrive-at-destination/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc2045",
+   "pattern": "mult",
+   "difficulty": "Hard",
+   "title": "The second-fastest commute",
+   "story": [
+    "A city has intersections 1 to n and two-way roads that all take the same time to drive. Every intersection has a traffic light, and all lights switch between green and red together every \"change\" minutes, starting green. You can arrive at an intersection at any time but can only leave on green, and you must leave immediately if it is green.",
+    "Write a function that returns the second smallest possible arrival time at intersection n starting from intersection 1, meaning the smallest time strictly greater than the fastest one. You may pass through intersections more than once."
+   ],
+   "constraints": [
+    "2 ≤ n ≤ 10⁴",
+    "n - 1 ≤ edges.length ≤ min(2 * 10⁴, n * (n - 1) / 2)",
+    "edges[i].length == 2",
+    "1 ≤ ui, vi ≤ n",
+    "ui ≠ vi",
+    "There are no duplicate edges.",
+    "Each vertex can be reached directly or indirectly from every other vertex.",
+    "1 ≤ time, change ≤ 10³"
+   ],
+   "followups": [
+    "Find the k-th smallest arrival time.",
+    "Roads now take different times.",
+    "Why is tracking the number of roads driven enough?"
+   ],
+   "hint": "Keep the two best distinct arrival counts for every intersection.",
+   "leetcode": {
+    "number": 2045,
+    "title": "Second Minimum Time to Reach Destination",
+    "url": "https://leetcode.com/problems/second-minimum-time-to-reach-destination/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc1928",
+   "pattern": "mult",
+   "difficulty": "Hard",
+   "title": "Cheapest trip before the deadline",
+   "story": [
+    "Cities 0 to n - 1 are connected by two-way roads with travel times, and there may be several roads between the same pair. Every city charges a fee each time you pass through it, including the start and the end. You must get from city 0 to city n - 1 within maxTime minutes.",
+    "Write a function that returns the minimum total fees, or -1 if the deadline cannot be met."
+   ],
+   "constraints": [
+    "1 ≤ maxTime ≤ 1000",
+    "n == passingFees.length",
+    "2 ≤ n ≤ 1000",
+    "n - 1 ≤ edges.length ≤ 1000",
+    "0 ≤ xi, yi ≤ n - 1",
+    "1 ≤ timei ≤ 1000",
+    "1 ≤ passingFees[j] ≤ 1000",
+    "The graph may contain multiple edges between two nodes.",
+    "The graph does not contain self loops."
+   ],
+   "followups": [
+    "Why does plain Dijkstra on cost fail?",
+    "maxTime is now huge. What breaks?",
+    "Return the route."
+   ],
+   "hint": "Make time part of the state.",
+   "leetcode": {
+    "number": 1928,
+    "title": "Minimum Cost to Reach Destination in Time",
+    "url": "https://leetcode.com/problems/minimum-cost-to-reach-destination-in-time/"
+   },
+   "source": "bank"
+  }
+ ]
+}
