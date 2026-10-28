@@ -10,7 +10,7 @@
     roboto: '"Roboto Mono", ui-monospace, Menlo, monospace',
   };
   const FONT_LABEL = { arial: 'Arial', courier: 'Courier New', roboto: 'Roboto Mono' };
-  const SIZES = [13, 14, 15, 16, 18];
+  const SIZES = [10, 11, 12, 13, 14, 15, 16, 18];
   const TIMER_SECONDS = 45 * 60;
   const TEMPLATE = 'Clarifying questions:\n- \n\nExamples and edge cases:\n- \n\nApproach:\nBrute force: \nBetter: \n\nComplexity:\nTime: \nSpace: \n\nCode:\n\n\nDry run:\n\n';
   const OWN_PATTERN = { id: 'own', tier: 0, name: 'Your own questions', signal: 'Questions you added that are not filed under a pattern yet.' };
@@ -40,6 +40,8 @@
     pencil: svg('<path d="M12 20h9M16.5 3.5a2.1 2.1 0 1 1 3 3L7 19l-4 1 1-4z"/>'),
     trash: svg('<path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/>'),
     download: svg('<path d="M12 3v12M7 10l5 5 5-5M5 21h14"/>'),
+    panel: svg('<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16"/>'),
+    panelOpen: svg('<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16M13 10l2 2-2 2"/>'),
   };
   const DOC_ICON = '<svg class="doc-ico" viewBox="0 0 22 28" aria-hidden="true"><path d="M2 0h12l8 8v18a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2z" fill="#4285f4"/><path d="M14 0l8 8h-6a2 2 0 0 1-2-2z" fill="#a1c2fa"/><path d="M5 13h12M5 17h12M5 21h8" stroke="#fff" stroke-width="1.8"/></svg>';
 
@@ -681,7 +683,7 @@
         h('div', { class: 'doc-tools' }, fontSel, sizeSel, templateBtn, copyBtn, saveBtn)),
       h('div', { class: 'doc-scroll' }, noticeEl, page),
       h('div', { class: 'doc-foot' }, countEl, h('span', { text: 'Tab indents · Esc then Tab leaves the doc' })));
-    if (noticeEl) noticeEl.style.cssText = 'max-width:816px;margin:0 auto 12px';
+    if (noticeEl) noticeEl.style.cssText = 'margin:0 0 12px';
 
     function refresh() {
       const cur = getSol(q.id);
@@ -813,8 +815,64 @@
         prev ? h('a', { href: '#/q/' + encodeURIComponent(prev.id) }, icon('left'), h('span', { text: prev.title })) : h('span'),
         next ? h('a', { href: '#/q/' + encodeURIComponent(next.id) }, h('span', { text: next.title }), icon('right')) : h('span')) : null);
 
-    const main = h('main', { class: 'page' }, h('div', { class: 'room' }, prompt, editor.el));
+    // Problem panel can be hidden, and the line between the panels can be dragged to resize them.
+    const room = h('div', { class: 'room' + (S.ui.hidePrompt ? ' hide-prompt' : '') });
+    const clampLeft = (px) => Math.round(Math.max(260, Math.min(px, room.clientWidth - 380)));
+    const applyLeft = () => {
+      if (S.ui.leftPx && window.innerWidth > 980) room.style.setProperty('--left-col', clampLeft(S.ui.leftPx) + 'px');
+      else room.style.removeProperty('--left-col');
+    };
+    const panelBtn = h('button', { class: 'icon-btn', type: 'button' });
+    const drawPanelBtn = () => {
+      const hidden = !!S.ui.hidePrompt;
+      panelBtn.innerHTML = '';
+      append(panelBtn, [icon(hidden ? 'panelOpen' : 'panel'), h('span', { class: 'lbl', text: hidden ? 'Show problem' : 'Hide problem' })]);
+      panelBtn.setAttribute('aria-pressed', String(hidden));
+      panelBtn.title = hidden ? 'Show the problem next to the doc' : 'Hide the problem to give the doc the full width';
+    };
+    const setHidden = (hidden) => {
+      S.ui.hidePrompt = hidden; saveUi();
+      room.classList.toggle('hide-prompt', hidden);
+      drawPanelBtn(); applyLeft(); editor.fit();
+    };
+    panelBtn.addEventListener('click', () => setHidden(!S.ui.hidePrompt));
+    drawPanelBtn();
+    editor.el.querySelector('.doc-tools').prepend(panelBtn);
+    const rail = h('aside', { class: 'rail', 'aria-label': 'Problem hidden' },
+      h('button', { class: 'rail-btn', type: 'button', title: 'Show the problem', onclick: () => setHidden(false) },
+        icon('panelOpen'), h('span', { class: 'rail-txt', text: 'Show problem' })),
+      h('span', { class: 'rail-title', text: q.title }));
+    const splitter = h('div', { class: 'splitter', role: 'separator', tabindex: '0', 'aria-orientation': 'vertical', 'aria-label': 'Drag to resize the problem and the doc. Double-click to reset.', title: 'Drag to resize. Double-click to reset.' },
+      h('span', { class: 'splitter-grip' }));
+    let dragging = false;
+    splitter.addEventListener('pointerdown', (e) => {
+      if (e.button !== 0) return;
+      dragging = true; splitter.setPointerCapture(e.pointerId);
+      document.body.classList.add('resizing');
+      e.preventDefault();
+    });
+    splitter.addEventListener('pointermove', (e) => {
+      if (!dragging) return;
+      const r = room.getBoundingClientRect();
+      S.ui.leftPx = clampLeft(e.clientX - r.left - 7);
+      applyLeft();
+    });
+    const endDrag = () => { if (!dragging) return; dragging = false; document.body.classList.remove('resizing'); saveUi(); editor.fit(); };
+    splitter.addEventListener('pointerup', endDrag);
+    splitter.addEventListener('pointercancel', endDrag);
+    splitter.addEventListener('dblclick', () => { delete S.ui.leftPx; saveUi(); applyLeft(); editor.fit(); });
+    splitter.addEventListener('keydown', (e) => {
+      if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+      e.preventDefault();
+      const cur = prompt.getBoundingClientRect().width;
+      S.ui.leftPx = clampLeft(cur + (e.key === 'ArrowLeft' ? -32 : 32)); saveUi(); applyLeft(); editor.fit();
+    });
+    append(room, [rail, prompt, splitter, editor.el]);
+    const main = h('main', { class: 'page' }, room);
+    const onResize = () => { applyLeft(); editor.fit(); };
+    window.addEventListener('resize', onResize);
     mount(main);
+    applyLeft();
     window.scrollTo(0, 0);
     editor.fit();
     route.ctx = {
@@ -825,7 +883,7 @@
         fuList.querySelectorAll('input[type="checkbox"]').forEach((box, i) => { box.checked = st.has(i); });
         const sub = reveals.querySelector('.rv-fu .rv-sub'); if (sub) sub.textContent = fuSub();
       },
-      cleanup: () => { timer.stop(); editor.flush(); if (Sync.enabled() && Sync.timers['sol:' + q.id]) { Sync.flushKey('sol:' + q.id); Sync.syncSolution(q.id); } },
+      cleanup: () => { window.removeEventListener('resize', onResize); document.body.classList.remove('resizing'); timer.stop(); editor.flush(); if (Sync.enabled() && Sync.timers['sol:' + q.id]) { Sync.flushKey('sol:' + q.id); Sync.syncSolution(q.id); } },
     };
     if (Sync.enabled()) Sync.syncSolution(q.id);
   }
