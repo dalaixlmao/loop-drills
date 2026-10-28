@@ -6,7 +6,7 @@ Live site: https://dalaixlmao.github.io/loop-drills/
 
 ## How it is put together
 
-- Static site: `index.html`, `styles.css`, `app.js`. No build step. GitHub Pages serves this repo.
+- Static site: `index.html`, `styles.css`, `app.js`. No build step. GitHub Pages serves the `gh-pages` branch, so push changes to `main` and then `git push origin main:gh-pages` (or switch Settings > Pages to deploy from `main`).
 - `data/bank.json` holds the question bank: 19 patterns in 3 priority tiers, 3 Medium and 2 Hard each.
 - Your solutions, progress and the questions you add are **not** stored here. They go to a private repo (`loop-drills-data` by default) through the GitHub API, using a fine-grained token that stays in your browser. Without a token, everything is kept in the browser only.
 
