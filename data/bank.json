@@ -237,7 +237,7 @@
    ],
    "constraints": [
     "1 ≤ nums.length ≤ 10⁵",
-    "10⁴ ≤ nums[i] ≤ 10⁴",
+    "-10⁴ ≤ nums[i] ≤ 10⁴",
     "1 ≤ k ≤ nums.length"
    ],
    "followups": [
@@ -564,7 +564,7 @@
    ],
    "constraints": [
     "The number of nodes in the linked list will be in the range [1, 10⁴].",
-    "10⁴ ≤ Node.val ≤ 10⁴",
+    "-10⁴ ≤ Node.val ≤ 10⁴",
     "At most 10⁴ calls will be made to getRandom."
    ],
    "followups": [
@@ -671,7 +671,7 @@
     "Implement insert(val), returning true if val was not in the box before; remove(val), returning true if a ticket with val was there and one was removed; and getRandom(), returning a drawn number. Every operation should be O(1) on average."
    ],
    "constraints": [
-    "2³¹ ≤ val ≤ 2³¹ - 1",
+    "-2³¹ ≤ val ≤ 2³¹ - 1",
     "At most 2 * 10⁵ calls in total will be made to insert, remove, and getRandom.",
     "There will be at least one element in the data structure when getRandom is called."
    ],
@@ -931,7 +931,7 @@
    ],
    "constraints": [
     "1 ≤ k ≤ nums.length ≤ 10⁵",
-    "2³¹ ≤ nums[i] ≤ 2³¹ - 1"
+    "-2³¹ ≤ nums[i] ≤ 2³¹ - 1"
    ],
    "followups": [
     "Show the rolling 90th percentile instead of the median.",
@@ -987,7 +987,7 @@
    ],
    "constraints": [
     "1 ≤ nums.length ≤ 3 * 10⁴",
-    "10⁴ ≤ nums[i] ≤ 10⁴",
+    "-10⁴ ≤ nums[i] ≤ 10⁴",
     "2 ≤ k ≤ 10⁴"
    ],
    "followups": [
@@ -1068,8 +1068,8 @@
    "constraints": [
     "1 ≤ matrix.length ≤ 100",
     "1 ≤ matrix[0].length ≤ 100",
-    "1000 ≤ matrix[i][j] ≤ 1000",
-    "10⁸ ≤ target ≤ 10⁸"
+    "-1000 ≤ matrix[i][j] ≤ 1000",
+    "-10⁸ ≤ target ≤ 10⁸"
    ],
    "followups": [
     "The grid is very wide but only a few rows tall. Which way do you iterate?",
@@ -1095,7 +1095,7 @@
    ],
    "constraints": [
     "1 ≤ nums.length ≤ 10⁵",
-    "10⁵ ≤ nums[i] ≤ 10⁵",
+    "-10⁵ ≤ nums[i] ≤ 10⁵",
     "1 ≤ k ≤ 10⁹"
    ],
    "followups": [
@@ -1266,7 +1266,7 @@
    "constraints": [
     "n == nums.length",
     "1 ≤ n ≤ 3 * 10⁴",
-    "3 * 10⁴ ≤ nums[i] ≤ 3 * 10⁴"
+    "-3 * 10⁴ ≤ nums[i] ≤ 3 * 10⁴"
    ],
    "followups": [
     "Return the first and last stop of the stretch.",
@@ -1292,7 +1292,7 @@
    ],
    "constraints": [
     "1 ≤ arr.length ≤ 10⁵",
-    "10⁴ ≤ arr[i] ≤ 10⁴"
+    "-10⁴ ≤ arr[i] ≤ 10⁴"
    ],
    "followups": [
     "Forgive up to k days.",
@@ -1372,8 +1372,8 @@
     "m == matrix.length",
     "n == matrix[i].length",
     "1 ≤ m, n ≤ 100",
-    "100 ≤ matrix[i][j] ≤ 100",
-    "10⁵ ≤ k ≤ 10⁵"
+    "-100 ≤ matrix[i][j] ≤ 100",
+    "-10⁵ ≤ k ≤ 10⁵"
    ],
    "followups": [
     "There are far more rows than columns. What do you change?",
@@ -2226,7 +2226,7 @@
    ],
    "constraints": [
     "1 ≤ stoneValue.length ≤ 5 * 10⁴",
-    "1000 ≤ stoneValue[i] ≤ 1000"
+    "-1000 ≤ stoneValue[i] ≤ 1000"
    ],
    "followups": [
     "Players may take up to k cards.",

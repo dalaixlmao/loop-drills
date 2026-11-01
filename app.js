@@ -38,6 +38,8 @@
     copy: svg('<rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/>'),
     cloud: svg('<path d="M7 19h10a4.5 4.5 0 0 0 .6-8.96A6 6 0 0 0 6.2 9.2 5 5 0 0 0 7 19z"/><path d="m9.2 14 2 2 3.6-3.6"/>'),
     pencil: svg('<path d="M12 20h9M16.5 3.5a2.1 2.1 0 1 1 3 3L7 19l-4 1 1-4z"/>'),
+    star: svg('<path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2L12 17.3 6.4 20.2l1.1-6.2L3 9.6l6.2-.9z"/>'),
+    grid: svg('<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>'),
     trash: svg('<path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/>'),
     download: svg('<path d="M12 3v12M7 10l5 5 5-5M5 21h14"/>'),
     panel: svg('<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16"/>'),
@@ -64,6 +66,7 @@
 
   const S = {
     bank: null,
+    star: null,
     custom: ls.get('custom', []),
     progress: ls.get('progress', {}),
     sync: Object.assign({}, DEFAULT_SYNC, ls.get('sync', {})),
@@ -145,7 +148,22 @@
   // ------------------------------------------------------------------ data access
   const visibleCustom = () => S.custom.filter((q) => q && !q.deleted);
   const allQuestions = () => S.bank.questions.concat(visibleCustom());
-  const qById = (id) => allQuestions().find((q) => q.id === id) || null;
+  const starQuestions = () => (S.star && S.star.questions) || [];
+  const qById = (id) => allQuestions().find((q) => q.id === id) || starQuestions().find((q) => q.id === id) || null;
+  // Star page order: group by group, row by row. Rows can point at questions that also live in the
+  // main bank; those keep one id, so progress and the solution doc are shared between both pages.
+  function starOrder() {
+    const out = [], seen = new Set();
+    ((S.star && S.star.groups) || []).forEach((g) => g.rows.forEach((r) => r.ids.forEach((id) => {
+      if (seen.has(id)) return;
+      const q = qById(id);
+      if (!q) return;
+      seen.add(id); out.push({ q: q, group: g, row: r });
+    })));
+    return out;
+  }
+  const starInfo = (id) => starOrder().find((x) => x.q.id === id) || null;
+  const starHref = (id, blind) => '#/q/' + encodeURIComponent(id) + '/star' + (blind ? '/blind' : '');
   const patternById = (id) => S.bank.patterns.find((p) => p.id === id) || OWN_PATTERN;
   const questionsOf = (pid) => allQuestions().filter((q) => q.pattern === pid);
   const tierById = (id) => S.bank.tiers.find((t) => t.id === id) || { id: 0, label: 'Yours', heading: 'Your own questions', blurb: '' };
@@ -403,6 +421,7 @@
 
   function onDataChanged() {
     if (route.view === 'home') renderHome(true);
+    if (route.view === 'star') renderStar(true);
     if (route.view === 'q' && route.ctx && route.ctx.refreshStatus) route.ctx.refreshStatus();
   }
   function onSolutionPulled(id, r) {
@@ -441,11 +460,27 @@
           h('a', { class: 'icon-btn', href: '#/settings', title: 'Settings and sync', 'aria-label': 'Settings' }, icon('gear')))));
   }
   function surprise() {
-    let pool = orderedQuestions().filter((q) => statusOf(q.id) !== 'solved');
-    if (!pool.length) pool = orderedQuestions();
+    // On the Star page (or a Star question) pick from Star, otherwise from the pattern list.
+    const star = route.view === 'star' || (route.view === 'q' && route.star);
+    const all = star ? starOrder().map((x) => x.q) : orderedQuestions();
+    let pool = all.filter((q) => statusOf(q.id) !== 'solved');
+    if (!pool.length) pool = all;
     const q = pool[Math.floor(Math.random() * pool.length)];
-    if (q) location.hash = '#/q/' + encodeURIComponent(q.id) + '/blind';
+    if (q) location.hash = star ? starHref(q.id, true) : '#/q/' + encodeURIComponent(q.id) + '/blind';
   }
+  function pageTabs(active) {
+    const nStar = starOrder().length;
+    const tab = (key, href, ic, label, n) => h('a', { href: href, 'aria-current': active === key ? 'page' : null }, icon(ic), h('span', { text: label }), n ? h('span', { class: 'n', text: String(n) }) : null);
+    return h('nav', { class: 'tabs', 'aria-label': 'Question lists' },
+      tab('home', '#/', 'grid', 'Patterns', allQuestions().length),
+      tab('star', '#/star', 'star', 'Star', nStar));
+  }
+  const statBar = (label, c, n, d, attN) => {
+    const pct = (a, b) => (b ? Math.round((a / b) * 1000) / 10 : 0) + '%';
+    return h('div', { class: 'stat', style: '--c:' + c },
+      h('div', { class: 'stat-h' }, h('span', null, h('i', { class: 'dot' }), label), h('b', { text: n + ' / ' + d })),
+      h('div', { class: 'bar' }, h('i', { style: 'width:' + pct(n, d) }), attN ? h('i', { class: 'att', style: 'width:' + pct(attN, d) }) : null));
+  };
   function mount(main) {
     const app = $('#app');
     app.innerHTML = '';
@@ -465,6 +500,7 @@
     const solved = count(qs, 'solved'), att = count(qs, 'attempted');
     const pct = (n, d) => (d ? Math.round((n / d) * 1000) / 10 : 0) + '%';
 
+    col.append(pageTabs('home'));
     col.append(h('header', null,
       h('div', { class: 'eyebrow', text: 'Google loop practice · ' + S.bank.patterns.length + ' patterns · ' + qs.length + ' questions' }),
       h('h1', { class: 'page-title', text: 'Loop Drills' }),
@@ -544,15 +580,94 @@
     mount(main);
     if (keepScroll) window.scrollTo(0, y); else window.scrollTo(0, homeScroll || 0);
   }
-  function questionRow(q) {
+  function questionRow(q, opts) {
+    opts = opts || {};
     const st = statusOf(q.id);
     const next = st === 'solved' ? 'todo' : 'solved';
+    const rerender = opts.star ? renderStar : renderHome;
+    const shared = opts.star && q.source !== 'star';
     return h('li', { class: 'qrow ' + st, 'data-st': st },
       h('button', { class: 'st-btn', type: 'button', title: 'Mark as ' + STATUS_LABEL[next].toLowerCase(), 'aria-label': q.title + ': ' + STATUS_LABEL[st] + '. Mark as ' + STATUS_LABEL[next].toLowerCase(),
-        onclick: () => { setStatus(q.id, next); renderHome(true); } },
+        onclick: () => { setStatus(q.id, next); rerender(true); } },
         h('span', { class: 'st-ico', html: I.check })),
-      h('a', { href: '#/q/' + encodeURIComponent(q.id), text: q.title }),
-      h('span', { class: 'tags' }, q.source === 'custom' ? h('span', { class: 'chip yours', text: 'Yours' }) : null, h('span', { class: 'chip ' + q.difficulty, text: q.difficulty })));
+      h('a', { href: opts.star ? starHref(q.id) : '#/q/' + encodeURIComponent(q.id), text: q.title }),
+      h('span', { class: 'tags' },
+        q.source === 'custom' ? h('span', { class: 'chip yours', text: 'Yours' }) : null,
+        shared ? h('span', { class: 'chip muted', title: 'Also in the Patterns list. Progress and your doc are shared.', text: 'In Patterns' }) : null,
+        h('span', { class: 'chip ' + q.difficulty, text: q.difficulty })));
+  }
+
+  // ------------------------------------------------------------------ star page
+  let starScroll = 0;
+  function renderStar(keepScroll) {
+    const y = window.scrollY;
+    const main = h('main', { class: 'page star-page' });
+    const col = h('div', { class: 'col' });
+    main.append(col);
+    col.append(pageTabs('star'));
+    if (!S.star) {
+      col.append(h('div', { class: 'empty', text: 'Could not load the Star list. Check your connection and reload.' }));
+      mount(main);
+      return;
+    }
+    const items = starOrder();
+    const qs = items.map((x) => x.q);
+    const count = (arr, s) => arr.filter((q) => statusOf(q.id) === s).length;
+    const solved = count(qs, 'solved'), att = count(qs, 'attempted');
+    const pct = (n, d) => (d ? Math.round((n / d) * 1000) / 10 : 0) + '%';
+
+    col.append(h('header', null,
+      h('div', { class: 'eyebrow', text: 'Disguised problems · ' + S.star.groups.length + ' groups · ' + qs.length + ' questions' }),
+      h('h1', { class: 'page-title' }, h('span', { class: 'title-star', html: I.star }), 'Star'),
+      h('p', { class: 'lede', text: S.star.blurb })));
+
+    col.append(h('section', { class: 'card summary', 'aria-label': 'Progress' },
+      h('div', { class: 'sum-top' },
+        h('div', { class: 'sum-big' }, String(solved), h('small', { text: 'of ' + qs.length + ' solved' })),
+        h('div', { class: 'sum-sub', text: att + ' attempted · ' + (qs.length - solved - att) + ' to go' })),
+      h('div', { class: 'bar', role: 'img', 'aria-label': solved + ' solved, ' + att + ' attempted' }, h('i', { style: 'width:' + pct(solved, qs.length) }), h('i', { class: 'att', style: 'width:' + pct(att, qs.length) })),
+      h('hr', { class: 'div' }),
+      h('div', { class: 'stats' }, ['Medium', 'Hard'].map((dname) => { const a = qs.filter((q) => q.difficulty === dname); return statBar(dname, dname === 'Medium' ? 'var(--med)' : 'var(--hard)', count(a, 'solved'), a.length); }))));
+
+    col.append(h('div', { class: 'controls' },
+      h('div', { class: 'seg', role: 'group', 'aria-label': 'Filter by status' },
+        [['all', 'Any status'], ['todo', 'To do'], ['attempted', 'Attempted'], ['solved', 'Solved']].map(([v, t]) => h('button', { type: 'button', 'aria-pressed': String(S.ui.status === v), text: t, onclick: () => { S.ui.status = v; saveUi(); renderStar(true); } }))),
+      h('label', { class: 'switch', for: 'blind-toggle' },
+        h('input', { type: 'checkbox', id: 'blind-toggle', checked: S.ui.blind, onchange: (e) => { S.ui.blind = e.target.checked; saveUi(); } }),
+        'Blind mode: hide group and difficulty while solving')));
+
+    let shown = 0;
+    const placed = new Set();
+    S.star.groups.forEach((g, gi) => {
+      const gq = items.filter((x) => x.group.id === g.id).map((x) => x.q);
+      const done = count(gq, 'solved');
+      const rows = [];
+      g.rows.forEach((r) => {
+        const rq = r.ids.map((id) => (placed.has(id) ? null : qById(id))).filter(Boolean);
+        rq.forEach((q) => placed.add(q.id));
+        const list = rq.filter((q) => S.ui.status === 'all' || statusOf(q.id) === S.ui.status);
+        if (!list.length && (S.ui.status !== 'all' || !r.note)) return;
+        shown += list.length;
+        rows.push(h('div', { class: 'srow' },
+          h('div', { class: 'srow-says' }, h('span', { class: 'srow-k', text: 'Sounds like' }), h('span', { text: r.says })),
+          h('details', { class: 'trick' },
+            h('summary', null, icon('eye'), h('span', { class: 'show', text: 'What it really is' })),
+            h('div', { class: 'trick-body', text: r.really })),
+          r.note ? h('p', { class: 'srow-note', text: r.note }) : null,
+          list.length ? h('ul', { class: 'qlist' }, list.map((q) => questionRow(q, { star: true }))) : null));
+      });
+      if (!rows.length) return;
+      col.append(h('article', { class: 'card pcard sgroup' + (gq.length && done === gq.length ? ' done' : ''), id: 'g-' + g.id },
+        h('div', { class: 'pcard-head' },
+          h('div', { class: 'rank', text: pad(gi + 1) }),
+          h('div', { class: 'ptitle' }, h('h3', { text: g.name })),
+          h('div', { class: 'pcount' }, h('span', { text: done + ' / ' + gq.length }), h('div', { class: 'bar' }, h('i', { style: 'width:' + pct(done, gq.length) })))),
+        rows));
+    });
+    if (!shown) col.append(h('div', { class: 'empty', text: 'Nothing matches this filter.' }));
+    col.append(h('p', { class: 'foot', text: 'Questions tagged "In Patterns" also sit in the main list; progress and your doc are shared. Constraints come from LeetCode; stories, follow-ups and hints are written for practice.' }));
+    mount(main);
+    if (keepScroll) window.scrollTo(0, y); else window.scrollTo(0, starScroll || 0);
   }
 
   // ------------------------------------------------------------------ question room
@@ -731,18 +846,23 @@
       h('div', { class: 'rv-body' }, body));
   }
 
-  function renderQuestion(id, blindRoute) {
+  function renderQuestion(id, opts) {
+    opts = opts || {};
     const q = qById(id);
     if (!q) {
       mount(h('main', { class: 'page' }, h('div', { class: 'col' }, h('div', { class: 'empty' }, 'That question does not exist anymore. ', h('a', { href: '#/', text: 'Back to the list' })))));
       return;
     }
-    const blind = blindRoute || S.ui.blind;
-    const p = patternById(q.pattern);
+    const blind = opts.blind || S.ui.blind;
+    const sinfo = starInfo(q.id);
+    const inStar = !!sinfo && (opts.star || q.source === 'star');
+    route.star = inStar;
+    const p = inStar ? { id: sinfo.group.id, tier: 0, name: sinfo.group.name } : patternById(q.pattern);
     const tier = tierById(p.tier);
-    const siblings = questionsOf(q.pattern);
+    const siblings = inStar ? starOrder().filter((x) => x.group.id === sinfo.group.id).map((x) => x.q) : questionsOf(q.pattern);
     const idx = siblings.findIndex((x) => x.id === q.id);
     const prev = blind ? null : siblings[idx - 1], next = blind ? null : siblings[idx + 1];
+    const qHref = (x) => (inStar ? starHref(x.id) : '#/q/' + encodeURIComponent(x.id));
 
     const statusSeg = h('div', { class: 'seg status-seg', role: 'group', 'aria-label': 'Status' });
     const drawStatus = () => {
@@ -778,11 +898,14 @@
       reveal('rv-cons', 'ruler', 'Constraints', 'LeetCode', q.constraints && q.constraints.length ? h('ul', null, q.constraints.map((c) => h('li', { text: c }))) : h('p', { text: 'No constraints recorded for this one.' })),
       reveal('rv-fu', 'chat', 'Follow-ups the interviewer might ask', fuSub(), (q.followups || []).length ? [fuList, h('p', { class: 'fu-note', text: 'Tick one once you have answered it in the doc. The daily review only counts ticked follow-ups that have a written answer.' })] : h('p', { text: 'No follow-ups recorded yet.' })),
       reveal('rv-hint', 'bulb', 'One hint', 'Not the full idea', h('p', { text: q.hint || 'No hint recorded for this one.' })),
+      sinfo ? reveal('rv-trick', 'star', 'What it really is', 'Spoiler', [
+        h('p', { class: 'trick-says' }, h('span', { class: 'trick-k', text: 'Sounds like' }), sinfo.row.says),
+        h('p', { class: 'trick-really' }, h('span', { class: 'trick-k', text: 'Really' }), sinfo.row.really)]) : null,
       lc ? reveal('rv-lc', 'code', 'Which LeetCode problem is this?', 'Spoiler', h('div', { class: 'lc-name' }, lc.number ? h('b', { text: '#' + lc.number }) : null, h('span', { text: lc.title || lc.url }), h('a', { href: lc.url, target: '_blank', rel: 'noopener', text: 'Open' }))) : null,
       blind ? reveal('rv-pat', 'eye', 'Pattern and difficulty', 'Hidden in blind mode', h('p', null, h('b', { text: p.name }), ' · ' + q.difficulty)) : null);
     // Record the first time each hidden panel is opened, and how much was already written,
     // so the review can tell "peeked before trying" from "checked after a full attempt".
-    const REVEAL_KEYS = { 'rv-cons': 'constraints', 'rv-fu': 'followups', 'rv-hint': 'hint', 'rv-lc': 'leetcode', 'rv-pat': 'pattern' };
+    const REVEAL_KEYS = { 'rv-cons': 'constraints', 'rv-fu': 'followups', 'rv-hint': 'hint', 'rv-trick': 'trick', 'rv-lc': 'leetcode', 'rv-pat': 'pattern' };
     reveals.querySelectorAll('details.rv').forEach((d) => {
       const key = Object.keys(REVEAL_KEYS).find((c) => d.classList.contains(c));
       if (!key) return;
@@ -797,7 +920,10 @@
     });
 
     const prompt = h('section', { class: 'card prompt', 'aria-label': 'Problem' },
-      h('div', { class: 'crumbs' },
+      inStar ? h('div', { class: 'crumbs' },
+        h('a', { href: '#/star' }, icon('back'), 'Star'),
+        blind ? null : [h('span', { class: 'sep', text: '/' }), h('a', { href: '#/star', onclick: () => { starScroll = 0; setTimeout(() => { const t = document.getElementById('g-' + p.id); if (t) t.scrollIntoView(); }, 30); }, text: p.name })])
+      : h('div', { class: 'crumbs' },
         h('a', { href: '#/' }, icon('back'), 'All questions'),
         blind ? null : [h('span', { class: 'sep', text: '/' }), h('span', { text: p.tier ? 'Priority ' + p.tier + ' · ' + tier.label : 'Yours' }), h('span', { class: 'sep', text: '/' }), h('a', { href: '#/', onclick: () => { homeScroll = 0; setTimeout(() => { const t = document.getElementById('p-' + p.id); if (t) t.scrollIntoView(); }, 30); }, text: p.name })]),
       h('div', { class: 'q-meta' },
@@ -811,9 +937,9 @@
       q.source === 'custom' ? h('div', { class: 'own-actions' },
         h('a', { class: 'icon-btn', href: '#/edit/' + encodeURIComponent(q.id) }, icon('pencil'), 'Edit question'),
         deleteButton(q)) : null,
-      (prev || next) ? h('nav', { class: 'pn', 'aria-label': 'More in this pattern' },
-        prev ? h('a', { href: '#/q/' + encodeURIComponent(prev.id) }, icon('left'), h('span', { text: prev.title })) : h('span'),
-        next ? h('a', { href: '#/q/' + encodeURIComponent(next.id) }, h('span', { text: next.title }), icon('right')) : h('span')) : null);
+      (prev || next) ? h('nav', { class: 'pn', 'aria-label': inStar ? 'More in this group' : 'More in this pattern' },
+        prev ? h('a', { href: qHref(prev) }, icon('left'), h('span', { text: prev.title })) : h('span'),
+        next ? h('a', { href: qHref(next) }, h('span', { text: next.title }), icon('right')) : h('span')) : null);
 
     // Problem panel can be hidden, and the line between the panels can be dragged to resize them.
     const room = h('div', { class: 'room' + (S.ui.hidePrompt ? ' hide-prompt' : '') });
@@ -1066,7 +1192,7 @@
   }
 
   // ------------------------------------------------------------------ router
-  const route = { view: null, id: null, ctx: null };
+  const route = { view: null, id: null, ctx: null, star: false };
   function readSetupHash() {
     const m = /^#setup=([A-Za-z0-9_-]+)/.exec(location.hash);
     if (!m) return false;
@@ -1083,12 +1209,25 @@
   function onRoute() {
     if (route.ctx && route.ctx.cleanup) route.ctx.cleanup();
     if (route.view === 'home') homeScroll = window.scrollY;
+    if (route.view === 'star') starScroll = window.scrollY;
     route.ctx = null;
+    route.star = false;
     if (readSetupHash()) { Sync.pullAll(); }
     const parts = (location.hash || '#/').replace(/^#\/?/, '').split('/').filter(Boolean).map((x) => { try { return decodeURIComponent(x); } catch (e) { return x; } });
     const v = parts[0] || '';
-    if (v === 'q' && parts[1]) { route.view = 'q'; route.id = parts[1]; renderQuestion(parts[1], parts[2] === 'blind'); document.title = (qById(parts[1]) || {}).title ? qById(parts[1]).title + ' · Loop Drills' : 'Loop Drills'; return; }
+    if (v === 'q' && parts[1]) {
+      const flags = parts.slice(2);
+      route.view = 'q'; route.id = parts[1];
+      renderQuestion(parts[1], { blind: flags.includes('blind'), star: flags.includes('star') });
+      document.title = (qById(parts[1]) || {}).title ? qById(parts[1]).title + ' · Loop Drills' : 'Loop Drills';
+      return;
+    }
     route.id = null;
+    if (v === 'star') {
+      route.view = 'star'; document.title = 'Star · Loop Drills'; renderStar(false);
+      if (Sync.enabled() && Date.now() - Sync.lastPull > 3000) Sync.pullAll();
+      return;
+    }
     if (v === 'add') { route.view = 'add'; document.title = 'Add a question · Loop Drills'; renderEdit(null); return; }
     if (v === 'edit' && parts[1]) { route.view = 'edit'; document.title = 'Edit question · Loop Drills'; renderEdit(parts[1]); return; }
     if (v === 'settings') { route.view = 'settings'; document.title = 'Settings · Loop Drills'; renderSettings(); return; }
@@ -1110,13 +1249,27 @@
       throw e;
     }
   }
+  // The Star list is optional: if it fails to load, the rest of the app still works.
+  async function loadStar() {
+    try {
+      const r = await fetch('data/star.json', { cache: 'no-cache' });
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      const s = await r.json();
+      ls.set('starCache', s);
+      return s;
+    } catch (e) {
+      return ls.get('starCache', null);
+    }
+  }
   async function boot() {
     applyTheme();
+    const starP = loadStar();
     try { S.bank = await loadBank(); } catch (e) {
       $('#app').innerHTML = '';
       $('#app').append(h('div', { class: 'loading', text: 'Could not load the question bank. Check your connection and reload.' }));
       return;
     }
+    S.star = await starP;
     window.addEventListener('hashchange', onRoute);
     onRoute();
     Sync.refresh();

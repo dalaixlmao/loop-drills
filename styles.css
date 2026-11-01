@@ -23,6 +23,8 @@
   --info-bg: #e3ebfd;
   --accent: #3846c4;
   --accent-ink: #ffffff;
+  --star: #7a3fd1;
+  --star-bg: #f0e8fc;
   --canvas: #e9edf4;
   --paper: #ffffff;
   --paper-ink: #202124;
@@ -59,6 +61,8 @@
     --info-bg: #1d2b52;
     --accent: #8f9bff;
     --accent-ink: #0e1222;
+    --star: #c4a3ff;
+    --star-bg: #2c2150;
     --canvas: #0b0f1c;
     --paper: #1a1f33;
     --paper-ink: #e6e8f2;
@@ -90,6 +94,8 @@
   --info-bg: #1d2b52;
   --accent: #8f9bff;
   --accent-ink: #0e1222;
+  --star: #c4a3ff;
+  --star-bg: #2c2150;
   --canvas: #0b0f1c;
   --paper: #1a1f33;
   --paper-ink: #e6e8f2;
@@ -414,3 +420,33 @@ details.rv[open] > summary { border-bottom: 1px solid var(--line); }
   .fu-list li { grid-template-columns: minmax(0, 1fr); }
   .fu-ans { justify-self: start; margin-left: 26px; }
 }
+
+/* ---------- list tabs (Patterns / Star) ---------- */
+.tabs { display: inline-flex; align-self: flex-start; gap: 2px; padding: 3px; border-radius: 12px; background: var(--soft); margin-bottom: -10px; }
+.tabs a { display: inline-flex; align-items: center; gap: 7px; padding: 7px 14px; border-radius: 9px; color: var(--muted); text-decoration: none; font-size: 13.5px; font-weight: 600; }
+.tabs a:hover { color: var(--ink); }
+.tabs a[aria-current="page"] { background: var(--surface); color: var(--ink); box-shadow: 0 1px 2px rgba(20, 26, 51, 0.14); }
+.tabs a[href="#/star"][aria-current="page"] svg { color: var(--star); }
+.tabs svg { width: 15px; height: 15px; flex: none; }
+.tabs .n { font-family: var(--font-mono); font-size: 11.5px; font-weight: 500; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+/* ---------- star page ---------- */
+.title-star { display: inline-grid; place-items: center; width: 0.9em; height: 0.9em; margin-right: 0.22em; vertical-align: -0.06em; color: var(--star); }
+.title-star svg { width: 100%; height: 100%; fill: currentColor; stroke-width: 1.5; }
+.sgroup { --tc: var(--star); --tb: var(--star-bg); }
+.srow { border-top: 1px solid var(--line); padding: 12px 8px 6px; display: grid; gap: 8px; }
+.srow-says { padding: 0 8px; display: grid; gap: 2px; font-size: 14.5px; font-weight: 600; line-height: 1.4; }
+.srow-k, .trick-k { font-family: var(--font-mono); font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--tc, var(--star)); }
+.trick { margin: 0 8px; }
+.trick > summary { list-style: none; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 500; color: var(--muted); padding: 2px 0; user-select: none; }
+.trick > summary::-webkit-details-marker { display: none; }
+.trick > summary svg { width: 14px; height: 14px; }
+.trick > summary:hover, .trick[open] > summary { color: var(--tc); }
+.trick-body { margin-top: 6px; padding: 9px 12px; border-radius: 9px; background: var(--tb); color: var(--ink); font-family: var(--font-mono); font-size: 13px; line-height: 1.5; }
+.srow-note { margin: 0 8px; font-size: 13px; color: var(--muted); }
+.srow .qlist { padding: 0; }
+.sgroup .pcard-head { padding-bottom: 12px; }
+.rv-trick { --rc: var(--star); --rb: var(--star-bg); }
+.rv-trick .rv-body { display: grid; gap: 8px; }
+.rv-trick .trick-k { display: block; margin-bottom: 1px; }
+.rv-trick .trick-really { font-family: var(--font-mono); font-size: 13.5px; }

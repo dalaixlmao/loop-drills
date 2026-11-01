@@ -1,0 +1,1824 @@
+{
+ "version": 1,
+ "updated": "2026-11-01",
+ "title": "Star",
+ "blurb": "Problems that are really a well-known trick in disguise. Each row is how the problem sounds and, hidden, what it really is. Try to spot the trick before you open it.",
+ "groups": [
+  {
+   "id": "s-minops",
+   "name": "Minimum operations (count an invariant)",
+   "rows": [
+    {
+     "says": "Min adjacent swaps to sort",
+     "really": "Inversion count (BIT / merge sort)",
+     "ids": [
+      "lc315",
+      "lc493"
+     ]
+    },
+    {
+     "says": "Min adjacent swaps to turn s into t, or into a palindrome",
+     "really": "Map the k-th occurrence of each char to its target index, then count inversions",
+     "ids": [
+      "lc1850",
+      "lc2193"
+     ]
+    },
+    {
+     "says": "Min adjacent swaps to group k 1s together",
+     "really": "Gather around the median, using prefix sums",
+     "ids": [
+      "lc1703"
+     ]
+    },
+    {
+     "says": "Min swaps of any two elements to sort",
+     "really": "n − number of cycles",
+     "ids": [
+      "lc765"
+     ]
+    },
+    {
+     "says": "Min \"remove and insert anywhere\" to sort",
+     "really": "n − LIS",
+     "ids": [],
+     "note": "No LeetCode problem asks exactly this. The next row (1713) is the same n − LIS idea."
+    },
+    {
+     "says": "Min insertions so target (distinct values) becomes a subsequence",
+     "really": "Map to indices, then n − LIS (LCS collapses to LIS)",
+     "ids": [
+      "lc1713"
+     ]
+    },
+    {
+     "says": "Min deletions to make a palindrome",
+     "really": "n − LCS(s, reverse(s))",
+     "ids": [
+      "lc516"
+     ]
+    },
+    {
+     "says": "Min removals to make a mountain",
+     "really": "LIS from the left + LIS from the right",
+     "ids": [
+      "lc1671"
+     ]
+    },
+    {
+     "says": "Min ±1 moves to make all elements equal",
+     "really": "Move everything to the median",
+     "ids": [
+      "lc462"
+     ]
+    },
+    {
+     "says": "Each move adds +1 to n−1 elements",
+     "really": "Same as −1 to one element, so sum − n·min",
+     "ids": [
+      "lc453"
+     ]
+    },
+    {
+     "says": "Min \"+1 on a subarray\" ops to build target",
+     "really": "Σ max(0, t[i] − t[i−1])",
+     "ids": [
+      "lc1526"
+     ]
+    },
+    {
+     "says": "Remove from either end until the sum is x",
+     "really": "Longest middle subarray with sum = total − x",
+     "ids": [
+      "lc1658",
+      "lc1423"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "s-budget",
+   "name": "A budget of k (\"at most k times\")",
+   "rows": [
+    {
+     "says": "Shortest path, may break/unlock ≤ k cells",
+     "really": "BFS with state (r, c, used)",
+     "ids": [
+      "lc1293"
+     ]
+    },
+    {
+     "says": "Longest run if you flip/replace ≤ k",
+     "really": "Sliding window where (window − good) ≤ k",
+     "ids": [
+      "lc1004",
+      "lc424"
+     ]
+    },
+    {
+     "says": "Cheapest route with ≤ k stops",
+     "really": "Bellman-Ford for k+1 rounds",
+     "ids": [
+      "lc787"
+     ]
+    },
+    {
+     "says": "Count subarrays with exactly k of something",
+     "really": "atMost(k) − atMost(k−1)",
+     "ids": [
+      "lc992",
+      "lc1248"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "s-minmax",
+   "name": "Minimize the max / maximize the min",
+   "rows": [
+    {
+     "says": "Split / ship / eat so the largest part is smallest",
+     "really": "Binary search on the answer + greedy feasibility check",
+     "ids": [
+      "lc410",
+      "lc1011",
+      "lc875",
+      "lc1552"
+     ]
+    },
+    {
+     "says": "Path whose worst edge is as small as possible",
+     "really": "Dijkstra with max instead of sum, or sorted edges + DSU",
+     "ids": [
+      "lc1631",
+      "lc778"
+     ]
+    },
+    {
+     "says": "k-th smallest in a sorted matrix or among pair distances",
+     "really": "Binary search on the value, count how many are ≤ mid",
+     "ids": [
+      "lc378",
+      "lc719"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "s-knap",
+   "name": "Hidden knapsack",
+   "rows": [
+    {
+     "says": "Smash stones, minimize what's left",
+     "really": "Split into two subsets with min difference (subset sum)",
+     "ids": [
+      "lc1049"
+     ]
+    },
+    {
+     "says": "Assign + or − to reach a target",
+     "really": "Count subsets with sum (S + T)/2",
+     "ids": [
+      "lc494"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "s-prefix",
+   "name": "Prefix sums and difference arrays",
+   "rows": [
+    {
+     "says": "Longest subarray with equal 0s and 1s",
+     "really": "Treat 0 as −1, store the first index of each prefix sum",
+     "ids": [
+      "lc525"
+     ]
+    },
+    {
+     "says": "Count subarrays with sum divisible by k",
+     "really": "Count prefix sums by their value mod k",
+     "ids": [
+      "lc974"
+     ]
+    },
+    {
+     "says": "Many range updates, read at the end",
+     "really": "Difference array",
+     "ids": [
+      "lc1094",
+      "lc1109"
+     ]
+    },
+    {
+     "says": "Min changes so every a[i] + a[n−1−i] is equal",
+     "really": "Difference array over candidate sums",
+     "ids": [
+      "lc1674"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "s-mono",
+   "name": "Monotonic stack and contribution",
+   "rows": [
+    {
+     "says": "Sum of min (or max − min) over all subarrays",
+     "really": "For each element, count the subarrays where it is the min, using previous/next smaller elements",
+     "ids": [
+      "lc907",
+      "lc2104"
+     ]
+    },
+    {
+     "says": "Remove k digits to get the smallest number",
+     "really": "Monotonic stack",
+     "ids": [
+      "lc402"
+     ]
+    },
+    {
+     "says": "Largest rectangle of 1s in a matrix",
+     "really": "Run \"histogram\" on each row",
+     "ids": [
+      "lc85"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "s-graph",
+   "name": "Hidden graphs",
+   "rows": [
+    {
+     "says": "Ordering with prerequisites, alien alphabet",
+     "really": "Topological sort (a cycle means impossible)",
+     "ids": [
+      "lc210",
+      "lc269"
+     ]
+    },
+    {
+     "says": "Split people into two groups with dislikes",
+     "really": "Bipartite check",
+     "ids": [
+      "lc886"
+     ]
+    },
+    {
+     "says": "Lock combinations, word transformations",
+     "really": "BFS on an implicit state graph",
+     "ids": [
+      "lc752",
+      "lc127"
+     ]
+    },
+    {
+     "says": "Things spread simultaneously, nearest X for every cell",
+     "really": "Multi-source BFS",
+     "ids": [
+      "lc994",
+      "lc542"
+     ]
+    },
+    {
+     "says": "Shortest walk visiting all nodes",
+     "really": "BFS with state (node, visited mask)",
+     "ids": [
+      "lc847"
+     ]
+    },
+    {
+     "says": "a/b = 2, b/c = 3, find a/c",
+     "really": "Weighted graph or weighted DSU",
+     "ids": [
+      "lc399"
+     ]
+    },
+    {
+     "says": "Remove stones sharing a row or column",
+     "really": "stones − number of components (DSU)",
+     "ids": [
+      "lc947",
+      "lc721"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "s-greedy",
+   "name": "Greedy with a formula",
+   "rows": [
+    {
+     "says": "Tasks with a cooldown",
+     "really": "max(n, (f−1)(gap+1) + countOfMaxFreq)",
+     "ids": [
+      "lc621"
+     ]
+    },
+    {
+     "says": "No two adjacent characters the same",
+     "really": "Possible iff maxFreq ≤ (n+1)/2, then build with a heap",
+     "ids": [
+      "lc767"
+     ]
+    },
+    {
+     "says": "Min arrows, or min intervals to remove",
+     "really": "Sort by end, then greedy",
+     "ids": [
+      "lc452",
+      "lc435"
+     ]
+    },
+    {
+     "says": "Min rooms or platforms",
+     "really": "Sweep line, take the max overlap",
+     "ids": [
+      "lc253"
+     ]
+    },
+    {
+     "says": "Combine items where cost = their sum",
+     "really": "Min-heap (Huffman)",
+     "ids": [
+      "lc1167"
+     ]
+    },
+    {
+     "says": "Min taps, clips, or jumps to cover a range",
+     "really": "Interval covering, same as Jump Game II",
+     "ids": [
+      "lc45",
+      "lc1326",
+      "lc1024"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "s-math",
+   "name": "Math tricks",
+   "rows": [
+    {
+     "says": "Find the duplicate in 1..n, O(1) space, no modifying",
+     "really": "Floyd cycle detection",
+     "ids": [
+      "lc287"
+     ]
+    },
+    {
+     "says": "First missing positive in O(1) space",
+     "really": "Place x at index x−1 (cyclic sort)",
+     "ids": [
+      "lc41"
+     ]
+    },
+    {
+     "says": "Max subarray sum on a circular array",
+     "really": "max(Kadane, total − min subarray)",
+     "ids": [
+      "lc918"
+     ]
+    },
+    {
+     "says": "Reach (tx, ty) via (x+y, y) steps",
+     "really": "Walk backwards using modulo",
+     "ids": [
+      "lc780"
+     ]
+    },
+    {
+     "says": "×2 or −1 to reach a target",
+     "really": "Work backwards from the target greedily",
+     "ids": [
+      "lc991"
+     ]
+    },
+    {
+     "says": "Toggle bulbs at every multiple",
+     "really": "Count perfect squares ≤ n",
+     "ids": [
+      "lc319"
+     ]
+    },
+    {
+     "says": "Measure z liters with two jugs",
+     "really": "z % gcd(x, y) == 0 and z ≤ x + y",
+     "ids": [
+      "lc365"
+     ]
+    },
+    {
+     "says": "Count BSTs or balanced parenthesis strings",
+     "really": "Catalan numbers",
+     "ids": [
+      "lc96"
+     ]
+    }
+   ]
+  }
+ ],
+ "questions": [
+  {
+   "id": "lc315",
+   "pattern": "s-minops",
+   "difficulty": "Hard",
+   "title": "Later sign-ups with a lower rating",
+   "story": [
+    "Our ride-share app keeps its drivers in the order they signed up, each with an integer rating.",
+    "For every driver, the growth team wants to know how many drivers who signed up after them have a strictly lower rating.",
+    "Write a function that takes the ratings in sign-up order and returns, for each driver in that same order, that count."
+   ],
+   "constraints": [
+    "1 ≤ nums.length ≤ 10⁵",
+    "-10⁴ ≤ nums[i] ≤ 10⁴"
+   ],
+   "followups": [
+    "Now count later drivers whose rating is lower or equal. What changes in your solution?",
+    "The team only needs the total over all drivers, not the list. Is there a simpler way to get just the total?",
+    "Ratings can be any 32-bit integer. How do you keep your counting structure from depending on the value range?"
+   ],
+   "hint": "Process the drivers from the last sign-up to the first. At each driver, everyone you have already seen signed up later. What would let you ask \"how many of those are below x\" quickly?",
+   "leetcode": {
+    "number": 315,
+    "title": "Count of Smaller Numbers After Self",
+    "url": "https://leetcode.com/problems/count-of-smaller-numbers-after-self/"
+   },
+   "source": "star"
+  },
+  {
+   "id": "lc493",
+   "pattern": "s-minops",
+   "difficulty": "Hard",
+   "title": "Sharp drops in a metric",
+   "story": [
+    "Our monitoring system stores one integer value of a metric per minute, in time order. Values are signed.",
+    "A pair of minutes, an earlier minute i and a later minute j, counts as a sharp drop when the value at minute i is strictly greater than twice the value at minute j. The two minutes do not have to be next to each other.",
+    "Write a function that takes the values in time order and returns the number of sharp-drop pairs."
+   ],
+   "constraints": [
+    "1 ≤ nums.length ≤ 5 * 10⁴",
+    "-2³¹ ≤ nums[i] ≤ 2³¹ - 1"
+   ],
+   "followups": [
+    "Change the rule to \"earlier value strictly greater than the later value\". Which part of your solution gets simpler?",
+    "Values cover the whole 32-bit range. Where can 2 * value overflow, and how do you guard against it?",
+    "Values stream in one minute at a time. Report the running count after each new minute."
+   ],
+   "hint": "Split the timeline into a left half and a right half. Pairs live inside the left, inside the right, or cross the middle. Which of those is easy to count if you are allowed to reorder each half?",
+   "leetcode": {
+    "number": 493,
+    "title": "Reverse Pairs",
+    "url": "https://leetcode.com/problems/reverse-pairs/"
+   },
+   "source": "star"
+  },
+  {
+   "id": "lc1850",
+   "pattern": "s-minops",
+   "difficulty": "Medium",
+   "title": "Next lucky ticket on the drum",
+   "story": [
+    "A lottery machine shows a ticket number as a string of digits on a drum of rotating wheels.",
+    "For a bonus draw it moves to a \"wonderful\" ticket: a rearrangement of the same digits whose value is strictly greater than the current ticket. Ordering the wonderful tickets from smallest value up, it wants the k-th one. That ticket always exists.",
+    "The drum can only swap two neighboring digits at a time. Write a function that takes the current ticket string and k, and returns the minimum number of neighboring swaps that turn the current ticket into the k-th smallest wonderful ticket."
+   ],
+   "constraints": [
+    "2 ≤ num.length ≤ 1000",
+    "1 ≤ k ≤ 1000",
+    "num only consists of digits."
+   ],
+   "followups": [
+    "k can now be far too large to step through one rearrangement at a time. How would you jump straight to the k-th one?",
+    "The target is now any given rearrangement of the digits, not the k-th larger one. Does your swap counting still work unchanged?",
+    "Can you count the swaps faster than quadratic in the length of the ticket?"
+   ],
+   "hint": "Treat it as two separate problems: first build the target string, then count the neighboring swaps that turn one string into a rearrangement of itself. When a digit appears more than once, which copy should end up where?",
+   "leetcode": {
+    "number": 1850,
+    "title": "Minimum Adjacent Swaps to Reach the Kth Smallest Number",
+    "url": "https://leetcode.com/problems/minimum-adjacent-swaps-to-reach-the-kth-smallest-number/"
+   },
+   "source": "star"
+  },
+  {
+   "id": "lc2193",
+   "pattern": "s-minops",
+   "difficulty": "Hard",
+   "title": "Symmetric banner",
+   "story": [
+    "A sign shop has a banner of lowercase letters on movable tiles. The machine that arranges the tiles can only swap two neighboring tiles in one move.",
+    "A client wants the banner to read the same forwards and backwards. You can assume the letters on the banner allow that.",
+    "Write a function that takes the banner and returns the minimum number of moves needed to make it a palindrome."
+   ],
+   "constraints": [
+    "1 ≤ s.length ≤ 2000",
+    "s consists only of lowercase English letters.",
+    "s can be converted to a palindrome using a finite number of moves."
+   ],
+   "followups": [
+    "Before rearranging, how would you check whether a palindrome is possible at all?",
+    "Also return the palindrome you end up with. Is the final banner unique?",
+    "Can you get below quadratic time?"
+   ],
+   "hint": "Look at the leftmost tile. Some tile with the same letter must end up at the far right end. Is there ever a reason to bring a copy other than the one that is already closest to that end?",
+   "leetcode": {
+    "number": 2193,
+    "title": "Minimum Number of Moves to Make Palindrome",
+    "url": "https://leetcode.com/problems/minimum-number-of-moves-to-make-palindrome/"
+   },
+   "source": "star"
+  },
+  {
+   "id": "lc1703",
+   "pattern": "s-minops",
+   "difficulty": "Hard",
+   "title": "Line up the convoy",
+   "story": [
+    "A depot has one long row of parking spots. Each spot either holds one of our trucks or is empty.",
+    "Before a convoy leaves, we need k trucks parked in consecutive spots with no gaps. In one move, the yard crew swaps the contents of two neighboring spots. The row always has at least k trucks.",
+    "Write a function that takes the row (1 for a truck, 0 for an empty spot) and k, and returns the minimum number of moves."
+   ],
+   "constraints": [
+    "1 ≤ nums.length ≤ 10⁵",
+    "nums[i] is 0 or 1.",
+    "1 ≤ k ≤ sum(nums)"
+   ],
+   "followups": [
+    "Return which k trucks end up in the convoy and where.",
+    "Each truck now has its own cost per move. Where should the convoy form?",
+    "The spots are arranged in a circle. What changes?"
+   ],
+   "hint": "Fix which k trucks you will gather. Where should they meet so the total distance is smallest, and can you get that total for the next group of k without recomputing from scratch?",
+   "leetcode": {
+    "number": 1703,
+    "title": "Minimum Adjacent Swaps for K Consecutive Ones",
+    "url": "https://leetcode.com/problems/minimum-adjacent-swaps-for-k-consecutive-ones/"
+   },
+   "source": "star"
+  },
+  {
+   "id": "lc765",
+   "pattern": "s-minops",
+   "difficulty": "Hard",
+   "title": "Seating the couples",
+   "story": [
+    "At a dinner, guests sit along a row of tables for two: seats 0 and 1 are the first table, seats 2 and 3 the second, and so on.",
+    "Guests are numbered, and couples are (0, 1), (2, 3), (4, 5), and so on. The seating got mixed up.",
+    "In one swap, any two guests stand up and trade seats. Write a function that takes the guest sitting in each seat and returns the minimum number of swaps so that every couple shares a table."
+   ],
+   "constraints": [
+    "2n == row.length",
+    "2 ≤ n ≤ 30",
+    "0 ≤ row[i] < 2n",
+    "All the elements of row are unique."
+   ],
+   "followups": [
+    "Return the actual swaps, not just how many.",
+    "Why is it safe to fix the leftmost table first, every time?",
+    "Groups of three now sit at tables for three. Does the same reasoning still give the minimum?"
+   ],
+   "hint": "Think about what a single swap can achieve at best. When does one swap fix two tables at once, and when does it only fix one?",
+   "leetcode": {
+    "number": 765,
+    "title": "Couples Holding Hands",
+    "url": "https://leetcode.com/problems/couples-holding-hands/"
+   },
+   "source": "star"
+  },
+  {
+   "id": "lc1713",
+   "pattern": "s-minops",
+   "difficulty": "Hard",
+   "title": "Fix the playlist log",
+   "story": [
+    "A radio curator has a target list of songs, all different, that must appear in the station's play log in that order. Other songs can play in between; the target songs just need to show up in order.",
+    "The play log already exists and can contain repeats. The only fix allowed is inserting a song anywhere in the log: at the start, at the end, or between two entries.",
+    "Write a function that takes the target song ids and the log's song ids, and returns the minimum number of insertions so that the target list appears in the log in order."
+   ],
+   "constraints": [
+    "1 ≤ target.length, arr.length ≤ 10⁵",
+    "1 ≤ target[i], arr[i] ≤ 10⁹",
+    "target contains no duplicates."
+   ],
+   "followups": [
+    "Also return where each inserted song should go.",
+    "The target list may now contain repeated songs. Why does your approach break, and what would you fall back to?"
+   ],
+   "hint": "You keep as much of the target as already appears in the log in order. Since target songs are all different, every log entry points to at most one position in the target. What does \"in order\" mean after you replace songs by those positions?",
+   "leetcode": {
+    "number": 1713,
+    "title": "Minimum Operations to Make a Subsequence",
+    "url": "https://leetcode.com/problems/minimum-operations-to-make-a-subsequence/"
+   },
+   "source": "star"
+  },
+  {
+   "id": "lc516",
+   "pattern": "s-minops",
+   "difficulty": "Medium",
+   "title": "Longest mirrored leftover",
+   "story": [
+    "A word puzzle shows a string of lowercase letters. The player may cross out any letters without moving the rest, and wins points for the longest leftover that reads the same forwards and backwards.",
+    "Write a function that takes the string and returns the length of the longest leftover that is a palindrome."
+   ],
+   "constraints": [
+    "1 ≤ s.length ≤ 1000",
+    "s consists only of lowercase English letters."
+   ],
+   "followups": [
+    "Return the minimum number of letters to cross out instead. How does it relate to your answer?",
+    "Return one longest leftover itself, not just its length.",
+    "Now the player may insert letters anywhere instead of crossing out. What is the minimum number of insertions to make the whole string a palindrome?"
+   ],
+   "hint": "A palindrome hiding in the string is also hiding, in the same order, in some other string you can make from it cheaply. Which one?",
+   "leetcode": {
+    "number": 516,
+    "title": "Longest Palindromic Subsequence",
+    "url": "https://leetcode.com/problems/longest-palindromic-subsequence/"
+   },
+   "source": "star"
+  },
+  {
+   "id": "lc1671",
+   "pattern": "s-minops",
+   "difficulty": "Hard",
+   "title": "Brochure mountain profile",
+   "story": [
+    "A trail guide lists elevation readings at checkpoints along a hike, in order.",
+    "The brochure wants a mountain profile: elevations strictly rise to one peak and then strictly fall, with at least one checkpoint before the peak and at least one after it. The editor may drop checkpoints from the brochure but cannot reorder them. It is always possible to get a mountain.",
+    "Write a function that takes the elevations and returns the minimum number of checkpoints to drop."
+   ],
+   "constraints": [
+    "3 ≤ nums.length ≤ 1000",
+    "1 ≤ nums[i] ≤ 10⁹",
+    "It is guaranteed that you can make a mountain array out of nums."
+   ],
+   "followups": [
+    "Return the checkpoints you keep.",
+    "Allow flat steps: the rise and the fall no longer have to be strict. What changes?",
+    "Can you do it faster than quadratic?"
+   ],
+   "hint": "Fix which checkpoint is the peak. What do you need to know about the readings on its left, and separately on its right?",
+   "leetcode": {
+    "number": 1671,
+    "title": "Minimum Number of Removals to Make Mountain Array",
+    "url": "https://leetcode.com/problems/minimum-number-of-removals-to-make-mountain-array/"
+   },
+   "source": "star"
+  },
+  {
+   "id": "lc462",
+   "pattern": "s-minops",
+   "difficulty": "Medium",
+   "title": "Calibrating the sensors",
+   "story": [
+    "A lab has a set of sensors, each with an integer calibration offset. In one move, a technician nudges one sensor's offset up or down by exactly 1.",
+    "To compare readings, every sensor must end up with the same offset. Any common value is fine.",
+    "Write a function that takes the offsets and returns the minimum number of moves."
+   ],
+   "constraints": [
+    "n == nums.length",
+    "1 ≤ nums.length ≤ 10⁵",
+    "-10⁹ ≤ nums[i] ≤ 10⁹"
+   ],
+   "followups": [
+    "Each sensor now has its own cost per move. Where should they meet?",
+    "The cost of moving a sensor is now the square of the distance it moves. Where should they meet?",
+    "Can you find the meeting point without sorting everything?"
+   ],
+   "hint": "Put the offsets on a number line and slide the meeting point one step to the right. Which sensors get closer and which get farther, and when does that trade stop paying off?",
+   "leetcode": {
+    "number": 462,
+    "title": "Minimum Moves to Equal Array Elements II",
+    "url": "https://leetcode.com/problems/minimum-moves-to-equal-array-elements-ii/"
+   },
+   "source": "star"
+  },
+  {
+   "id": "lc453",
+   "pattern": "s-minops",
+   "difficulty": "Medium",
+   "title": "Bonus rounds",
+   "story": [
+    "In a team game, each player has an integer score. In one bonus round, every player except one gets +1 point. The game master picks who is left out each round.",
+    "The game ends when all players have the same score.",
+    "Write a function that takes the current scores and returns the minimum number of bonus rounds needed."
+   ],
+   "constraints": [
+    "n == nums.length",
+    "1 ≤ nums.length ≤ 10⁵",
+    "-10⁹ ≤ nums[i] ≤ 10⁹",
+    "The answer is guaranteed to fit in a 32-bit integer."
+   ],
+   "followups": [
+    "Also return the final common score.",
+    "The sum of scores can overflow a 32-bit integer even when the answer fits. How do you compute safely?"
+   ],
+   "hint": "\"Equal\" only depends on the gaps between players. What does one bonus round do to those gaps?",
+   "leetcode": {
+    "number": 453,
+    "title": "Minimum Moves to Equal Array Elements",
+    "url": "https://leetcode.com/problems/minimum-moves-to-equal-array-elements/"
+   },
+   "source": "star"
+  },
+  {
+   "id": "lc1526",
+   "pattern": "s-minops",
+   "difficulty": "Hard",
+   "title": "Printing the skyline wall",
+   "story": [
+    "A 3D printer builds a decorative wall made of columns in a row. Every column starts at height 0.",
+    "In one pass, the print head raises one contiguous stretch of columns by exactly one layer.",
+    "Write a function that takes the target height of every column and returns the minimum number of passes to reach exactly those heights."
+   ],
+   "constraints": [
+    "1 ≤ target.length ≤ 10⁵",
+    "1 ≤ target[i] ≤ 10⁵",
+    "The input is generated such that the answer fits inside a 32 bit integer."
+   ],
+   "followups": [
+    "Return the passes themselves as (first column, last column) ranges.",
+    "The wall now starts from a given profile, and a pass can either add or remove one layer on a stretch. What is the minimum now?"
+   ],
+   "hint": "Think about where a pass has to start. Passes that are already running over the current column can simply continue onto the next one.",
+   "leetcode": {
+    "number": 1526,
+    "title": "Minimum Number of Increments on Subarrays to Form a Target Array",
+    "url": "https://leetcode.com/problems/minimum-number-of-increments-on-subarrays-to-form-a-target-array/"
+   },
+   "source": "star"
+  },
+  {
+   "id": "lc1658",
+   "pattern": "s-minops",
+   "difficulty": "Medium",
+   "title": "Dispensing from both ends",
+   "story": [
+    "A vending machine holds packets in a single row. It can only release the leftmost or the rightmost packet in the current row. Each packet has a weight.",
+    "An order needs exactly x grams. Write a function that takes the packet weights in order and x, and returns the minimum number of packets to release so their total weight is exactly x, or -1 if it cannot be done."
+   ],
+   "constraints": [
+    "1 ≤ nums.length ≤ 10⁵",
+    "1 ≤ nums[i] ≤ 10⁴",
+    "1 ≤ x ≤ 10⁹"
+   ],
+   "followups": [
+    "Weights can now be zero or negative. Does your approach still work?",
+    "Return how many packets come from the left and how many from the right."
+   ],
+   "hint": "The released packets are always some from the start and some from the end. Look at what stays in the machine instead.",
+   "leetcode": {
+    "number": 1658,
+    "title": "Minimum Operations to Reduce X to Zero",
+    "url": "https://leetcode.com/problems/minimum-operations-to-reduce-x-to-zero/"
+   },
+   "source": "star"
+  },
+  {
+   "id": "lc1423",
+   "pattern": "s-minops",
+   "difficulty": "Medium",
+   "title": "Gift boxes from both ends",
+   "story": [
+    "A conveyor holds gift boxes in a row, each with a point value. You must take exactly k boxes, and each pick takes either the first or the last box currently on the conveyor.",
+    "Write a function that takes the box values in order and k, and returns the maximum total value you can collect."
+   ],
+   "constraints": [
+    "1 ≤ cardPoints.length ≤ 10⁵",
+    "1 ≤ cardPoints[i] ≤ 10⁴",
+    "1 ≤ k ≤ cardPoints.length"
+   ],
+   "followups": [
+    "Return the sequence of picks (left or right).",
+    "Instead of exactly k picks, take as few boxes as possible to reach a total of at least V. What is the minimum?"
+   ],
+   "hint": "However you pick, the boxes left on the conveyor form one contiguous block. How big is that block?",
+   "leetcode": {
+    "number": 1423,
+    "title": "Maximum Points You Can Obtain from Cards",
+    "url": "https://leetcode.com/problems/maximum-points-you-can-obtain-from-cards/"
+   },
+   "source": "star"
+  },
+  {
+   "id": "lc1004",
+   "pattern": "s-budget",
+   "difficulty": "Medium",
+   "title": "Streak freeze tokens",
+   "story": [
+    "A fitness app marks each day as goal met (1) or missed (0), in order. A user has k streak-freeze tokens; each token turns one missed day into a goal-met day.",
+    "Write a function that takes the day history and k, and returns the length of the longest run of consecutive goal-met days the user can have after using at most k tokens."
+   ],
+   "constraints": [
+    "1 ≤ nums.length ≤ 10⁵",
+    "nums[i] is either 0 or 1.",
+    "0 ≤ k ≤ nums.length"
+   ],
+   "followups": [
+    "Also return where the best streak starts.",
+    "Days arrive live. Report the best possible streak after each new day.",
+    "Freezing a day now costs a different number of tokens depending on the day. What changes?"
+   ],
+   "hint": "Pick a window of days. When can the whole window become a streak, and how does that condition change as the window's right end moves forward?",
+   "leetcode": {
+    "number": 1004,
+    "title": "Max Consecutive Ones III",
+    "url": "https://leetcode.com/problems/max-consecutive-ones-iii/"
+   },
+   "source": "star"
+  },
+  {
+   "id": "lc424",
+   "pattern": "s-budget",
+   "difficulty": "Medium",
+   "title": "Retyping the banner",
+   "story": [
+    "A print shop has a banner of uppercase letters. Before printing, the editor may retype at most k letters, each into any uppercase letter.",
+    "The client loves long runs of one repeated letter. Write a function that takes the banner and k, and returns the length of the longest run of a single repeated letter possible after the edits."
+   ],
+   "constraints": [
+    "1 ≤ s.length ≤ 10⁵",
+    "s consists of only uppercase English letters.",
+    "0 ≤ k ≤ s.length"
+   ],
+   "followups": [
+    "Return the letter and where the run starts.",
+    "Banners can now use any of 62 symbols (letters in both cases and digits). Does your cost change?",
+    "Explain why your window can keep a stale maximum count and still return the right answer."
+   ],
+   "hint": "In a fixed window, which letters would you keep and which would you retype? How many edits does that window need?",
+   "leetcode": {
+    "number": 424,
+    "title": "Longest Repeating Character Replacement",
+    "url": "https://leetcode.com/problems/longest-repeating-character-replacement/"
+   },
+   "source": "star"
+  },
+  {
+   "id": "lc992",
+   "pattern": "s-budget",
+   "difficulty": "Hard",
+   "title": "Artist variety on the radio",
+   "story": [
+    "A music service logs the artist of each song played on a station, in order, as integer ids.",
+    "A non-empty continuous stretch of the log is called k-variety if exactly k different artists appear in it.",
+    "Write a function that takes the log and k, and returns how many continuous stretches are k-variety."
+   ],
+   "constraints": [
+    "1 ≤ nums.length ≤ 2 * 10⁴",
+    "1 ≤ nums[i], k ≤ nums.length"
+   ],
+   "followups": [
+    "Count the stretches with at most k different artists.",
+    "Return the shortest k-variety stretch."
+   ],
+   "hint": "With \"exactly k\", a sliding window does not shrink and grow in a clean way. Is there a related count that a window handles cleanly?",
+   "leetcode": {
+    "number": 992,
+    "title": "Subarrays with K Different Integers",
+    "url": "https://leetcode.com/problems/subarrays-with-k-different-integers/"
+   },
+   "source": "star"
+  },
+  {
+   "id": "lc1248",
+   "pattern": "s-budget",
+   "difficulty": "Medium",
+   "title": "Shifts that need cash change",
+   "story": [
+    "A coffee shop logs the amount of each order in a shift, in order. Orders with an odd amount need cash change.",
+    "A non-empty continuous stretch of orders is called busy if exactly k of its orders have an odd amount.",
+    "Write a function that takes the order amounts and k, and returns how many continuous stretches are busy."
+   ],
+   "constraints": [
+    "1 ≤ nums.length ≤ 50000",
+    "1 ≤ nums[i] ≤ 10⁵",
+    "1 ≤ k ≤ nums.length"
+   ],
+   "followups": [
+    "Count the stretches with at least k odd amounts instead.",
+    "Solve it with running counts instead of a window, or with a window if you used counts."
+   ],
+   "hint": "Only odd or even matters. Replace each amount by 1 or 0. What does the question become?",
+   "leetcode": {
+    "number": 1248,
+    "title": "Count Number of Nice Subarrays",
+    "url": "https://leetcode.com/problems/count-number-of-nice-subarrays/"
+   },
+   "source": "star"
+  },
+  {
+   "id": "lc875",
+   "pattern": "s-minmax",
+   "difficulty": "Medium",
+   "title": "Draining the job queues",
+   "story": [
+    "A batch worker has to clear several job queues, where queue i holds piles[i] jobs, within h hours.",
+    "The worker runs at a fixed integer speed s. Each hour it picks one queue and processes up to s jobs from it. If the queue has fewer than s jobs left, it finishes that queue and sits idle for the rest of that hour.",
+    "Write a function that takes the queue sizes and h, and returns the smallest speed s that clears every queue within h hours. Some speed always works."
+   ],
+   "constraints": [
+    "1 ≤ piles.length ≤ 10⁴",
+    "piles.length ≤ h ≤ 10⁹",
+    "1 ≤ piles[i] ≤ 10⁹"
+   ],
+   "followups": [
+    "Two identical workers now share the queues. How does your check change?",
+    "The speed must be chosen from a fixed list of supported machine speeds.",
+    "Also report how many hours the chosen speed actually takes."
+   ],
+   "hint": "If some speed works, what can you say about every faster speed?",
+   "leetcode": {
+    "number": 875,
+    "title": "Koko Eating Bananas",
+    "url": "https://leetcode.com/problems/koko-eating-bananas/"
+   },
+   "source": "star"
+  },
+  {
+   "id": "lc378",
+   "pattern": "s-minmax",
+   "difficulty": "Medium",
+   "title": "k-th cheapest plan",
+   "story": [
+    "A pricing table is square: rows are customer tiers and columns are contract lengths. Every row is sorted from cheapest to most expensive, and so is every column.",
+    "Write a function that takes the table and k, and returns the k-th smallest price in it, counting repeated prices separately. Try not to use memory that grows with the size of the whole table."
+   ],
+   "constraints": [
+    "n == matrix.length == matrix[i].length",
+    "1 ≤ n ≤ 300",
+    "-10⁹ ≤ matrix[i][j] ≤ 10⁹",
+    "All the rows and columns of matrix are guaranteed to be sorted in non-decreasing order.",
+    "1 ≤ k ≤ n²"
+   ],
+   "followups": [
+    "Use only constant extra memory.",
+    "The table is now rectangular instead of square. What changes?",
+    "Return the k-th smallest distinct price instead."
+   ],
+   "hint": "Pick a price v. Can you count how many entries are at most v without looking at every cell? Start from a corner.",
+   "leetcode": {
+    "number": 378,
+    "title": "Kth Smallest Element in a Sorted Matrix",
+    "url": "https://leetcode.com/problems/kth-smallest-element-in-a-sorted-matrix/"
+   },
+   "source": "star"
+  },
+  {
+   "id": "lc719",
+   "pattern": "s-minmax",
+   "difficulty": "Hard",
+   "title": "k-th closest finishing gap",
+   "story": [
+    "After a race, each runner has a finishing time in whole seconds. For every pair of different runners, the gap is the absolute difference of their times.",
+    "Write a function that takes the finishing times and k, and returns the k-th smallest gap over all pairs of runners."
+   ],
+   "constraints": [
+    "n == nums.length",
+    "2 ≤ n ≤ 10⁴",
+    "0 ≤ nums[i] ≤ 10⁶",
+    "1 ≤ k ≤ n * (n - 1) / 2"
+   ],
+   "followups": [
+    "Return the k-th largest gap instead.",
+    "Times can now be up to 10¹⁸ seconds. Does your approach still work?"
+   ],
+   "hint": "Sort the times first. For a candidate gap g, how quickly can you count the pairs whose gap is at most g?",
+   "leetcode": {
+    "number": 719,
+    "title": "Find K-th Smallest Pair Distance",
+    "url": "https://leetcode.com/problems/find-k-th-smallest-pair-distance/"
+   },
+   "source": "star"
+  },
+  {
+   "id": "lc1049",
+   "pattern": "s-knap",
+   "difficulty": "Medium",
+   "title": "Colliding energy orbs",
+   "story": [
+    "In a puzzle game, each orb has an integer energy. On each turn the player picks any two orbs and collides them. Say their energies are x and y with x at most y. If they are equal, both orbs vanish. Otherwise the orb with energy x vanishes and the other one is left with energy y minus x.",
+    "Play continues until at most one orb is left. Write a function that takes the energies and returns the smallest possible energy of the last orb, or 0 if no orb is left."
+   ],
+   "constraints": [
+    "1 ≤ stones.length ≤ 30",
+    "1 ≤ stones[i] ≤ 100"
+   ],
+   "followups": [
+    "Return an order of collisions that reaches that value.",
+    "The player has no choice anymore: each turn the two strongest orbs collide. What is left at the end?"
+   ],
+   "hint": "Follow each orb's original energy through all the collisions. In the final value, every original energy appears exactly once, with some sign.",
+   "leetcode": {
+    "number": 1049,
+    "title": "Last Stone Weight II",
+    "url": "https://leetcode.com/problems/last-stone-weight-ii/"
+   },
+   "source": "star"
+  },
+  {
+   "id": "lc494",
+   "pattern": "s-knap",
+   "difficulty": "Medium",
+   "title": "Credits and debits",
+   "story": [
+    "A ledger lists non-negative amounts in order. Each amount must be recorded either as a credit (+) or a debit (-).",
+    "Write a function that takes the amounts and a target, and returns how many ways to choose the signs make the total equal the target. Two ways are different if any entry gets a different sign, even when that entry is 0."
+   ],
+   "constraints": [
+    "1 ≤ nums.length ≤ 20",
+    "0 ≤ nums[i] ≤ 1000",
+    "0 ≤ sum(nums[i]) ≤ 1000",
+    "-1000 ≤ target ≤ 1000"
+   ],
+   "followups": [
+    "Return one valid choice of signs.",
+    "The count can get very large. Return it modulo 1,000,000,007.",
+    "Amounts can now be negative. Does your approach still work?"
+   ],
+   "hint": "A choice of signs is fully described by one of its two groups. Can you describe what that group must add up to?",
+   "leetcode": {
+    "number": 494,
+    "title": "Target Sum",
+    "url": "https://leetcode.com/problems/target-sum/"
+   },
+   "source": "star"
+  },
+  {
+   "id": "lc525",
+   "pattern": "s-prefix",
+   "difficulty": "Medium",
+   "title": "Balanced A/B traffic",
+   "story": [
+    "An A/B test logs, for each visitor in order, which variant they saw: 0 for A, 1 for B.",
+    "The analytics team wants the longest continuous stretch of visitors in which A and B were shown the same number of times.",
+    "Write a function that takes the log and returns the length of that stretch, or 0 if there is none."
+   ],
+   "constraints": [
+    "1 ≤ nums.length ≤ 10⁵",
+    "nums[i] is either 0 or 1."
+   ],
+   "followups": [
+    "Count how many such balanced stretches there are instead.",
+    "There are now three variants. Find the longest stretch where all three were shown equally often."
+   ],
+   "hint": "Keep a running score that goes up for one variant and down for the other. What does a balanced stretch look like in that running score?",
+   "leetcode": {
+    "number": 525,
+    "title": "Contiguous Array",
+    "url": "https://leetcode.com/problems/contiguous-array/"
+   },
+   "source": "star"
+  },
+  {
+   "id": "lc1109",
+   "pattern": "s-prefix",
+   "difficulty": "Medium",
+   "title": "Seats booked per flight",
+   "story": [
+    "An airline runs n flights, labeled 1 to n. Each booking is (first, last, seats): it reserves that many seats on every flight from first through last, inclusive.",
+    "Write a function that takes n and the list of bookings, and returns an array where entry i is the total number of seats reserved on flight i + 1."
+   ],
+   "constraints": [
+    "1 ≤ n ≤ 2 * 10⁴",
+    "1 ≤ bookings.length ≤ 2 * 10⁴",
+    "bookings[i].length == 3",
+    "1 ≤ firsti ≤ lasti ≤ n",
+    "1 ≤ seatsi ≤ 10⁴"
+   ],
+   "followups": [
+    "Bookings and questions like \"how many seats are booked on flight f right now\" now arrive interleaved. What structure do you use?",
+    "Also return the flight with the most reserved seats.",
+    "Bookings can be canceled. How do you support that?"
+   ],
+   "hint": "Think about how the total changes as you go from flight f to flight f + 1. Which bookings matter for that change?",
+   "leetcode": {
+    "number": 1109,
+    "title": "Corporate Flight Bookings",
+    "url": "https://leetcode.com/problems/corporate-flight-bookings/"
+   },
+   "source": "star"
+  },
+  {
+   "id": "lc1674",
+   "pattern": "s-prefix",
+   "difficulty": "Medium",
+   "title": "Balancing the paired boxes",
+   "story": [
+    "A packing line pairs boxes from both ends of a conveyor: the first with the last, the second with the second to last, and so on. There is always an even number of boxes, and each box has an integer weight from 1 to limit.",
+    "For shipping, every pair must have the same total weight. In one move, a worker replaces any one box's weight with any integer from 1 to limit.",
+    "Write a function that takes the weights in order and limit, and returns the minimum number of moves."
+   ],
+   "constraints": [
+    "n == nums.length",
+    "2 ≤ n ≤ 10⁵",
+    "1 ≤ nums[i] ≤ limit ≤ 10⁵",
+    "n is even."
+   ],
+   "followups": [
+    "Also return the common pair total that achieves the minimum.",
+    "Each box now has its own allowed weight range. What changes?"
+   ],
+   "hint": "Fix the common total T. For a single pair, does it cost 0, 1 or 2 moves, and for which ranges of T?",
+   "leetcode": {
+    "number": 1674,
+    "title": "Minimum Moves to Make Array Complementary",
+    "url": "https://leetcode.com/problems/minimum-moves-to-make-array-complementary/"
+   },
+   "source": "star"
+  },
+  {
+   "id": "lc2104",
+   "pattern": "s-mono",
+   "difficulty": "Medium",
+   "title": "Total daily swing",
+   "story": [
+    "A trading desk records one integer reading per day. For any continuous run of days, the swing is the largest reading in the run minus the smallest.",
+    "Write a function that takes the readings and returns the sum of the swings over every non-empty continuous run of days."
+   ],
+   "constraints": [
+    "1 ≤ nums.length ≤ 1000",
+    "-10⁹ ≤ nums[i] ≤ 10⁹"
+   ],
+   "followups": [
+    "Can you do it in linear time?",
+    "Only runs of at least L days count now. What changes?"
+   ],
+   "hint": "Largest minus smallest splits into two separate sums. For one of them, ask: for how many runs is a given day the largest?",
+   "leetcode": {
+    "number": 2104,
+    "title": "Sum of Subarray Ranges",
+    "url": "https://leetcode.com/problems/sum-of-subarray-ranges/"
+   },
+   "source": "star"
+  },
+  {
+   "id": "lc402",
+   "pattern": "s-mono",
+   "difficulty": "Medium",
+   "title": "Shortest promo number",
+   "story": [
+    "A promo engine takes a non-negative integer written as a string of digits and must delete exactly k digits from it, keeping the other digits in their original order.",
+    "Write a function that returns the smallest number possible after the deletions, as a string. Drop any leading zeros, and return \"0\" if nothing is left."
+   ],
+   "constraints": [
+    "1 ≤ k ≤ num.length ≤ 10⁵",
+    "num consists of only digits.",
+    "num does not have any leading zeros except for the zero itself."
+   ],
+   "followups": [
+    "Make the number as large as possible instead.",
+    "Prove that your greedy choice never hurts."
+   ],
+   "hint": "The leftmost digits matter most. Scanning left to right, when is it worth throwing away a digit you have already kept?",
+   "leetcode": {
+    "number": 402,
+    "title": "Remove K Digits",
+    "url": "https://leetcode.com/problems/remove-k-digits/"
+   },
+   "source": "star"
+  },
+  {
+   "id": "lc85",
+   "pattern": "s-mono",
+   "difficulty": "Hard",
+   "title": "Biggest clear plot",
+   "story": [
+    "A solar company surveys a rectangular field as a grid. Each cell is either clear ('1') or blocked ('0').",
+    "Write a function that takes the grid and returns the area of the largest rectangle, aligned with the grid, that contains only clear cells."
+   ],
+   "constraints": [
+    "rows == matrix.length",
+    "cols == matrix[i].length",
+    "1 ≤ rows, cols ≤ 200",
+    "matrix[i][j] is '0' or '1'."
+   ],
+   "followups": [
+    "Return the largest square instead.",
+    "Return the corners of the best rectangle.",
+    "Count how many rectangles contain only clear cells."
+   ],
+   "hint": "Solve a one-dimensional version first: a single row of bars with heights. Then ask how each row of the grid can give you such a row of bars.",
+   "leetcode": {
+    "number": 85,
+    "title": "Maximal Rectangle",
+    "url": "https://leetcode.com/problems/maximal-rectangle/"
+   },
+   "source": "star"
+  },
+  {
+   "id": "lc210",
+   "pattern": "s-graph",
+   "difficulty": "Medium",
+   "title": "Onboarding course order",
+   "story": [
+    "New hires take onboarding courses numbered 0 to numCourses - 1. Each requirement (a, b) says course b must be finished before course a.",
+    "Write a function that takes the number of courses and the requirements, and returns an order in which a new hire can take all the courses. Any valid order is fine. If no order works, return an empty list."
+   ],
+   "constraints": [
+    "1 ≤ numCourses ≤ 2000",
+    "0 ≤ prerequisites.length ≤ numCourses * (numCourses - 1)",
+    "prerequisites[i].length == 2",
+    "0 ≤ ai, bi < numCourses",
+    "ai ≠ bi",
+    "All the pairs [ai, bi] are distinct."
+   ],
+   "followups": [
+    "Any number of courses can be taken in parallel in one week. What is the minimum number of weeks?",
+    "Return the lexicographically smallest valid order.",
+    "When no order exists, return one cycle of requirements that causes it."
+   ],
+   "hint": "Which courses can be taken right now? After someone takes them, what changes for the rest?",
+   "leetcode": {
+    "number": 210,
+    "title": "Course Schedule II",
+    "url": "https://leetcode.com/problems/course-schedule-ii/"
+   },
+   "source": "star"
+  },
+  {
+   "id": "lc269",
+   "pattern": "s-graph",
+   "difficulty": "Hard",
+   "title": "Lost alphabet",
+   "story": [
+    "A linguist found a dictionary of an unknown language. It uses lowercase English letters, but the order of the alphabet is different and unknown. The dictionary claims its words are sorted by that language's alphabet.",
+    "Write a function that takes the words in dictionary order and returns a string containing every letter that appears in the words, ordered by the language's alphabet. If several orders are possible, return any. If no alphabet can make the list sorted, return an empty string."
+   ],
+   "constraints": [
+    "1 ≤ words.length ≤ 100",
+    "1 ≤ words[i].length ≤ 100",
+    "words[i] consists of only lowercase English letters."
+   ],
+   "followups": [
+    "Return whether the alphabet order is unique.",
+    "When the list is impossible, point to two words that show it."
+   ],
+   "hint": "Only compare words that are next to each other in the list. What exactly does one such pair tell you, and when does it tell you nothing?",
+   "leetcode": {
+    "number": 269,
+    "title": "Alien Dictionary",
+    "url": "https://leetcode.com/problems/alien-dictionary/"
+   },
+   "source": "star"
+  },
+  {
+   "id": "lc886",
+   "pattern": "s-graph",
+   "difficulty": "Medium",
+   "title": "Two buses for the offsite",
+   "story": [
+    "A team of n people, labeled 1 to n, is going to an offsite in two buses. The buses can carry any number of people.",
+    "Some pairs of people dislike each other and must not ride the same bus. Write a function that takes n and the list of dislike pairs, and returns whether everyone can be split across the two buses."
+   ],
+   "constraints": [
+    "1 ≤ n ≤ 2000",
+    "0 ≤ dislikes.length ≤ 10⁴",
+    "dislikes[i].length == 2",
+    "1 ≤ ai < bi ≤ n",
+    "All the pairs of dislikes are unique."
+   ],
+   "followups": [
+    "Return the actual split.",
+    "Dislike pairs arrive one at a time. Report the first pair that makes a split impossible.",
+    "There are now three buses. How hard does the problem get?"
+   ],
+   "hint": "Put one person on bus A. Where must everyone they dislike go, and what does that force next?",
+   "leetcode": {
+    "number": 886,
+    "title": "Possible Bipartition",
+    "url": "https://leetcode.com/problems/possible-bipartition/"
+   },
+   "source": "star"
+  },
+  {
+   "id": "lc127",
+   "pattern": "s-graph",
+   "difficulty": "Hard",
+   "title": "Word chain game",
+   "story": [
+    "In a word game, you start from beginWord and want to reach endWord. Each step changes exactly one letter, and every word you step on after the start must be in the game's dictionary. The start word does not need to be in the dictionary. All words have the same length.",
+    "Write a function that takes beginWord, endWord and the dictionary, and returns the number of words in the shortest chain from beginWord to endWord, counting both ends, or 0 if no chain exists."
+   ],
+   "constraints": [
+    "1 ≤ beginWord.length ≤ 10",
+    "endWord.length == beginWord.length",
+    "1 ≤ wordList.length ≤ 5000",
+    "wordList[i].length == beginWord.length",
+    "beginWord, endWord, and wordList[i] consist of lowercase English letters.",
+    "beginWord ≠ endWord",
+    "All the words in wordList are unique."
+   ],
+   "followups": [
+    "Return every shortest chain, not just the length.",
+    "Search from both ends at once. Why does it help?",
+    "Changing a vowel now costs 2 and changing a consonant costs 1. What changes?"
+   ],
+   "hint": "Treat each word as a place you can stand. How do you list the places one step away without comparing against every dictionary word?",
+   "leetcode": {
+    "number": 127,
+    "title": "Word Ladder",
+    "url": "https://leetcode.com/problems/word-ladder/"
+   },
+   "source": "star"
+  },
+  {
+   "id": "lc994",
+   "pattern": "s-graph",
+   "difficulty": "Medium",
+   "title": "Malware in the server rack",
+   "story": [
+    "A data center floor is a grid. Each cell is empty (0), holds a healthy server (1), or holds an infected server (2).",
+    "Every minute, every healthy server that is directly up, down, left or right of an infected server becomes infected.",
+    "Write a function that takes the grid and returns the number of minutes until no healthy server is left, or -1 if some healthy server can never be infected."
+   ],
+   "constraints": [
+    "m == grid.length",
+    "n == grid[i].length",
+    "1 ≤ m, n ≤ 10",
+    "grid[i][j] is 0, 1, or 2."
+   ],
+   "followups": [
+    "Return which server is infected last.",
+    "Each server now has a firewall that delays its infection by its own number of minutes. What changes?"
+   ],
+   "hint": "When does a given healthy server fall, in terms of the infected servers around it?",
+   "leetcode": {
+    "number": 994,
+    "title": "Rotting Oranges",
+    "url": "https://leetcode.com/problems/rotting-oranges/"
+   },
+   "source": "star"
+  },
+  {
+   "id": "lc542",
+   "pattern": "s-graph",
+   "difficulty": "Medium",
+   "title": "Nearest fire station",
+   "story": [
+    "A city is laid out as a grid of blocks. Each block either has a fire station (0) or does not (1). There is at least one station.",
+    "Write a function that takes the grid and returns a grid of the same size where each block holds its distance to the nearest station, moving only up, down, left or right between blocks."
+   ],
+   "constraints": [
+    "m == mat.length",
+    "n == mat[i].length",
+    "1 ≤ m, n ≤ 10⁴",
+    "1 ≤ m * n ≤ 10⁴",
+    "mat[i][j] is either 0 or 1.",
+    "There is at least one 0 in mat."
+   ],
+   "followups": [
+    "Diagonal moves are now allowed. What changes?",
+    "Solve it with two passes over the grid and no queue.",
+    "Also return which station is nearest to each block."
+   ],
+   "hint": "A separate search from every block is far too slow. Can a single search answer every block?",
+   "leetcode": {
+    "number": 542,
+    "title": "01 Matrix",
+    "url": "https://leetcode.com/problems/01-matrix/"
+   },
+   "source": "star"
+  },
+  {
+   "id": "lc721",
+   "pattern": "s-graph",
+   "difficulty": "Medium",
+   "title": "Merging customer records",
+   "story": [
+    "A CRM stores customer records. Each record is a list whose first entry is a name and whose other entries are email addresses.",
+    "Two records belong to the same person if they share at least one email. Two records with the same name may still be different people, but all records of one person have the same name.",
+    "Write a function that merges the records and returns one record per person: the name first, then all of that person's emails in sorted order with no repeats. The people can be returned in any order."
+   ],
+   "constraints": [
+    "1 ≤ accounts.length ≤ 1000",
+    "2 ≤ accounts[i].length ≤ 10",
+    "1 ≤ accounts[i][j].length ≤ 30",
+    "accounts[i][0] consists of English letters.",
+    "accounts[i][j] (for j > 0) is a valid email."
+   ],
+   "followups": [
+    "Records can now also be linked by a shared phone number.",
+    "Records stream in one at a time. Support merging as they arrive."
+   ],
+   "hint": "An email that appears in two records ties them together. What structure tracks groups that keep getting tied together?",
+   "leetcode": {
+    "number": 721,
+    "title": "Accounts Merge",
+    "url": "https://leetcode.com/problems/accounts-merge/"
+   },
+   "source": "star"
+  },
+  {
+   "id": "lc621",
+   "pattern": "s-greedy",
+   "difficulty": "Medium",
+   "title": "Build server cooldown",
+   "story": [
+    "A build server runs jobs, each labeled with an uppercase letter for its kind. In each time slot the server either runs one job or stays idle. Two jobs of the same kind need at least n slots between them. Jobs can run in any order.",
+    "Write a function that takes the job labels and n, and returns the minimum number of slots needed to finish all jobs."
+   ],
+   "constraints": [
+    "1 ≤ tasks.length ≤ 10⁴",
+    "tasks[i] is an uppercase English letter.",
+    "0 ≤ n ≤ 100"
+   ],
+   "followups": [
+    "Return an actual schedule, with idle slots marked.",
+    "Jobs must now run in the given order. What is the minimum number of slots?",
+    "Each kind now has its own cooldown. What changes?"
+   ],
+   "hint": "Which kind of job controls how long you have to wait? Lay out its copies first and look at the gaps.",
+   "leetcode": {
+    "number": 621,
+    "title": "Task Scheduler",
+    "url": "https://leetcode.com/problems/task-scheduler/"
+   },
+   "source": "star"
+  },
+  {
+   "id": "lc767",
+   "pattern": "s-greedy",
+   "difficulty": "Medium",
+   "title": "No back-to-back advertisers",
+   "story": [
+    "An ad slot schedule is a string where each lowercase letter stands for an advertiser. Policy says no two neighboring slots may show the same advertiser.",
+    "Write a function that takes the string and returns any rearrangement of it that follows the policy, or an empty string if none exists."
+   ],
+   "constraints": [
+    "1 ≤ s.length ≤ 500",
+    "s consists of lowercase English letters."
+   ],
+   "followups": [
+    "Neighboring repeats must now be at least k slots apart.",
+    "Return the lexicographically smallest valid arrangement."
+   ],
+   "hint": "First work out exactly when it is impossible. Then, when building, which advertiser should go next to stay safe?",
+   "leetcode": {
+    "number": 767,
+    "title": "Reorganize String",
+    "url": "https://leetcode.com/problems/reorganize-string/"
+   },
+   "source": "star"
+  },
+  {
+   "id": "lc452",
+   "pattern": "s-greedy",
+   "difficulty": "Medium",
+   "title": "Snapshots of overlapping events",
+   "story": [
+    "A logging system records events on a timeline. Each event is (start, end). A snapshot taken at time t captures every event with start at most t and end at least t.",
+    "Write a function that takes the events and returns the minimum number of snapshots needed so every event is captured at least once."
+   ],
+   "constraints": [
+    "1 ≤ points.length ≤ 10⁵",
+    "points[i].length == 2",
+    "-2³¹ ≤ xstart < xend ≤ 2³¹ - 1"
+   ],
+   "followups": [
+    "Return the snapshot times.",
+    "Each event must now be captured at least twice, at different times."
+   ],
+   "hint": "Some event is the first one to end. What does that force about the first snapshot?",
+   "leetcode": {
+    "number": 452,
+    "title": "Minimum Number of Arrows to Burst Balloons",
+    "url": "https://leetcode.com/problems/minimum-number-of-arrows-to-burst-balloons/"
+   },
+   "source": "star"
+  },
+  {
+   "id": "lc435",
+   "pattern": "s-greedy",
+   "difficulty": "Medium",
+   "title": "Clearing the room bookings",
+   "story": [
+    "A meeting room has booking requests, each (start, end). Two bookings conflict if they overlap; bookings that only touch, where one ends exactly when the next starts, do not conflict.",
+    "Write a function that takes the requests and returns the minimum number of requests to cancel so that the remaining ones do not conflict."
+   ],
+   "constraints": [
+    "1 ≤ intervals.length ≤ 10⁵",
+    "intervals[i].length == 2",
+    "-5 * 10⁴ ≤ starti < endi ≤ 5 * 10⁴"
+   ],
+   "followups": [
+    "Return which requests to cancel.",
+    "Each request now has a value. Keep the set of non-conflicting requests with the largest total value."
+   ],
+   "hint": "Flip it: what is the largest number of requests you can keep? Which request is the safest one to keep first?",
+   "leetcode": {
+    "number": 435,
+    "title": "Non-overlapping Intervals",
+    "url": "https://leetcode.com/problems/non-overlapping-intervals/"
+   },
+   "source": "star"
+  },
+  {
+   "id": "lc253",
+   "pattern": "s-greedy",
+   "difficulty": "Medium",
+   "title": "How many rooms to book",
+   "story": [
+    "An offsite planner has a list of meetings, each (start, end). A room can host one meeting at a time. A meeting that ends at time t frees its room for a meeting that starts at t.",
+    "Write a function that takes the meetings and returns the minimum number of rooms needed to host all of them."
+   ],
+   "constraints": [
+    "1 ≤ intervals.length ≤ 10⁴",
+    "0 ≤ starti < endi ≤ 10⁶"
+   ],
+   "followups": [
+    "Return which room each meeting goes to.",
+    "Rooms are numbered and each meeting takes the lowest numbered free room. Which room hosts the most meetings?"
+   ],
+   "hint": "At which moments can the number of rooms in use change?",
+   "leetcode": {
+    "number": 253,
+    "title": "Meeting Rooms II",
+    "url": "https://leetcode.com/problems/meeting-rooms-ii/"
+   },
+   "source": "star"
+  },
+  {
+   "id": "lc1167",
+   "pattern": "s-greedy",
+   "difficulty": "Medium",
+   "title": "Merging log files",
+   "story": [
+    "A logging service has several log files with positive integer sizes. Merging two files of sizes x and y costs x + y and produces one file of size x + y. Merging continues until one file is left.",
+    "Write a function that takes the file sizes and returns the minimum total cost to end with a single file."
+   ],
+   "constraints": [
+    "1 ≤ sticks.length ≤ 10⁴",
+    "1 ≤ sticks[i] ≤ 10⁴"
+   ],
+   "followups": [
+    "Merges now combine three files at a time. What changes?",
+    "Files must stay in order, so you can only merge neighbors. What is the minimum cost now?"
+   ],
+   "hint": "A file's size is paid again every time the file containing it gets merged. Which files should take part in the fewest merges?",
+   "leetcode": {
+    "number": 1167,
+    "title": "Minimum Cost to Connect Sticks",
+    "url": "https://leetcode.com/problems/minimum-cost-to-connect-sticks/"
+   },
+   "source": "star"
+  },
+  {
+   "id": "lc45",
+   "pattern": "s-greedy",
+   "difficulty": "Medium",
+   "title": "Relay drone hops",
+   "story": [
+    "Relay stations stand in a line, numbered from 0. A delivery drone starts at station 0. From station i it can fly forward to any station at most nums[i] stations ahead.",
+    "Write a function that takes nums and returns the minimum number of flights to reach the last station. The last station is always reachable."
+   ],
+   "constraints": [
+    "1 ≤ nums.length ≤ 10⁴",
+    "0 ≤ nums[i] ≤ 1000",
+    "It's guaranteed that you can reach nums[n - 1]."
+   ],
+   "followups": [
+    "Return the stations the drone stops at.",
+    "The last station may now be unreachable. Return -1 in that case.",
+    "The drone can now also fly backward. What changes?"
+   ],
+   "hint": "Group the stations by the minimum number of flights needed to reach them. Where does the next group end?",
+   "leetcode": {
+    "number": 45,
+    "title": "Jump Game II",
+    "url": "https://leetcode.com/problems/jump-game-ii/"
+   },
+   "source": "star"
+  },
+  {
+   "id": "lc1326",
+   "pattern": "s-greedy",
+   "difficulty": "Hard",
+   "title": "Sprinklers for the garden",
+   "story": [
+    "A garden runs along a line from point 0 to point n. There is a sprinkler at every integer point from 0 to n, and the sprinkler at point i, when turned on, waters everything from i - ranges[i] to i + ranges[i].",
+    "Write a function that takes n and ranges, and returns the minimum number of sprinklers to turn on so that the whole garden from 0 to n is watered, or -1 if that is impossible."
+   ],
+   "constraints": [
+    "1 ≤ n ≤ 10⁴",
+    "ranges.length == n + 1",
+    "0 ≤ ranges[i] ≤ 100"
+   ],
+   "followups": [
+    "Return which sprinklers to turn on.",
+    "Each sprinkler now has a cost. Minimize the total cost instead of the count."
+   ],
+   "hint": "Turn each sprinkler into an interval. Standing at the left edge of the part that is still dry, which sprinkler would you want next?",
+   "leetcode": {
+    "number": 1326,
+    "title": "Minimum Number of Taps to Open to Water a Garden",
+    "url": "https://leetcode.com/problems/minimum-number-of-taps-to-open-to-water-a-garden/"
+   },
+   "source": "star"
+  },
+  {
+   "id": "lc1024",
+   "pattern": "s-greedy",
+   "difficulty": "Medium",
+   "title": "Highlight reel from clips",
+   "story": [
+    "A sports editor has video clips from a match that lasted time seconds. Each clip is (start, end), clips can overlap, and any clip can be cut into smaller pieces.",
+    "Write a function that takes the clips and time, and returns the minimum number of clips needed to cover the whole match from 0 to time, or -1 if that is impossible."
+   ],
+   "constraints": [
+    "1 ≤ clips.length ≤ 100",
+    "0 ≤ starti ≤ endi ≤ 100",
+    "1 ≤ time ≤ 100"
+   ],
+   "followups": [
+    "Return which clips to use.",
+    "Each clip now has a licensing cost. Minimize the total cost."
+   ],
+   "hint": "Coverage has to start at 0 and grow without gaps. Among the clips that start inside what is already covered, which one helps most?",
+   "leetcode": {
+    "number": 1024,
+    "title": "Video Stitching",
+    "url": "https://leetcode.com/problems/video-stitching/"
+   },
+   "source": "star"
+  },
+  {
+   "id": "lc287",
+   "pattern": "s-math",
+   "difficulty": "Medium",
+   "title": "The double-scanned ticket",
+   "story": [
+    "A stadium issued tickets numbered 1 to n. The gate scanner's log has n + 1 entries, each a ticket number from 1 to n. Exactly one ticket number appears more than once in the log, possibly many times.",
+    "Write a function that returns that ticket number. You may not modify the log, and you may only use constant extra memory."
+   ],
+   "constraints": [
+    "1 ≤ n ≤ 10⁵",
+    "nums.length == n + 1",
+    "1 ≤ nums[i] ≤ n",
+    "All the integers in nums appear only once except for precisely one integer which appears two or more times."
+   ],
+   "followups": [
+    "Prove that some ticket number must repeat.",
+    "Can you do it in linear time?",
+    "Without the memory rule, what would you do, and why is it not allowed here?"
+   ],
+   "hint": "You cannot sort and you cannot mark entries. But every value in the log is also a valid position in the log. What can you do with that?",
+   "leetcode": {
+    "number": 287,
+    "title": "Find the Duplicate Number",
+    "url": "https://leetcode.com/problems/find-the-duplicate-number/"
+   },
+   "source": "star"
+  },
+  {
+   "id": "lc41",
+   "pattern": "s-math",
+   "difficulty": "Hard",
+   "title": "Smallest unused order id",
+   "story": [
+    "A shop assigns order ids that are positive integers. You are given a list of integers pulled from an old system. It can contain zero, negative numbers and duplicates.",
+    "Write a function that returns the smallest positive integer that does not appear in the list. It must run in linear time and use only constant extra memory."
+   ],
+   "constraints": [
+    "1 ≤ nums.length ≤ 10⁵",
+    "-2³¹ ≤ nums[i] ≤ 2³¹ - 1"
+   ],
+   "followups": [
+    "You may not modify the list now. What is the best you can do?",
+    "Return the k smallest missing positive integers."
+   ],
+   "hint": "The answer is between 1 and the list length plus one. Is there somewhere you can record \"I have seen value v\" without extra memory?",
+   "leetcode": {
+    "number": 41,
+    "title": "First Missing Positive",
+    "url": "https://leetcode.com/problems/first-missing-positive/"
+   },
+   "source": "star"
+  },
+  {
+   "id": "lc780",
+   "pattern": "s-math",
+   "difficulty": "Hard",
+   "title": "Climbing the number grid",
+   "story": [
+    "A board game piece starts at (sx, sy). In one move, a piece at (x, y) goes to either (x, x + y) or (x + y, y).",
+    "Write a function that takes sx, sy, tx and ty, and returns whether the piece can reach (tx, ty)."
+   ],
+   "constraints": [
+    "1 ≤ sx, sy, tx, ty ≤ 10⁹"
+   ],
+   "followups": [
+    "Return the minimum number of moves when it is reachable.",
+    "Which points are reachable from (1, 1)?"
+   ],
+   "hint": "Going forward, every move branches. Going backward from (tx, ty), is there ever a real choice?",
+   "leetcode": {
+    "number": 780,
+    "title": "Reaching Points",
+    "url": "https://leetcode.com/problems/reaching-points/"
+   },
+   "source": "star"
+  },
+  {
+   "id": "lc991",
+   "pattern": "s-math",
+   "difficulty": "Medium",
+   "title": "Broken calculator",
+   "story": [
+    "A broken calculator shows startValue. Only two buttons work: one doubles the number on the display, and one subtracts 1 from it.",
+    "Write a function that takes startValue and target, and returns the minimum number of button presses to show target."
+   ],
+   "constraints": [
+    "1 ≤ startValue, target ≤ 10⁹"
+   ],
+   "followups": [
+    "Return the sequence of presses.",
+    "A third button now adds 1. Does your approach still work?"
+   ],
+   "hint": "Going forward, you have to guess when to double. Run it from the target instead: what are the reverse moves, and when is each one forced?",
+   "leetcode": {
+    "number": 991,
+    "title": "Broken Calculator",
+    "url": "https://leetcode.com/problems/broken-calculator/"
+   },
+   "source": "star"
+  },
+  {
+   "id": "lc319",
+   "pattern": "s-math",
+   "difficulty": "Medium",
+   "title": "Hallway lights",
+   "story": [
+    "A hallway has n lights, all off. On round 1, every light is toggled. On round 2, every second light is toggled. On round i, every i-th light is toggled. The last round is round n, which only toggles light n.",
+    "Write a function that takes n and returns how many lights are on after the last round."
+   ],
+   "constraints": [
+    "0 ≤ n ≤ 10⁹"
+   ],
+   "followups": [
+    "Return which lights are on.",
+    "Count the lights that are on with numbers between L and R."
+   ],
+   "hint": "Follow one light. Which rounds toggle it, and when is that number of toggles odd?",
+   "leetcode": {
+    "number": 319,
+    "title": "Bulb Switcher",
+    "url": "https://leetcode.com/problems/bulb-switcher/"
+   },
+   "source": "star"
+  },
+  {
+   "id": "lc365",
+   "pattern": "s-math",
+   "difficulty": "Medium",
+   "title": "Measuring with two jugs",
+   "story": [
+    "You have two empty jugs with capacities x liters and y liters, and an unlimited tap. In one step you can fill either jug completely, empty either jug completely, or pour from one jug into the other until the receiving jug is full or the pouring jug is empty.",
+    "Write a function that takes x, y and target, and returns whether the total water in the two jugs together can be exactly target liters."
+   ],
+   "constraints": [
+    "1 ≤ x, y, target ≤ 10³"
+   ],
+   "followups": [
+    "Return the minimum number of steps when it is possible.",
+    "There are now three jugs. What changes?"
+   ],
+   "hint": "Every step changes the total in both jugs by a certain kind of amount. Which totals can you ever reach that way?",
+   "leetcode": {
+    "number": 365,
+    "title": "Water and Jug Problem",
+    "url": "https://leetcode.com/problems/water-and-jug-problem/"
+   },
+   "source": "star"
+  },
+  {
+   "id": "lc96",
+   "pattern": "s-math",
+   "difficulty": "Medium",
+   "title": "Shapes of a search index",
+   "story": [
+    "A search index stores n distinct keys, 1 to n, in a binary search tree.",
+    "Write a function that takes n and returns how many structurally different binary search trees can hold exactly those keys."
+   ],
+   "constraints": [
+    "1 ≤ n ≤ 19"
+   ],
+   "followups": [
+    "Return all of the trees, not just the count.",
+    "Count balanced parenthesis strings with n pairs. Why is the answer the same?",
+    "n is now large. Return the count modulo 1,000,000,007."
+   ],
+   "hint": "Pick the root. What does that choice tell you about the keys in each subtree?",
+   "leetcode": {
+    "number": 96,
+    "title": "Unique Binary Search Trees",
+    "url": "https://leetcode.com/problems/unique-binary-search-trees/"
+   },
+   "source": "star"
+  }
+ ]
+}
