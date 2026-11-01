@@ -12,7 +12,42 @@
   const FONT_LABEL = { arial: 'Arial', courier: 'Courier New', roboto: 'Roboto Mono' };
   const SIZES = [10, 11, 12, 13, 14, 15, 16, 18];
   const TIMER_SECONDS = 45 * 60;
-  const TEMPLATE = 'Clarifying questions:\n- \n\nExamples and edge cases:\n- \n\nApproach:\nBrute force: \nBetter: \n\nComplexity:\nTime: \nSpace: \n\nCode:\n\n\nDry run:\n\n';
+  // The doc can be split into one box per thing the interview (and the daily review) scores.
+  // Whatever the view, a single text is saved: each non-empty box becomes a "## Name" section,
+  // so sync, the review and the one-doc view all keep working on plain text.
+  const SECTIONS = [
+    { key: 'clarify', name: 'Clarifying questions', crit: 'Understanding', ph: 'What you would ask before designing: input format, ranges, duplicates, ties, empty input, what to return when it is impossible.', aliases: ['clarifying questions', 'clarifications', 'clarification', 'questions'] },
+    { key: 'examples', name: 'Examples', crit: 'Understanding', ph: 'One or two small examples worked by hand, with the expected answer.', aliases: ['examples', 'example', 'examples and edge cases'] },
+    { key: 'edge', name: 'Edge cases', crit: 'Correctness · Testing', ph: 'Inputs that could break a first attempt, and what should happen for each.', aliases: ['edge cases', 'edge case'] },
+    { key: 'approach', name: 'Approach', crit: 'Approach', ph: 'Brute force first, then the better idea, the data structures, and why it is correct.', aliases: ['approach', 'algorithm', 'idea'] },
+    { key: 'complexity', name: 'Complexity', crit: 'Complexity', ph: 'Time and space, with the term that dominates and why.', aliases: ['complexity', 'complexity analysis', 'time and space'] },
+    { key: 'code', name: 'Code', crit: 'Correctness · Code quality', ph: 'The complete function.', aliases: ['code', 'implementation'] },
+    { key: 'dryrun', name: 'Dry run and tests', crit: 'Testing', ph: 'Trace one example through the code with the variable values, then list the tests you would run.', aliases: ['dry run and tests', 'dry run', 'testing', 'tests', 'test cases'] },
+    { key: 'followups', name: 'Follow-ups', crit: 'Follow-ups', ph: 'Press "Answer in doc" on a follow-up to start its answer here.', aliases: ['follow-ups', 'followups', 'follow ups'] },
+    { key: 'notes', name: 'Notes', crit: 'Scratch', ph: 'Anything else: scratch work, thoughts while stuck.', aliases: ['notes', 'scratch'] },
+  ];
+  const SEC_ALIAS = {};
+  SECTIONS.forEach((s) => s.aliases.forEach((a) => { SEC_ALIAS[a] = s.key; }));
+  const SEC_HEAD = /^ {0,3}(?:##\s*([A-Za-z][A-Za-z &-]*?)\s*:?|([A-Za-z][A-Za-z &-]*?)\s*:)\s*$/;
+  const SEC_FU = /^\s*(?:##\s*)?Follow-up \d+\b/i;
+  function parseSections(text) {
+    const acc = {};
+    SECTIONS.forEach((s) => { acc[s.key] = []; });
+    let cur = 'notes';
+    String(text || '').split('\n').forEach((line) => {
+      const m = SEC_HEAD.exec(line);
+      const key = m && SEC_ALIAS[(m[1] || m[2] || '').toLowerCase()];
+      if (key) { if (acc[key].length) acc[key].push(''); cur = key; return; }
+      if (SEC_FU.test(line)) cur = 'followups';
+      acc[cur].push(line);
+    });
+    const out = {};
+    SECTIONS.forEach((s) => { out[s.key] = acc[s.key].join('\n').replace(/^\n+/, '').replace(/\n+$/, ''); });
+    return out;
+  }
+  const composeSections = (vals) => SECTIONS.filter((s) => (vals[s.key] || '').trim())
+    .map((s) => '## ' + s.name + '\n' + vals[s.key].replace(/\n+$/, '')).join('\n\n');
+  const TEMPLATE = '## Clarifying questions\n- \n\n## Examples\n- \n\n## Edge cases\n- \n\n## Approach\nBrute force: \nBetter: \n\n## Complexity\nTime: \nSpace: \n\n## Code\n\n\n## Dry run and tests\n\n';
   const OWN_PATTERN = { id: 'own', tier: 0, name: 'Your own questions', signal: 'Questions you added that are not filed under a pattern yet.' };
 
   const svg = (body, extra) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ${extra || ''}>${body}</svg>`;
@@ -697,30 +732,33 @@
 
   function Editor(q) {
     const rec = getSol(q.id);
-    const ta = h('textarea', {
-      id: 'doc-' + safeName(q.id), spellcheck: 'false', autocapitalize: 'off', autocomplete: 'off', autocorrect: 'off', 'aria-label': 'Your solution',
-      placeholder: 'Start typing. Like a Google Doc in a real interview, there is no autocomplete, highlighting or auto-indent.\n\nClarifying questions, approach, complexity, then code.',
-    });
-    ta.value = rec ? rec.t : '';
+    // `text` is what gets saved. In sections view each box edits one entry of `vals`, and `text`
+    // is rebuilt from them; switching views alone never rewrites the saved text.
+    let text = rec ? rec.t : '';
+    let vals = parseSections(text);
+    const sectioned = () => S.ui.docMode !== 'single';
     let saveT = null, touched = false, tabOut = false, lastInput = 0, activeAdd = 0;
-    const page = h('div', { class: 'doc-page' }, ta);
+    let boxes = [];
+    const page = h('div', { class: 'doc-page' });
     const stateEl = h('span', { class: 'save-state' });
     const countEl = h('span');
     const noticeEl = h('div', { class: 'notice', hidden: true });
 
-    // Grow the textarea with its content. Measuring needs height:auto for a moment, which would
+    // Grow each textarea with its content. Measuring needs height:auto for a moment, which would
     // shrink the page and make the browser jump the scroll up, so the page's height is held while
     // measuring and the scroll position is put back.
     const fit = () => {
       const y = window.scrollY;
       page.style.minHeight = page.offsetHeight + 'px';
-      ta.style.height = 'auto';
-      ta.style.height = Math.max(ta.scrollHeight, 200) + 'px';
+      boxes.forEach((ta) => {
+        ta.style.height = 'auto';
+        ta.style.height = Math.max(ta.scrollHeight, sectioned() ? 0 : 200) + 'px';
+      });
       page.style.minHeight = '';
       if (window.scrollY !== y) window.scrollTo(0, y);
     };
     const counts = () => {
-      const v = ta.value;
+      const v = text;
       const lines = v ? v.split('\n').length : 0;
       const words = (v.match(/\S+/g) || []).length;
       countEl.textContent = lines + ' lines · ' + words + ' words · ' + v.length + ' chars';
@@ -733,57 +771,108 @@
     const persist = () => {
       clearTimeout(saveT); saveT = null;
       const cur = getSol(q.id);
-      if (cur && cur.t === ta.value) return;
+      if (cur ? cur.t === text : !text) return;
       const m = Object.assign({}, (cur && cur.m) || {});
       if (!m.opened) m.opened = Date.now();
       if (!m.firstKey) m.firstKey = Date.now();
       m.active = (m.active || 0) + activeAdd; activeAdd = 0;
-      putSol(q.id, { t: ta.value, u: Date.now(), d: true, m: m });
+      putSol(q.id, { t: text, u: Date.now(), d: true, m: m });
       Sync.schedule('sol:' + q.id, () => Sync.syncSolution(q.id), 5000);
       refreshDocState();
     };
-    const insert = (text) => {
+    const insert = (ta, str) => {
       ta.focus();
-      const done = document.execCommand && (text ? document.execCommand('insertText', false, text) : document.execCommand('delete'));
+      const done = document.execCommand && (str ? document.execCommand('insertText', false, str) : document.execCommand('delete'));
       if (!done) {
         const s = ta.selectionStart, e = ta.selectionEnd;
-        ta.setRangeText(text, s, e, 'end');
+        ta.setRangeText(str, s, e, 'end');
         ta.dispatchEvent(new Event('input'));
       }
     };
-    ta.addEventListener('input', () => {
-      touched = true;
-      const now = Date.now();
-      if (lastInput && now - lastInput < 60000) activeAdd += (now - lastInput) / 1000;
-      lastInput = now;
-      fit(); counts();
-      clearTimeout(saveT); saveT = setTimeout(persist, 300);
-      if (Sync.enabled()) { stateEl.textContent = 'Editing'; stateEl.setAttribute('data-state', 'pending'); }
-    });
-    ta.addEventListener('blur', () => { persist(); if (Sync.enabled()) { Sync.flushKey('sol:' + q.id); Sync.syncSolution(q.id); } });
-    ta.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') { tabOut = true; return; }
-      if (e.key === 'Tab' && !tabOut && !e.altKey && !e.ctrlKey && !e.metaKey) {
-        e.preventDefault();
-        if (e.shiftKey) {
-          const v = ta.value, s = ta.selectionStart;
-          const ls0 = v.lastIndexOf('\n', s - 1) + 1;
-          const m = /^ {1,4}/.exec(v.slice(ls0));
-          if (m) { ta.setSelectionRange(ls0, ls0 + m[0].length); insert(''); }
-        } else insert('    ');
-        return;
+    const box = (key, placeholder, label) => {
+      const ta = h('textarea', {
+        id: 'doc-' + safeName(q.id) + (key ? '-' + key : ''), spellcheck: 'false', autocapitalize: 'off', autocomplete: 'off', autocorrect: 'off',
+        'aria-label': label, placeholder: placeholder, 'data-k': key || null,
+      });
+      ta.value = key ? vals[key] : text;
+      ta.addEventListener('input', () => {
+        touched = true;
+        if (key) { vals[key] = ta.value; text = composeSections(vals); } else text = ta.value;
+        const now = Date.now();
+        if (lastInput && now - lastInput < 60000) activeAdd += (now - lastInput) / 1000;
+        lastInput = now;
+        fit(); counts();
+        clearTimeout(saveT); saveT = setTimeout(persist, 300);
+        if (Sync.enabled()) { stateEl.textContent = 'Editing'; stateEl.setAttribute('data-state', 'pending'); }
+      });
+      ta.addEventListener('blur', () => {
+        persist();
+        if (Sync.enabled() && !page.contains(document.activeElement)) { Sync.flushKey('sol:' + q.id); Sync.syncSolution(q.id); }
+      });
+      ta.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') { tabOut = true; return; }
+        if (e.key === 'Tab' && !tabOut && !e.altKey && !e.ctrlKey && !e.metaKey) {
+          e.preventDefault();
+          if (e.shiftKey) {
+            const v = ta.value, s = ta.selectionStart;
+            const ls0 = v.lastIndexOf('\n', s - 1) + 1;
+            const m = /^ {1,4}/.exec(v.slice(ls0));
+            if (m) { ta.setSelectionRange(ls0, ls0 + m[0].length); insert(ta, ''); }
+          } else insert(ta, '    ');
+          return;
+        }
+        tabOut = false;
+      });
+      boxes.push(ta);
+      return ta;
+    };
+    const boxFor = (key) => boxes.find((b) => b.getAttribute('data-k') === key) || null;
+    function build() {
+      boxes = [];
+      page.innerHTML = '';
+      page.classList.toggle('sectioned', sectioned());
+      if (!sectioned()) {
+        page.append(box(null, 'Start typing. Like a Google Doc in a real interview, there is no autocomplete, highlighting or auto-indent.\n\nClarifying questions, approach, complexity, then code.', 'Your solution'));
+      } else {
+        SECTIONS.forEach((s, i) => page.append(h('div', { class: 'sec', 'data-k': s.key },
+          h('label', { class: 'sec-h', for: 'doc-' + safeName(q.id) + '-' + s.key },
+            h('span', { class: 'sec-n', text: String(i + 1) }), h('span', { class: 'sec-t', text: s.name }), h('span', { class: 'sec-c', text: s.crit })),
+          box(s.key, s.ph, s.name))));
       }
-      tabOut = false;
-    });
+      requestAnimationFrame(fit);
+    }
 
     const fontSel = h('select', { 'aria-label': 'Font', title: 'Font', onchange: (e) => { S.ui.font = e.target.value; saveUi(); applyFont(); } },
       Object.keys(FONTS).map((k) => h('option', { value: k, selected: S.ui.font === k, text: FONT_LABEL[k] })));
     const sizeSel = h('select', { 'aria-label': 'Font size', title: 'Font size', onchange: (e) => { S.ui.size = Number(e.target.value); saveUi(); applyFont(); } },
       SIZES.map((n) => h('option', { value: String(n), selected: Number(S.ui.size) === n, text: String(n) })));
-    const copyBtn = h('button', { class: 'icon-btn', type: 'button', title: 'Copy everything to paste into LeetCode', onclick: async () => { toast((await copyText(ta.value)) ? 'Copied the whole doc' : 'Copy failed. Select the text and copy it manually.'); } }, icon('copy'), h('span', { class: 'lbl', text: 'Copy' }));
-    const templateBtn = h('button', { class: 'icon-btn', type: 'button', title: 'Insert the interview structure: clarify, examples, approach, complexity, code, dry run', onclick: () => {
-      insert(ta.value.trim() ? '\n' + TEMPLATE : TEMPLATE);
+    const copyBtn = h('button', { class: 'icon-btn', type: 'button', onclick: async () => {
+      const codeOnly = sectioned() && vals.code.trim();
+      const ok = await copyText(codeOnly ? vals.code : text);
+      toast(ok ? (codeOnly ? 'Copied the Code section' : 'Copied the whole doc') : 'Copy failed. Select the text and copy it manually.');
+    } }, icon('copy'), h('span', { class: 'lbl', text: 'Copy' }));
+    const templateBtn = h('button', { class: 'icon-btn', type: 'button', title: 'Insert the interview structure: clarify, examples, edge cases, approach, complexity, code, dry run', onclick: () => {
+      const ta = boxes[0];
+      if (!ta) return;
+      ta.setSelectionRange(ta.value.length, ta.value.length);
+      insert(ta, ta.value.trim() ? '\n' + TEMPLATE : TEMPLATE);
     } }, icon('ruler'), h('span', { class: 'lbl', text: 'Template' }));
+    const modeSeg = h('div', { class: 'seg doc-mode', role: 'group', 'aria-label': 'Doc layout' });
+    const drawMode = () => {
+      modeSeg.innerHTML = '';
+      [['sections', 'Sections', 'One box per scored part: clarify, examples, edge cases, approach, complexity, code, dry run, follow-ups'], ['single', 'One doc', 'A single free-form doc, like a plain Google Doc']].forEach(([v, t, tip]) =>
+        modeSeg.append(h('button', { type: 'button', title: tip, 'aria-pressed': String((v === 'single') !== sectioned()), text: t, onclick: () => setMode(v) })));
+      templateBtn.hidden = sectioned();
+      copyBtn.title = sectioned() ? 'Copy the Code section to paste into LeetCode (the whole doc if Code is empty)' : 'Copy everything to paste into LeetCode';
+    };
+    function setMode(v) {
+      if ((v === 'single') !== sectioned()) return;
+      persist();
+      S.ui.docMode = v; saveUi();
+      if (v !== 'single') vals = parseSections(text);
+      drawMode(); build();
+    }
+    drawMode(); build();
     const saveBtn = h('button', { class: 'icon-btn', type: 'button', title: 'Save to GitHub now', onclick: async () => {
       persist();
       if (!Sync.enabled()) { toast('Saved on this device. Set up sync in Settings to reach it from your phone.'); return; }
@@ -795,7 +884,7 @@
     const el = h('section', { class: 'doc', 'aria-label': 'Solution document' },
       h('div', { class: 'doc-bar' },
         h('div', { class: 'doc-name' }, h('span', { html: DOC_ICON }), h('div', { class: 'nm' }, h('b', { text: 'Solution · ' + q.title }), stateEl)),
-        h('div', { class: 'doc-tools' }, fontSel, sizeSel, templateBtn, copyBtn, saveBtn)),
+        h('div', { class: 'doc-tools' }, modeSeg, fontSel, sizeSel, templateBtn, copyBtn, saveBtn)),
       h('div', { class: 'doc-scroll' }, noticeEl, page),
       h('div', { class: 'doc-foot' }, countEl, h('span', { text: 'Tab indents · Esc then Tab leaves the doc' })));
     if (noticeEl) noticeEl.style.cssText = 'margin:0 0 12px';
@@ -819,20 +908,25 @@
       el, refresh,
       fit: () => requestAnimationFrame(fit),
       flush: () => { persist(); },
-      length: () => ta.value.length,
-      appendSection(text) {
+      length: () => text.length,
+      // "Answer in doc" for a follow-up: goes to the end of the doc, or into the Follow-ups box.
+      appendSection(head) {
         persist();
+        const ta = sectioned() ? boxFor('followups') : boxes[0];
+        if (!ta) return;
         const v = ta.value;
         ta.focus();
         ta.setSelectionRange(v.length, v.length);
-        insert((v.trim() ? (v.endsWith('\n\n') ? '' : v.endsWith('\n') ? '\n' : '\n\n') : '') + text + '\n');
+        insert(ta, (v.trim() ? (v.endsWith('\n\n') ? '' : v.endsWith('\n') ? '\n' : '\n\n') : '') + head + '\n');
         fit();
+        if (sectioned()) ta.scrollIntoView({ block: 'nearest' });
       },
-      load(text, fromRemote) {
-        if (ta.value === text) return;
-        const focused = document.activeElement === ta;
-        if (touched && focused) return;
-        ta.value = text; fit(); counts();
+      load(next, fromRemote) {
+        if (text === next) return;
+        if (touched && page.contains(document.activeElement)) return;
+        text = next; vals = parseSections(text);
+        boxes.forEach((ta) => { const k = ta.getAttribute('data-k'); ta.value = k ? vals[k] : text; });
+        fit(); counts();
         if (fromRemote) { noticeEl.textContent = 'Loaded the newer version you saved on another device.'; noticeEl.hidden = false; }
         refresh();
       },

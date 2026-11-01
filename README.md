@@ -11,6 +11,10 @@ Live site: https://dalaixlmao.github.io/loop-drills/
 - `data/star.json` holds the Star page (`#/star`): problems that are a known trick in disguise. See "The Star list" below.
 - Your solutions, progress and the questions you add are **not** stored here. They go to a private repo (`loop-drills-data` by default) through the GitHub API, using a fine-grained token that stays in your browser. Without a token, everything is kept in the browser only.
 
+## The solution doc
+
+The doc has two views, switched in its toolbar. **Sections** (the default) gives one box per scored part: clarifying questions, examples, edge cases, approach, complexity, code, dry run and tests, follow-ups, and notes. **One doc** is a single free-form page. Either way one text is saved: each non-empty box is stored as a `## <Section>` block, so switching views never loses anything, and headings typed in One doc land in their boxes when you switch back. In Sections view, Copy copies just the Code box.
+
 ## Adding questions to the bank
 
 Append an object to `questions` in `data/bank.json`:
