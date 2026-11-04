@@ -14,7 +14,7 @@ Questions live in `data/bank.json` under `questions`. Follow the schema in READM
 - Keep the story exactly equivalent to the LeetCode problem so a solution passes when submitted.
 - `constraints` are copied from the LeetCode statement (use ≤, ≥ and superscript powers like 10⁵).
 - 2 or 3 `followups`, and one `hint` that nudges without giving the idea away.
-- `pattern` must match an id in `patterns`. Each pattern currently has 3 Medium and 2 Hard. Ask before changing that balance.
+- `pattern` must match an id in `patterns`. Each pattern currently has 3 Medium and 2 Hard, except `nov5`, the owner's Nov 5 interview set. Ask before changing that balance.
 - Disguised-trick questions go on the Star page instead: `data/star.json` (schema in README.md, "The Star list"). If the LeetCode problem is already in `bank.json`, add its id to the row rather than writing a second copy. The story rules above apply; the Medium/Hard balance does not.
 - Keep a leading minus in constraints (`-10⁴ ≤ nums[i]`); strip only the list marker when copying from LeetCode.
 - No em dashes anywhere (the owner's preference).

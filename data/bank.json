@@ -1,6 +1,6 @@
 {
  "version": 1,
- "updated": "2026-10-29",
+ "updated": "2026-11-04",
  "tiers": [
   {
    "id": 1,
@@ -22,6 +22,12 @@
   }
  ],
  "patterns": [
+  {
+   "id": "nov5",
+   "tier": 1,
+   "name": "Nov 5 interview set",
+   "signal": "Practice questions from your Nov 5 plan that weren't already in the bank. The patterns are mixed, so spot the technique yourself."
+  },
   {
    "id": "mono",
    "tier": 1,
@@ -147,6 +153,443 @@
   }
  ],
  "questions": [
+  {
+   "id": "lc2616",
+   "pattern": "nov5",
+   "difficulty": "Medium",
+   "title": "Pairing people for code reviews",
+   "story": [
+    "Each engineer on a team has a skill score. For a review exercise, we want to form exactly p pairs. Nobody can be in more than one pair, and anyone not chosen simply sits out.",
+    "A pair's mismatch is the absolute difference between its two scores, and the exercise is only as good as its worst-matched pair. Write a function that takes the scores and p, and returns the smallest possible value of the largest mismatch. If p is 0, return 0."
+   ],
+   "constraints": [
+    "1 ≤ nums.length ≤ 10⁵",
+    "0 ≤ nums[i] ≤ 10⁹",
+    "0 ≤ p ≤ (nums.length)/2"
+   ],
+   "followups": [
+    "How would you return the actual pairs?",
+    "What if each person had to be in a pair?",
+    "Prove that your way of choosing pairs can't miss a better answer."
+   ],
+   "hint": "Try answering an easier question first: is a given worst mismatch achievable?",
+   "leetcode": {
+    "number": 2616,
+    "title": "Minimize the Maximum Difference of Pairs",
+    "url": "https://leetcode.com/problems/minimize-the-maximum-difference-of-pairs/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc1851",
+   "pattern": "nov5",
+   "difficulty": "Hard",
+   "title": "Which maintenance window covers this time?",
+   "story": [
+    "We keep a list of maintenance windows, each with a start and end time, both inclusive. A window's length is end minus start plus one, and windows can overlap.",
+    "Support staff send us a list of times. For each time, we want the length of the shortest window containing it, or -1 if no window does. Write a function that takes the windows and the times, and returns the answers in the same order as the times."
+   ],
+   "constraints": [
+    "1 ≤ intervals.length ≤ 10⁵",
+    "1 ≤ queries.length ≤ 10⁵",
+    "intervals[i].length == 2",
+    "1 ≤ leftᵢ ≤ rightᵢ ≤ 10⁷",
+    "1 ≤ queries[j] ≤ 10⁷"
+   ],
+   "followups": [
+    "The times arrive one at a time, and each needs an immediate answer.",
+    "New windows can be added between queries.",
+    "Return the window itself rather than its length."
+   ],
+   "hint": "You don't have to answer the times in the order you were given them.",
+   "leetcode": {
+    "number": 1851,
+    "title": "Minimum Interval to Include Each Query",
+    "url": "https://leetcode.com/problems/minimum-interval-to-include-each-query/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc2762",
+   "pattern": "nov5",
+   "difficulty": "Medium",
+   "title": "Stable stretches of a sensor",
+   "story": [
+    "A sensor records a sequence of readings. A stretch of consecutive readings is stable if any two readings inside it differ by at most 2. A single reading counts as a stable stretch.",
+    "Write a function that takes the readings in order and returns the total number of stable stretches."
+   ],
+   "constraints": [
+    "1 ≤ nums.length ≤ 10⁵",
+    "1 ≤ nums[i] ≤ 10⁹"
+   ],
+   "followups": [
+    "Make the allowed difference a parameter.",
+    "Return the longest stable stretch instead.",
+    "Readings arrive as a stream. Report the running count after each one."
+   ],
+   "hint": "Fix where a stretch ends, and ask how many valid starts it has.",
+   "leetcode": {
+    "number": 2762,
+    "title": "Continuous Subarrays",
+    "url": "https://leetcode.com/problems/continuous-subarrays/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc1110",
+   "pattern": "nov5",
+   "difficulty": "Medium",
+   "title": "Retiring services from the tree",
+   "story": [
+    "Our services are arranged as a binary tree, with each service having at most a left and a right child, and every service having a unique ID. We're given a list of IDs to retire.",
+    "Retiring a service removes it and cuts its children loose, so what remains may be several separate trees. Write a function that takes the root and the list of IDs, and returns the roots of the remaining trees in any order."
+   ],
+   "constraints": [
+    "The number of nodes in the given tree is at most 1000.",
+    "Each node has a distinct value between 1 and 1000.",
+    "to_delete.length ≤ 1000",
+    "to_delete contains distinct values between 1 and 1000."
+   ],
+   "followups": [
+    "What if the retirements arrive one at a time?",
+    "Do it without using any extra set.",
+    "Return the size of each remaining tree too."
+   ],
+   "hint": "When you visit a node, what do you need to know from its parent, and what does its parent need from it?",
+   "leetcode": {
+    "number": 1110,
+    "title": "Delete Nodes And Return Forest",
+    "url": "https://leetcode.com/problems/delete-nodes-and-return-forest/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc1283",
+   "pattern": "nov5",
+   "difficulty": "Medium",
+   "title": "Choosing a batch size",
+   "story": [
+    "A nightly pipeline has several jobs, each with a known amount of work. We pick one positive whole-number batch size for all of them. Each job is cut into batches of that size, and a partial batch still takes a full slot, so a job's slot count rounds up.",
+    "The total slots across all jobs must stay within a limit, and a valid batch size is guaranteed to exist. Write a function that takes the job sizes and the limit, and returns the smallest batch size that stays within it."
+   ],
+   "constraints": [
+    "1 ≤ nums.length ≤ 5 * 10⁴",
+    "1 ≤ nums[i] ≤ 10⁶",
+    "nums.length ≤ threshold ≤ 10⁶"
+   ],
+   "followups": [
+    "Each job can have its own batch size, with a limit on the number of different sizes.",
+    "What are the lowest and highest batch sizes you need to consider?"
+   ],
+   "hint": "Think about how the total changes as the batch size grows.",
+   "leetcode": {
+    "number": 1283,
+    "title": "Find the Smallest Divisor Given a Threshold",
+    "url": "https://leetcode.com/problems/find-the-smallest-divisor-given-a-threshold/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc2226",
+   "pattern": "nov5",
+   "difficulty": "Medium",
+   "title": "Cutting cable for the crew",
+   "story": [
+    "We have several spools of cable with known whole-number lengths. Each of k technicians must receive one piece of cable, and all pieces must be the same whole-number length.",
+    "A spool can be cut into any number of pieces, but pieces from different spools can't be joined. Some cable or whole spools may go unused. Write a function that takes the spool lengths and k, and returns the longest piece length that lets every technician get one. If that isn't possible, return 0."
+   ],
+   "constraints": [
+    "1 ≤ candies.length ≤ 10⁵",
+    "1 ≤ candies[i] ≤ 10⁷",
+    "1 ≤ k ≤ 10¹²"
+   ],
+   "followups": [
+    "Lengths no longer need to be whole numbers.",
+    "Return how many pieces to cut from each spool."
+   ],
+   "hint": "If a length works, what can you say about every shorter length?",
+   "leetcode": {
+    "number": 2226,
+    "title": "Maximum Candies Allocated to K Children",
+    "url": "https://leetcode.com/problems/maximum-candies-allocated-to-k-children/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc373",
+   "pattern": "nov5",
+   "difficulty": "Medium",
+   "title": "Cheapest two-part bundles",
+   "story": [
+    "A store sells bundles made of one main item and one add-on. We have two price lists, one for main items and one for add-ons, each sorted from lowest to highest. A negative price is a credit, and two items with the same price are still separate items.",
+    "Write a function that takes the two lists and k, and returns the k pairs (main price, add-on price) with the lowest totals."
+   ],
+   "constraints": [
+    "1 ≤ nums1.length, nums2.length ≤ 10⁵",
+    "-10⁹ ≤ nums1[i], nums2[i] ≤ 10⁹",
+    "nums1 and nums2 both are sorted in non-decreasing order.",
+    "1 ≤ k ≤ 10⁴",
+    "k ≤ nums1.length * nums2.length"
+   ],
+   "followups": [
+    "Bundles now have three parts, from three sorted lists.",
+    "Return only the k-th lowest total.",
+    "Why can't you just build every pair?"
+   ],
+   "hint": "Once you've taken a pair, which pairs could possibly come right after it?",
+   "leetcode": {
+    "number": 373,
+    "title": "Find K Pairs with Smallest Sums",
+    "url": "https://leetcode.com/problems/find-k-pairs-with-smallest-sums/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc1642",
+   "pattern": "nov5",
+   "difficulty": "Medium",
+   "title": "How far can the delivery bike go?",
+   "story": [
+    "A delivery bike travels along a row of stops with known heights, starting at the first stop. Moving to a stop that's the same height or lower is free. Moving to a higher stop needs either battery units equal to the height difference, or one booster charge, which covers any climb.",
+    "We have a set number of battery units and booster charges. Write a function that takes the heights, the battery units and the booster charges, and returns the 0-based index of the farthest stop the bike can reach if they're used optimally."
+   ],
+   "constraints": [
+    "1 ≤ heights.length ≤ 10⁵",
+    "1 ≤ heights[i] ≤ 10⁶",
+    "0 ≤ bricks ≤ 10⁹",
+    "0 ≤ ladders ≤ heights.length"
+   ],
+   "followups": [
+    "Return which climbs used a booster.",
+    "Solve it a second way, and compare the complexity.",
+    "Each booster now only covers climbs up to a fixed height."
+   ],
+   "hint": "Deciding where to use a booster is hard up front. Could you change your mind later?",
+   "leetcode": {
+    "number": 1642,
+    "title": "Furthest Building You Can Reach",
+    "url": "https://leetcode.com/problems/furthest-building-you-can-reach/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc560",
+   "pattern": "nov5",
+   "difficulty": "Medium",
+   "title": "Stretches that net to the target",
+   "story": [
+    "A ledger records one net change for each day, which can be positive, negative or zero. Finance wants to know how often the ledger moved by an exact amount over a run of consecutive days.",
+    "Write a function that takes the daily changes and a target k, and returns how many stretches of one or more consecutive days add up to exactly k."
+   ],
+   "constraints": [
+    "1 ≤ nums.length ≤ 2 * 10⁴",
+    "-1000 ≤ nums[i] ≤ 1000",
+    "-10⁷ ≤ k ≤ 10⁷"
+   ],
+   "followups": [
+    "Return the longest such stretch.",
+    "What changes if every value is positive?",
+    "Count stretches whose total is divisible by k."
+   ],
+   "hint": "Could you describe any stretch's total using two running totals?",
+   "leetcode": {
+    "number": 560,
+    "title": "Subarray Sum Equals K",
+    "url": "https://leetcode.com/problems/subarray-sum-equals-k/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc739",
+   "pattern": "nov5",
+   "difficulty": "Medium",
+   "title": "Waiting for a busier day",
+   "story": [
+    "We log a server's peak load for each day. For capacity planning, we want to know how long each day's load stayed the high point.",
+    "Write a function that takes the daily loads and returns a list where each entry is the number of days until a strictly higher load. If no later day is higher, the entry is 0."
+   ],
+   "constraints": [
+    "1 ≤ temperatures.length ≤ 10⁵",
+    "30 ≤ temperatures[i] ≤ 100"
+   ],
+   "followups": [
+    "The loads arrive as a stream.",
+    "Find the nearest strictly higher load in either direction.",
+    "Why is your solution linear, even with a nested loop?"
+   ],
+   "hint": "Which earlier days are still waiting for an answer when a new day arrives?",
+   "leetcode": {
+    "number": 739,
+    "title": "Daily Temperatures",
+    "url": "https://leetcode.com/problems/daily-temperatures/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc84",
+   "pattern": "nov5",
+   "difficulty": "Hard",
+   "title": "Biggest banner on the wall",
+   "story": [
+    "A wall is made of adjacent columns of equal width 1, each with a known height. We want to paint the largest possible rectangular banner on it, with the banner's base on the ground and the whole banner on the wall.",
+    "Write a function that takes the column heights and returns the largest possible banner area."
+   ],
+   "constraints": [
+    "1 ≤ heights.length ≤ 10⁵",
+    "0 ≤ heights[i] ≤ 10⁴"
+   ],
+   "followups": [
+    "Now the wall is a grid of filled and empty cells. What's the largest filled rectangle?",
+    "Return the banner's position as well.",
+    "Heights change one at a time, and each change needs a new answer."
+   ],
+   "hint": "Suppose one column is the shortest under the banner. How far can the banner extend on each side?",
+   "leetcode": {
+    "number": 84,
+    "title": "Largest Rectangle in Histogram",
+    "url": "https://leetcode.com/problems/largest-rectangle-in-histogram/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc208",
+   "pattern": "nov5",
+   "difficulty": "Medium",
+   "title": "Search box word store",
+   "story": [
+    "A search box needs a word store for its suggestions. Design a class with three operations: insert(word) adds a word, search(word) returns whether that exact word was added, and startsWith(prefix) returns whether any added word begins with that prefix.",
+    "All text is lowercase English letters."
+   ],
+   "constraints": [
+    "1 ≤ word.length, prefix.length ≤ 2000",
+    "word and prefix consist only of lowercase English letters.",
+    "At most 3 * 10⁴ calls in total will be made to insert, search, and startsWith."
+   ],
+   "followups": [
+    "Add delete(word).",
+    "Return the k most frequently added words for a prefix.",
+    "How would you reduce memory use?"
+   ],
+   "hint": "Many words begin the same way. Could they share that work?",
+   "leetcode": {
+    "number": 208,
+    "title": "Implement Trie (Prefix Tree)",
+    "url": "https://leetcode.com/problems/implement-trie-prefix-tree/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc211",
+   "pattern": "nov5",
+   "difficulty": "Medium",
+   "title": "Crossword helper",
+   "story": [
+    "A crossword helper stores a dictionary of words. Design a class with addWord(word), which adds a lowercase word, and search(word), which returns whether any added word matches.",
+    "In search, a dot matches any one letter, and every other character must match exactly, so the lengths must be equal."
+   ],
+   "constraints": [
+    "1 ≤ word.length ≤ 25",
+    "word in addWord consists of lowercase English letters.",
+    "word in search consist of '.' or lowercase English letters.",
+    "There will be at most 2 dots in word for search queries.",
+    "At most 10⁴ calls will be made to addWord and search."
+   ],
+   "followups": [
+    "Return every matching word.",
+    "Support a * that matches any run of letters.",
+    "What's the worst case for search, and what causes it?"
+   ],
+   "hint": "Walk through what should happen at a dot compared with a normal letter.",
+   "leetcode": {
+    "number": 211,
+    "title": "Design Add and Search Words Data Structure",
+    "url": "https://leetcode.com/problems/design-add-and-search-words-data-structure/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc236",
+   "pattern": "nov5",
+   "difficulty": "Medium",
+   "title": "Who settles the dispute?",
+   "story": [
+    "A company's escalation chart is a binary tree: each person has at most a left and a right report, and everyone has a unique ID. When two different people disagree, it goes to the lowest person in the chart who has both of them under them.",
+    "A person counts as being under themselves, so if one of the two manages the other, the manager is the answer. Both people are always in the chart. Write a function that takes the root and the two people, and returns who settles it."
+   ],
+   "constraints": [
+    "The number of nodes in the tree is in the range [2, 10⁵].",
+    "-10⁹ ≤ Node.val ≤ 10⁹",
+    "All Node.val are unique.",
+    "p ≠ q",
+    "p and q will exist in the tree."
+   ],
+   "followups": [
+    "The two people may not be in the chart.",
+    "Each person also has a pointer to their manager. Can you avoid using the root?",
+    "Many disputes need settling on the same chart."
+   ],
+   "hint": "What can each subtree tell its parent about the two people?",
+   "leetcode": {
+    "number": 236,
+    "title": "Lowest Common Ancestor of a Binary Tree",
+    "url": "https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc124",
+   "pattern": "nov5",
+   "difficulty": "Hard",
+   "title": "Most profitable pipeline route",
+   "story": [
+    "A pipeline network is a binary tree of junctions, and each junction has a net value that can be negative. A route is a sequence of junctions connected by pipes. It must contain at least one junction, can't visit any junction twice, and doesn't have to pass through the top.",
+    "A route's value is the sum of its junctions. Write a function that takes the root and returns the highest value of any route."
+   ],
+   "constraints": [
+    "The number of nodes in the tree is in the range [1, 3 * 10⁴].",
+    "-1000 ≤ Node.val ≤ 1000"
+   ],
+   "followups": [
+    "Return the route itself.",
+    "The route must start and end at leaves.",
+    "The network is now a general tree, not a binary one."
+   ],
+   "hint": "What a subtree returns to its parent may differ from the best answer inside it.",
+   "leetcode": {
+    "number": 124,
+    "title": "Binary Tree Maximum Path Sum",
+    "url": "https://leetcode.com/problems/binary-tree-maximum-path-sum/"
+   },
+   "source": "bank"
+  },
+  {
+   "id": "lc228",
+   "pattern": "nov5",
+   "difficulty": "Easy",
+   "title": "Compact port list",
+   "story": [
+    "An admin page shows the ports in use. We're given the port numbers as a sorted list with no duplicates, and we want to display them compactly.",
+    "Write a function that returns the shortest sorted list of ranges that covers exactly those numbers. A run from a to b is written \"a->b\", and a number on its own is written \"a\". An empty list returns an empty list."
+   ],
+   "constraints": [
+    "0 ≤ nums.length ≤ 20",
+    "-2³¹ ≤ nums[i] ≤ 2³¹ - 1",
+    "All the values of nums are unique.",
+    "nums is sorted in ascending order."
+   ],
+   "followups": [
+    "The list can contain duplicates.",
+    "Ports are added one at a time, and the ranges must stay up to date.",
+    "Could anything overflow when you compare neighbors?"
+   ],
+   "hint": "When does the current run have to end?",
+   "leetcode": {
+    "number": 228,
+    "title": "Summary Ranges",
+    "url": "https://leetcode.com/problems/summary-ranges/"
+   },
+   "source": "bank"
+  },
   {
    "id": "lc907",
    "pattern": "mono",
